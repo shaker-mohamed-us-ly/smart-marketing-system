@@ -1,65 +1,78 @@
-import Image from "next/image";
+"use client";
+
+import Link from "next/link";
+import { PremiumGradientCard } from "@/components/shared/cards/PremiumGradientCard";
+import { IconTile } from "@/components/shared/icons/IconTile";
+import { SmartButton } from "@/components/shared/SmartButton";
+import { LayoutDashboard, Settings, ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
+import { ThemeToggle } from "@/components/shared/theme/ThemeToggle";
 
 export default function Home() {
+  const tHome = useTranslations('home');
+  const tNav = useTranslations('navigation');
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-background p-8 lg:p-12">
+      <div className="max-w-5xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex-1">
+            <h1 className="text-5xl font-semibold text-foreground mb-4">
+              {tHome("title")}
+            </h1>
+            <p className="text-xl text-muted-foreground">
+              {tHome("subtitle")}
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+            <ThemeToggle />
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <Link href="/client/dashboard" className="group">
+            <PremiumGradientCard variant="violet" className="h-full">
+              <div className="relative z-10 p-8 h-full flex flex-col">
+                <div className="flex items-start justify-between mb-6">
+                  <IconTile icon={LayoutDashboard} palette="violet" size="lg" />
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <ArrowRight className="h-4 w-4 text-primary" />
+                  </div>
+                </div>
+                <h2 className="text-2xl font-semibold mb-3">{tHome("clientPlatform")}</h2>
+                <p className="text-muted-foreground mb-6 flex-1">
+                  {tHome("dashboard")}, {tHome("brandDNA")}, {tHome("campaigns")}, {tHome("analytics")}, {tHome("recommendations")}.
+                </p>
+                <SmartButton variant="primary" className="w-full">
+                  {tNav("enterClientPlatform")}
+                </SmartButton>
+              </div>
+            </PremiumGradientCard>
+          </Link>
+
+          <Link href="/control/overview" className="group">
+            <PremiumGradientCard variant="blue" className="h-full">
+              <div className="relative z-10 p-8 h-full flex flex-col">
+                <div className="flex items-start justify-between mb-6">
+                  <IconTile icon={Settings} palette="blue" size="lg" />
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                    <ArrowRight className="h-4 w-4 text-primary" />
+                  </div>
+                </div>
+                <h2 className="text-2xl font-semibold mb-3">{tHome("controlPlatform")}</h2>
+                <p className="text-muted-foreground mb-6 flex-1">
+                  {tHome("aiBrain")}, {tHome("monitoring")}, {tHome("integrations")}, {tHome("billing")}.
+                </p>
+                <SmartButton variant="primary" className="w-full">
+                  {tNav("enterControlPlatform")}
+                </SmartButton>
+              </div>
+            </PremiumGradientCard>
+          </Link>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
