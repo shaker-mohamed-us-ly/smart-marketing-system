@@ -1,0 +1,22 @@
+.softPulseConnected {
+  animation: softPulse 2s ease-in-out infinite;
+}
+
+.softPulseSyncing {
+  animation: softPulse 2.4s ease-in-out infinite;
+}
+
+.softPulseOffline {
+  animation: softPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes softPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}

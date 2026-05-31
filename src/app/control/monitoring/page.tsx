@@ -10,6 +10,7 @@ import { FinancialAlertsPanel } from "@/components/control/monitoring/FinancialA
 import { CommunicationFailoverPanel } from "@/components/control/monitoring/CommunicationFailoverPanel";
 import { MessagingCommandPreview } from "@/components/control/monitoring/MessagingCommandPreview";
 import { AlertPreferencesPanel } from "@/components/control/monitoring/AlertPreferencesPanel";
+import { centeredPlatformCanvas, pageSectionGap, extendedMain, compactSupport } from "@/lib/layout/layout-classes";
 import { getTranslations } from "next-intl/server";
 
 export default async function ControlMonitoringPage() {
@@ -76,8 +77,8 @@ export default async function ControlMonitoringPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <div className="p-6 lg:p-8">
+      <div className={centeredPlatformCanvas}>
         <OperationsMonitoringHero
           labels={{
             title: t("common.monitoringHeroTitle"),
@@ -91,20 +92,24 @@ export default async function ControlMonitoringPage() {
         <OperationsTeamPanel labels={operationsTeamLabels} />
         <RoleBasedAlertsPanel labels={roleBasedAlertsLabels} />
 
-        <div className="grid grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main Content - 9 Columns */}
-          <div className="col-span-12 lg:col-span-9 space-y-6">
-            <SystemAlertsPanel labels={systemAlertsLabels} />
-            <BusinessAlertsPanel labels={businessAlertsLabels} />
-            <SalesAlertsPanel labels={salesAlertsLabels} />
-            <FinancialAlertsPanel labels={financialAlertsLabels} />
-            <CommunicationFailoverPanel labels={communicationFailoverLabels} />
-            <MessagingCommandPreview labels={messagingCommandLabels} />
+          <div className={extendedMain}>
+            <div className={pageSectionGap}>
+              <SystemAlertsPanel labels={systemAlertsLabels} />
+              <BusinessAlertsPanel labels={businessAlertsLabels} />
+              <SalesAlertsPanel labels={salesAlertsLabels} />
+              <FinancialAlertsPanel labels={financialAlertsLabels} />
+              <CommunicationFailoverPanel labels={communicationFailoverLabels} />
+              <MessagingCommandPreview labels={messagingCommandLabels} />
+            </div>
           </div>
 
           {/* Right Side Panels - 3 Columns */}
-          <div className="col-span-12 lg:col-span-3 space-y-6">
-            <AlertPreferencesPanel labels={alertPreferencesLabels} />
+          <div className={compactSupport}>
+            <div className={pageSectionGap}>
+              <AlertPreferencesPanel labels={alertPreferencesLabels} />
+            </div>
           </div>
         </div>
       </div>

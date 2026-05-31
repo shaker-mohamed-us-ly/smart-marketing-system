@@ -10,7 +10,7 @@ import { PhoneCallStrategyPanel } from "@/components/client/publishing/PhoneCall
 import { SchedulePlannerPanel } from "@/components/client/publishing/SchedulePlannerPanel";
 import { PublishingReadinessPanel } from "@/components/client/publishing/PublishingReadinessPanel";
 import { ApprovalAndLaunchPanel } from "@/components/client/publishing/ApprovalAndLaunchPanel";
-
+import { centeredPlatformCanvas, pageSectionGap, extendedMain, compactSupport } from "@/lib/layout/layout-classes";
 import { getTranslations } from "next-intl/server";
 
 export default async function PublishingPage() {
@@ -79,30 +79,34 @@ export default async function PublishingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <div className="p-6 lg:p-8">
+      <div className={centeredPlatformCanvas}>
         <PublishingHero labels={publishingLabels.hero} />
         <CampaignPublishPreview labels={publishingLabels.campaignPublishPreview} />
         <PlatformSelectionGrid labels={publishingLabels.platformSelection} />
 
-        <div className="grid grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main Content - 9 Columns */}
-          <div className="col-span-12 lg:col-span-9 space-y-6">
-            <ContactStrategyPanel labels={publishingLabels.contactStrategy} />
-            <CTAEnginePanel labels={publishingLabels.ctaEngine} />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <DMConversationStrategy labels={publishingLabels.dmConversationStrategy} />
-              <CommentConversionStrategy labels={publishingLabels.commentConversionStrategy} />
+          <div className={extendedMain}>
+            <div className={pageSectionGap}>
+              <ContactStrategyPanel labels={publishingLabels.contactStrategy} />
+              <CTAEnginePanel labels={publishingLabels.ctaEngine} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <DMConversationStrategy labels={publishingLabels.dmConversationStrategy} />
+                <CommentConversionStrategy labels={publishingLabels.commentConversionStrategy} />
+              </div>
+              <WhatsAppFlowPreview labels={publishingLabels.whatsappFlowPreview} />
+              <PhoneCallStrategyPanel labels={publishingLabels.phoneCallStrategy} />
+              <SchedulePlannerPanel labels={publishingLabels.schedulePlanner} />
             </div>
-            <WhatsAppFlowPreview labels={publishingLabels.whatsappFlowPreview} />
-            <PhoneCallStrategyPanel labels={publishingLabels.phoneCallStrategy} />
-            <SchedulePlannerPanel labels={publishingLabels.schedulePlanner} />
           </div>
 
           {/* Right Side Panels - 3 Columns */}
-          <div className="col-span-12 lg:col-span-3 space-y-6">
-            <PublishingReadinessPanel labels={publishingLabels.publishingReadiness} />
-            <ApprovalAndLaunchPanel labels={publishingLabels.approvalAndLaunch} />
+          <div className={compactSupport}>
+            <div className={pageSectionGap}>
+              <PublishingReadinessPanel labels={publishingLabels.publishingReadiness} />
+              <ApprovalAndLaunchPanel labels={publishingLabels.approvalAndLaunch} />
+            </div>
           </div>
         </div>
       </div>

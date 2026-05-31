@@ -1,0 +1,350 @@
+/* Dashboard V6.2 Motion System */
+/* Source-based: Adobe Animation in Design Systems, Material Design 3 Motion, Microinteractions Toolkit */
+
+/* ============================================
+   MOTION TOKENS
+   ============================================
+
+Duration Tokens (Material Design 3):
+- motion.duration.press: 120ms–150ms (tactile feedback)
+- motion.duration.hover: 160ms–220ms (hover response)
+- motion.duration.reveal: 220ms–300ms (content reveal)
+- motion.duration.status: 1800ms–2400ms (status breathing)
+
+Easing Tokens (Material Design 3):
+- motion.ease.standard: cubic-bezier(0.4, 0, 0.2, 1) (standard)
+- motion.ease.enter: cubic-bezier(0.2, 0.8, 0.2, 1) (emphasized enter)
+- motion.ease.press: cubic-bezier(0.34, 1.56, 0.64, 1) (tactile press)
+
+Microinteraction Anatomy (Microinteractions Toolkit):
+- Trigger: what starts it
+- Rules: what changes
+- Feedback: what user sees/feels
+- Loop/Mode: when it repeats, stops, or changes state
+
+*/
+
+/* ============================================
+   HERO PANEL MOTION
+   ============================================ */
+
+/* Hero Enter - Orientation + Reveal */
+.v6-hero-enter {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: v6HeroEnter 280ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v6HeroEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   METRIC CARD MOTION
+   ============================================ */
+
+/* Metric Card Enter - Staggered Reveal */
+.v6-metric-enter {
+  opacity: 0;
+  transform: translateY(16px) scale(0.98);
+  animation: v6MetricEnter 260ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v6MetricEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Signal Rail Reveal - Metric State Feedback */
+.v6-signal-reveal {
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: v6SignalReveal 280ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v6SignalReveal {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* RTL support for signal reveal */
+[dir="rtl"] .v6-signal-reveal {
+  transform-origin: right;
+}
+
+/* ============================================
+   OPERATIONS BOARD MOTION
+   ============================================ */
+
+/* Operations Row Enter - Staggered Reveal */
+.v6-ops-row-enter {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: v6OpsRowEnter 220ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v6OpsRowEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Unread Pulse - Attention for Unread/Latest Activity */
+.v6-unread-pulse {
+  animation: v6UnreadPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes v6UnreadPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   CHANNEL DOCK MOTION
+   ============================================ */
+
+/* Channel Card Enter - Staggered Reveal */
+.v6-channel-enter {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: v6ChannelEnter 240ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v6ChannelEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Connected Status Breathe - Connection State Feedback */
+.v6-connected-breathe {
+  animation: v6ConnectedBreathe 2.1s ease-in-out infinite;
+}
+
+@keyframes v6ConnectedBreathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Syncing Pulse - Sync/Warning State */
+.v6-syncing-pulse {
+  animation: v6SyncingPulse 1.8s ease-in-out infinite;
+}
+
+@keyframes v6SyncingPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 0.2;
+  }
+}
+
+/* ============================================
+   BUTTON MOTION
+   ============================================ */
+
+/* Button Press - Tactile Feedback */
+.v6-button-press:active {
+  transform: scale(0.985) translateY(1px);
+  transition: transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Liquid Sweep - Primary CTA Personality */
+.v6-liquid-sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.6) 0%,
+    rgba(139, 92, 246, 0.5) 30%,
+    rgba(6, 182, 212, 0.4) 60%,
+    rgba(99, 102, 241, 0.5) 100%
+  );
+  filter: blur(20px);
+  transform: translateX(-120%) scale(1.8) skewX(-12deg);
+  opacity: 0;
+  transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.v6-liquid-sweep-trigger:hover .v6-liquid-sweep {
+  transform: translateX(120%) scale(1.8) skewX(-12deg);
+  opacity: 1;
+}
+
+.v6-liquid-sweep-trigger:active .v6-liquid-sweep {
+  opacity: 0.8;
+  transition-duration: 140ms;
+}
+
+/* Aurora Border - Secondary CTA Attention */
+.v6-aurora-border {
+  position: absolute;
+  inset: -2px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(139, 92, 246, 0.5) 0deg,
+    rgba(6, 182, 212, 0.45) 90deg,
+    rgba(16, 185, 129, 0.45) 180deg,
+    rgba(245, 158, 11, 0.45) 270deg,
+    rgba(139, 92, 246, 0.5) 360deg
+  );
+  filter: blur(12px);
+  opacity: 0;
+  transform: scale(1);
+  transition: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.v6-aurora-border-trigger:hover .v6-aurora-border {
+  opacity: 0.6;
+  transform: scale(1.02);
+}
+
+.v6-aurora-border-trigger:active .v6-aurora-border {
+  opacity: 0.8;
+  transform: scale(1.06);
+  transition-duration: 140ms;
+}
+
+/* ============================================
+   ICON MOTION
+   ============================================ */
+
+/* Icon Micro-Motion - Premium Icon Feedback */
+.v6-icon-micro {
+  transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.v6-icon-micro:hover,
+.v6-icon-micro:focus-visible {
+  transform: translateY(-1px) translateX(1px);
+  opacity: 0.9;
+}
+
+/* Icon Frame Glow - Make Icon Frame Feel Alive */
+.v6-icon-frame {
+  transition: background-color 180ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 180ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.v6-icon-frame:hover,
+.v6-icon-frame:focus-visible {
+  transform: scale(1.02);
+}
+
+/* Icon Tap Pop - Mobile/Tap Feedback */
+.v6-icon-tap:active {
+  transform: scale(0.96);
+  transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   INSIGHT RAIL MOTION
+   ============================================ */
+
+/* Insight Card Enter - Staggered Reveal */
+.v6-insight-enter {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: v6InsightEnter 240ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v6InsightEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable pulse loops */
+  .v6-unread-pulse,
+  .v6-connected-breathe,
+  .v6-syncing-pulse {
+    animation: none;
+  }
+
+  /* Disable transform movement */
+  .v6-hero-enter,
+  .v6-metric-enter,
+  .v6-ops-row-enter,
+  .v6-channel-enter,
+  .v6-insight-enter,
+  .v6-signal-reveal,
+  .v6-button-press:active,
+  .v6-icon-micro:hover,
+  .v6-icon-micro:focus-visible,
+  .v6-icon-frame:hover,
+  .v6-icon-frame:focus-visible {
+    animation: none;
+    transform: none;
+    transition: none;
+  }
+
+  /* Keep instant opacity only */
+  .v6-hero-enter,
+  .v6-metric-enter,
+  .v6-ops-row-enter,
+  .v6-channel-enter,
+  .v6-insight-enter {
+    opacity: 1;
+  }
+
+  .v6-signal-reveal {
+    transform: scaleX(1);
+  }
+
+  /* No liquid sweep */
+  .v6-liquid-sweep {
+    display: none;
+  }
+
+  /* No aurora movement */
+  .v6-aurora-border {
+    display: none;
+  }
+
+  /* Icon hover uses color/opacity only, no movement */
+  .v6-icon-micro:hover,
+  .v6-icon-micro:focus-visible {
+    transform: none;
+  }
+
+  /* Instant only for tap */
+  .v6-icon-tap:active {
+    transform: none;
+  }
+}

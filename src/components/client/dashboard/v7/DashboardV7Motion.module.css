@@ -1,0 +1,306 @@
+/* Dashboard V7.2 Motion System */
+/* Source-based: Adobe Animation in Design Systems, Material Design 3 Motion, Microinteractions Toolkit */
+
+/* ============================================
+   MOTION TOKENS
+   ============================================
+
+Duration Tokens (Material Design 3):
+- motion.duration.press: 140ms (tactile feedback)
+- motion.duration.hover: 200ms (hover response)
+- motion.duration.reveal: 260ms (content reveal)
+- motion.duration.status: 2100ms (status breathing)
+
+Easing Tokens (Material Design 3):
+- motion.ease.standard: cubic-bezier(0.4, 0, 0.2, 1) (standard)
+- motion.ease.enter: cubic-bezier(0.2, 0.8, 0.2, 1) (emphasized enter)
+- motion.ease.press: cubic-bezier(0.34, 1.56, 0.64, 1) (tactile press)
+
+Microinteraction Anatomy (Microinteractions Toolkit):
+- Trigger: what starts it
+- Rules: what changes
+- Feedback: what user sees/feels
+- Loop/Mode: when it repeats, stops, or changes state
+
+*/
+
+/* ============================================
+   STAGE MOTION
+   ============================================ */
+
+/* Stage Reveal - Orientation */
+.v7-stage-reveal {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: v7StageReveal 260ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v7StageReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   HERO MOTION
+   ============================================ */
+
+/* Hero Reveal - Orientation */
+.v7-hero-reveal {
+  opacity: 0;
+  transform: translateY(10px);
+  animation: v7HeroReveal 260ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v7HeroReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   SIGNAL STRIP MOTION
+   ============================================ */
+
+/* Signal Card Reveal - Staggered */
+.v7-signal-card-reveal {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: v7SignalCardReveal 240ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v7SignalCardReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Signal Rail Reveal - Metric State */
+.v7-signal-rail-reveal {
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: v7SignalRailReveal 280ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v7SignalRailReveal {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* RTL support for signal rail */
+[dir="rtl"] .v7-signal-rail-reveal {
+  transform-origin: right;
+}
+
+/* ============================================
+   COMMAND WORKBENCH MOTION
+   ============================================ */
+
+/* Command Row Reveal - Staggered */
+.v7-command-row-reveal {
+  opacity: 0;
+  transform: translateY(5px);
+  animation: v7CommandRowReveal 220ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v7CommandRowReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   CHANNEL MATRIX MOTION
+   ============================================ */
+
+/* Channel Card Reveal - Staggered */
+.v7-channel-card-reveal {
+  opacity: 0;
+  transform: translateY(6px);
+  animation: v7ChannelCardReveal 240ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes v7ChannelCardReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   STATUS BREATHING
+   ============================================ */
+
+/* Status Breathe - Live State Feedback */
+.v7-status-breathe {
+  animation: v7StatusBreathe 2100ms ease-in-out infinite;
+}
+
+@keyframes v7StatusBreathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   ICON MICRO-MOTION
+   ============================================ */
+
+/* Icon Micro-Motion - Premium Feedback */
+.v7-icon-micro {
+  transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.v7-icon-micro:hover,
+.v7-icon-micro:focus-visible {
+  transform: translateY(-1px) translateX(1px);
+  opacity: 0.9;
+}
+
+/* Icon Tap Pop - Mobile/Tap */
+.v7-icon-tap:active {
+  transform: scale(0.96);
+  transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   BUTTON MOTION
+   ============================================ */
+
+/* Button Press - Tactile Feedback */
+.v7-button-press:active {
+  transform: scale(0.98);
+  transition: transform 140ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Liquid Sweep - Primary CTA Personality */
+.v7-liquid-sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(59, 130, 246, 0.6) 0%,
+    rgba(139, 92, 246, 0.5) 30%,
+    rgba(6, 182, 212, 0.4) 60%,
+    rgba(99, 102, 241, 0.5) 100%
+  );
+  filter: blur(20px);
+  transform: translateX(-120%) scale(1.8) skewX(-12deg);
+  opacity: 0;
+  transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.v7-liquid-sweep-trigger:hover .v7-liquid-sweep {
+  transform: translateX(120%) scale(1.8) skewX(-12deg);
+  opacity: 1;
+}
+
+.v7-liquid-sweep-trigger:active .v7-liquid-sweep {
+  opacity: 0.8;
+  transition-duration: 140ms;
+}
+
+/* Aurora Border - Secondary CTA Attention */
+.v7-aurora-border {
+  position: absolute;
+  inset: -2px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(139, 92, 246, 0.5) 0deg,
+    rgba(6, 182, 212, 0.45) 90deg,
+    rgba(16, 185, 129, 0.45) 180deg,
+    rgba(245, 158, 11, 0.45) 270deg,
+    rgba(139, 92, 246, 0.5) 360deg
+  );
+  filter: blur(12px);
+  opacity: 0;
+  transform: scale(1);
+  transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 200ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.v7-aurora-border-trigger:hover .v7-aurora-border {
+  opacity: 0.6;
+  transform: scale(1.02);
+}
+
+.v7-aurora-border-trigger:active .v7-aurora-border {
+  opacity: 0.8;
+  transform: scale(1.06);
+  transition-duration: 140ms;
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable pulse loops */
+  .v7-status-breathe {
+    animation: none;
+  }
+
+  /* Disable transform movement */
+  .v7-stage-reveal,
+  .v7-hero-reveal,
+  .v7-signal-card-reveal,
+  .v7-signal-rail-reveal,
+  .v7-command-row-reveal,
+  .v7-channel-card-reveal,
+  .v7-button-press:active,
+  .v7-icon-micro:hover,
+  .v7-icon-micro:focus-visible {
+    animation: none;
+    transform: none;
+    transition: none;
+  }
+
+  /* Keep instant opacity only */
+  .v7-stage-reveal,
+  .v7-hero-reveal,
+  .v7-signal-card-reveal,
+  .v7-command-row-reveal,
+  .v7-channel-card-reveal {
+    opacity: 1;
+  }
+
+  .v7-signal-rail-reveal {
+    transform: scaleX(1);
+  }
+
+  /* No liquid sweep */
+  .v7-liquid-sweep {
+    display: none;
+  }
+
+  /* No aurora movement */
+  .v7-aurora-border {
+    display: none;
+  }
+
+  /* Icon hover uses color/opacity only, no movement */
+  .v7-icon-micro:hover,
+  .v7-icon-micro:focus-visible {
+    transform: none;
+  }
+
+  /* Instant only for tap */
+  .v7-icon-tap:active {
+    transform: none;
+  }
+}

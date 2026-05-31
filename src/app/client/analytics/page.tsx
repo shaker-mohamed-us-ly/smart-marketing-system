@@ -11,6 +11,7 @@ import { ChannelAttributionPanel } from "@/components/client/analytics/ChannelAt
 import { SelfLearningSignalsPanel } from "@/components/client/analytics/SelfLearningSignalsPanel";
 import { AIRecommendationEnginePanel } from "@/components/client/analytics/AIRecommendationEnginePanel";
 import { LearningReadinessScore } from "@/components/client/analytics/LearningReadinessScore";
+import { centeredPlatformCanvas, pageSectionGap, extendedMain, compactSupport } from "@/lib/layout/layout-classes";
 import { createServerTranslator } from "@/i18n/server";
 import { Metadata } from "next";
 
@@ -211,29 +212,33 @@ export default async function AnalyticsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <div className="p-6 lg:p-8">
+      <div className={centeredPlatformCanvas}>
         <AnalyticsHero labels={analyticsLabels.hero} />
         <PerformanceCommandOverview labels={analyticsLabels.performanceCommand} />
         <CampaignPerformancePanel labels={analyticsLabels.campaignPerformance} />
         <EngagementIntelligencePanel labels={analyticsLabels.engagementIntelligence} />
         <ConversionIntelligencePanel labels={analyticsLabels.conversionIntelligence} />
 
-        <div className="grid grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main Content - 9 Columns */}
-          <div className="col-span-12 lg:col-span-9 space-y-6">
-            <AudienceLearningPanel labels={analyticsLabels.audienceLearning} />
-            <BrandDNAEvolutionPanel labels={analyticsLabels.brandDNAAvolution} />
-            <ContentPerformanceMatrix labels={analyticsLabels.contentPerformance} />
-            <OfferPerformancePanel labels={analyticsLabels.offerPerformance} />
-            <ChannelAttributionPanel labels={analyticsLabels.channelAttribution} />
-            <SelfLearningSignalsPanel labels={analyticsLabels.selfLearningSignals} />
-            <AIRecommendationEnginePanel labels={analyticsLabels.aiRecommendationEngine} />
+          <div className={extendedMain}>
+            <div className={pageSectionGap}>
+              <AudienceLearningPanel labels={analyticsLabels.audienceLearning} />
+              <BrandDNAEvolutionPanel labels={analyticsLabels.brandDNAAvolution} />
+              <ContentPerformanceMatrix labels={analyticsLabels.contentPerformance} />
+              <OfferPerformancePanel labels={analyticsLabels.offerPerformance} />
+              <ChannelAttributionPanel labels={analyticsLabels.channelAttribution} />
+              <SelfLearningSignalsPanel labels={analyticsLabels.selfLearningSignals} />
+              <AIRecommendationEnginePanel labels={analyticsLabels.aiRecommendationEngine} />
+            </div>
           </div>
 
           {/* Right Side Panels - 3 Columns */}
-          <div className="col-span-12 lg:col-span-3 space-y-6">
-            <LearningReadinessScore labels={analyticsLabels.learningReadiness} />
+          <div className={compactSupport}>
+            <div className={pageSectionGap}>
+              <LearningReadinessScore labels={analyticsLabels.learningReadiness} />
+            </div>
           </div>
         </div>
       </div>

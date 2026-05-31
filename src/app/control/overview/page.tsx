@@ -8,6 +8,7 @@ import { LearningEnginePanel } from "@/components/control/dashboard/LearningEngi
 import { SystemActivity } from "@/components/control/dashboard/SystemActivity";
 import { BillingSnapshot } from "@/components/control/dashboard/BillingSnapshot";
 import { UnifiedSourceConnectorPreview } from "@/components/control/dashboard/UnifiedSourceConnectorPreview";
+import { centeredPlatformCanvas, pageSectionGap, goldenMain, goldenSupport } from "@/lib/layout/layout-classes";
 import { createServerTranslator } from "@/i18n/server";
 import { Metadata } from "next";
 
@@ -92,84 +93,88 @@ export default async function ControlOverviewPage() {
 
   return (
     <div className="p-6 lg:p-8">
-      <ControlHero 
-        title={t("controlOverview.hero.title")}
-        subtitle={t("controlOverview.hero.subtitle")}
-      />
+      <div className={centeredPlatformCanvas}>
+        <ControlHero 
+          title={t("controlOverview.hero.title")}
+          subtitle={t("controlOverview.hero.subtitle")}
+        />
       
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-8 space-y-8">
-          {/* System Health Card */}
-          <SystemHealthCard labels={systemHealthLabels} />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          {/* Main Content */}
+          <div className={goldenMain}>
+            <div className={pageSectionGap}>
+              {/* System Health Card */}
+              <SystemHealthCard labels={systemHealthLabels} />
           
-          {/* Admin Metric Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
-            <AdminMetricCard
-              icon="BrainCircuit"
-              label={t("controlOverview.adminMetrics.intelligenceLoad")}
-              value="2,846"
-              trend="24%"
-              trendUp={true}
-              sparkline={[5, 8, 6, 10, 9, 12, 11]}
-            />
-            <AdminMetricCard
-              icon="Sparkles"
-              label={t("controlOverview.adminMetrics.dnaLearningRate")}
-              value="89"
-              trend="18%"
-              trendUp={true}
-              sparkline={[8, 10, 9, 12, 11, 14, 12]}
-            />
-            <AdminMetricCard
-              icon="TrendingUp"
-              label={t("controlOverview.adminMetrics.growthMomentum")}
-              value="128"
-              trend="12%"
-              trendUp={true}
-              sparkline={[10, 15, 12, 18, 14, 20, 16]}
-            />
-            <AdminMetricCard
-              icon="Send"
-              label={t("controlOverview.adminMetrics.publishingStability")}
-              value="18"
-              trend="3%"
-              trendUp={true}
-              sparkline={[6, 7, 6, 8, 7, 9, 8]}
-            />
-            <AdminMetricCard
-              icon="DollarSign"
-              label={t("controlOverview.adminMetrics.revenueVelocity")}
-              value="$42,850"
-              trend="15%"
-              trendUp={true}
-              sparkline={[7, 8, 7, 9, 8, 10, 9]}
-            />
+              {/* Admin Metric Cards */}
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-5">
+                <AdminMetricCard
+                  icon="BrainCircuit"
+                  label={t("controlOverview.adminMetrics.intelligenceLoad")}
+                  value="2,846"
+                  trend="24%"
+                  trendUp={true}
+                  sparkline={[5, 8, 6, 10, 9, 12, 11]}
+                />
+                <AdminMetricCard
+                  icon="Sparkles"
+                  label={t("controlOverview.adminMetrics.dnaLearningRate")}
+                  value="89"
+                  trend="18%"
+                  trendUp={true}
+                  sparkline={[8, 10, 9, 12, 11, 14, 12]}
+                />
+                <AdminMetricCard
+                  icon="TrendingUp"
+                  label={t("controlOverview.adminMetrics.growthMomentum")}
+                  value="128"
+                  trend="12%"
+                  trendUp={true}
+                  sparkline={[10, 15, 12, 18, 14, 20, 16]}
+                />
+                <AdminMetricCard
+                  icon="Send"
+                  label={t("controlOverview.adminMetrics.publishingStability")}
+                  value="18"
+                  trend="3%"
+                  trendUp={true}
+                  sparkline={[6, 7, 6, 8, 7, 9, 8]}
+                />
+                <AdminMetricCard
+                  icon="DollarSign"
+                  label={t("controlOverview.adminMetrics.revenueVelocity")}
+                  value="$42,850"
+                  trend="15%"
+                  trendUp={true}
+                  sparkline={[7, 8, 7, 9, 8, 10, 9]}
+                />
+              </div>
+
+              {/* AI Command Status */}
+              <AICommandStatus labels={aiCommandStatusLabels} />
+
+              {/* Client Overview */}
+              <ClientOverview labels={clientOverviewLabels} />
+
+              {/* Integration Health */}
+              <IntegrationHealth labels={integrationHealthLabels} />
+
+              {/* Learning Engine Panel */}
+              <LearningEnginePanel labels={learningEngineLabels} />
+
+              {/* Bottom Panels */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <SystemActivity labels={systemActivityLabels} />
+                <BillingSnapshot labels={billingSnapshotLabels} />
+              </div>
+            </div>
           </div>
 
-          {/* AI Command Status */}
-          <AICommandStatus labels={aiCommandStatusLabels} />
-
-          {/* Client Overview */}
-          <ClientOverview labels={clientOverviewLabels} />
-
-          {/* Integration Health */}
-          <IntegrationHealth labels={integrationHealthLabels} />
-
-          {/* Learning Engine Panel */}
-          <LearningEnginePanel labels={learningEngineLabels} />
-
-          {/* Bottom Panels */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <SystemActivity labels={systemActivityLabels} />
-            <BillingSnapshot labels={billingSnapshotLabels} />
-          </div>
-        </div>
-
-        {/* Right Sidebar */}
-        <div className="lg:col-span-4">
-          <div className="sticky top-8 space-y-8">
-            <UnifiedSourceConnectorPreview labels={unifiedSourceConnectorLabels} />
+          {/* Right Sidebar */}
+          <div className={goldenSupport}>
+            <div className="sticky top-8">
+              <UnifiedSourceConnectorPreview labels={unifiedSourceConnectorLabels} />
+            </div>
           </div>
         </div>
       </div>

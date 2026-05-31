@@ -12,7 +12,7 @@ import { AIStrategicInsightsCard } from "@/components/client/brand-dna/AIStrateg
 import { DNATimelinePanel } from "@/components/client/brand-dna/DNATimelinePanel";
 import { LearningSourcesPanel } from "@/components/client/brand-dna/LearningSourcesPanel";
 import { AIBrainStatusPanel } from "@/components/client/brand-dna/AIBrainStatusPanel";
-
+import { centeredPlatformCanvas, pageSectionGap, extendedMain, compactSupport } from "@/lib/layout/layout-classes";
 import { getTranslations } from "next-intl/server";
 
 export default async function BrandDnaPage() {
@@ -106,41 +106,45 @@ export default async function BrandDnaPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <div className="p-6 lg:p-8">
+      <div className={centeredPlatformCanvas}>
         <BrandDNAHero labels={brandDNALabels.hero} />
         <BrandDNASummary labels={brandDNALabels.summary} />
         <DNATabs activeTab="Overview" />
 
-        <div className="grid grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main Content - 9 Columns */}
-          <div className="col-span-12 lg:col-span-9 space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <BrandProfileCard labels={brandDNALabels.brandProfile} />
-              <AudienceIntelligenceCard labels={brandDNALabels.audienceIntelligence} />
-            </div>
+          <div className={extendedMain}>
+            <div className={pageSectionGap}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <BrandProfileCard labels={brandDNALabels.brandProfile} />
+                <AudienceIntelligenceCard labels={brandDNALabels.audienceIntelligence} />
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <BrandPersonalityCard labels={brandDNALabels.brandPersonality} />
-              <ProductIntelligenceCard labels={brandDNALabels.productIntelligence} />
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <BrandPersonalityCard labels={brandDNALabels.brandPersonality} />
+                <ProductIntelligenceCard labels={brandDNALabels.productIntelligence} />
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <CompetitorIntelligenceCard labels={brandDNALabels.competitorIntelligence} />
-              <BrandVoiceToneCard labels={brandDNALabels.brandVoiceTone} />
-            </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <CompetitorIntelligenceCard labels={brandDNALabels.competitorIntelligence} />
+                <BrandVoiceToneCard labels={brandDNALabels.brandVoiceTone} />
+              </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <VisualLanguageCard labels={brandDNALabels.visualLanguage} />
-              <AIStrategicInsightsCard labels={brandDNALabels.aiStrategicInsights} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <VisualLanguageCard labels={brandDNALabels.visualLanguage} />
+                <AIStrategicInsightsCard labels={brandDNALabels.aiStrategicInsights} />
+              </div>
             </div>
           </div>
 
           {/* Right Side Panels - 3 Columns */}
-          <div className="col-span-12 lg:col-span-3 space-y-6">
-            <DNATimelinePanel labels={brandDNALabels.dnaTimeline} />
-            <LearningSourcesPanel labels={brandDNALabels.learningSources} />
-            <AIBrainStatusPanel labels={brandDNALabels.aiBrainStatus} />
+          <div className={compactSupport}>
+            <div className={pageSectionGap}>
+              <DNATimelinePanel labels={brandDNALabels.dnaTimeline} />
+              <LearningSourcesPanel labels={brandDNALabels.learningSources} />
+              <AIBrainStatusPanel labels={brandDNALabels.aiBrainStatus} />
+            </div>
           </div>
         </div>
       </div>

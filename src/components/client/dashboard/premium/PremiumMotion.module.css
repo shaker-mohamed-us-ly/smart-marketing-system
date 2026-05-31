@@ -1,0 +1,288 @@
+/* Premium Dashboard Motion Module V4.6 */
+/* CSS-only motion for performance and RSC safety */
+
+/* ============================================
+   CARD MOTION
+   ============================================ */
+
+/* Card Enter - Orientation + Reveal */
+.motion-card-enter {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: cardEnter 260ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes cardEnter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Card Hover - Subtle Interactivity */
+.motion-card-hover:hover {
+  transform: translateY(-1px);
+  transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   BUTTON MOTION
+   ============================================ */
+
+/* Button Press - Tactile Feedback */
+.motion-button-press:active {
+  transform: scale(0.985) translateY(1px);
+  transition: transform 140ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Liquid Sweep - Primary CTA Personality */
+.motion-liquid-sweep {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(99, 102, 241, 0.6) 0%,
+    rgba(124, 58, 237, 0.5) 30%,
+    rgba(6, 182, 212, 0.4) 60%,
+    rgba(59, 130, 246, 0.5) 100%
+  );
+  filter: blur(20px);
+  transform: translateX(-120%) scale(1.8) skewX(-12deg);
+  opacity: 0;
+  transition: transform 220ms cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+.motion-liquid-sweep-trigger:hover .motion-liquid-sweep {
+  transform: translateX(120%) scale(1.8) skewX(-12deg);
+  opacity: 1;
+}
+
+.motion-liquid-sweep-trigger:active .motion-liquid-sweep {
+  opacity: 0.8;
+  transition-duration: 140ms;
+}
+
+/* Aurora Border - Secondary CTA Attention */
+.motion-aurora-border {
+  position: absolute;
+  inset: -2px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(124, 58, 237, 0.5) 0deg,
+    rgba(6, 182, 212, 0.45) 90deg,
+    rgba(16, 185, 129, 0.45) 180deg,
+    rgba(245, 158, 11, 0.45) 270deg,
+    rgba(124, 58, 237, 0.5) 360deg
+  );
+  filter: blur(12px);
+  opacity: 0;
+  transform: scale(1);
+  transition: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 220ms cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.motion-aurora-border-trigger:hover .motion-aurora-border {
+  opacity: 0.6;
+  transform: scale(1.02);
+}
+
+.motion-aurora-border-trigger:active .motion-aurora-border {
+  opacity: 0.8;
+  transform: scale(1.06);
+  transition-duration: 140ms;
+}
+
+/* ============================================
+   STATUS MOTION
+   ============================================ */
+
+/* Status Breathe - Connection State Feedback */
+.motion-status-breathe {
+  animation: statusBreathe 2.1s ease-in-out infinite;
+}
+
+@keyframes statusBreathe {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* Unread Pulse - Attention for Unread/Latest Activity */
+.motion-unread-pulse {
+  animation: unreadPulse 2.2s ease-in-out infinite;
+}
+
+@keyframes unreadPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   SIGNAL MOTION
+   ============================================ */
+
+/* Signal Reveal - Metric State Reveal */
+.motion-signal-reveal {
+  transform: scaleX(0);
+  transform-origin: left;
+  animation: signalReveal 300ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes signalReveal {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* RTL support for signal reveal */
+[dir="rtl"] .motion-signal-reveal {
+  transform-origin: right;
+}
+
+/* ============================================
+   TIME CHIP MOTION
+   ============================================ */
+
+/* Time Chip Arrive - Time Metadata Appearance */
+.motion-time-chip-arrive {
+  opacity: 0;
+  transform: translateY(2px);
+  animation: timeChipArrive 180ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes timeChipArrive {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   ELLIPSIS AFFORDANCE MOTION
+   ============================================ */
+
+/* Ellipsis Affordance - Show Expandable Text Affordance */
+.motion-ellipsis-affordance {
+  opacity: 0;
+  transform: translateX(1px) translateY(1px);
+  transition: opacity 160ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.motion-ellipsis-affordance:hover,
+.motion-ellipsis-affordance:focus {
+  opacity: 1;
+  transform: translateX(0) translateY(0);
+}
+
+/* ============================================
+   ICON MICRO-ANIMATION
+   ============================================ */
+
+/* Icon Soft Vector - Premium Icon Feedback */
+.motion-icon-soft-vector {
+  transition: transform 180ms cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.motion-icon-soft-vector:hover,
+.motion-icon-soft-vector:focus-visible {
+  transform: translateY(-1px) translateX(1px);
+  opacity: 0.9;
+}
+
+/* Icon Frame Glow - Make Icon Frame Feel Alive */
+.motion-icon-frame-glow {
+  transition: background-color 180ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 180ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 180ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.motion-icon-frame-glow:hover,
+.motion-icon-frame-glow:focus-visible {
+  transform: scale(1.02);
+}
+
+/* Icon Tap Pop - Mobile/Tap Feedback */
+.motion-icon-tap-pop:active {
+  transform: scale(0.96);
+  transition: transform 120ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   REDUCED MOTION SUPPORT
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Disable pulse loops */
+  .motion-status-breathe,
+  .motion-unread-pulse {
+    animation: none;
+  }
+
+  /* Disable transform movement */
+  .motion-card-enter,
+  .motion-card-hover:hover,
+  .motion-button-press:active,
+  .motion-signal-reveal,
+  .motion-time-chip-arrive,
+  .motion-ellipsis-affordance,
+  .motion-icon-soft-vector:hover,
+  .motion-icon-soft-vector:focus-visible,
+  .motion-icon-frame-glow:hover,
+  .motion-icon-frame-glow:focus-visible {
+    animation: none;
+    transform: none;
+    transition: none;
+  }
+
+  /* Keep instant opacity only if needed */
+  .motion-card-enter {
+    opacity: 1;
+  }
+
+  .motion-time-chip-arrive {
+    opacity: 1;
+  }
+
+  .motion-ellipsis-affordance:hover,
+  .motion-ellipsis-affordance:focus {
+    opacity: 1;
+  }
+
+  /* No liquid sweep */
+  .motion-liquid-sweep {
+    display: none;
+  }
+
+  /* No aurora movement */
+  .motion-aurora-border {
+    display: none;
+  }
+
+  /* Icon hover uses color/opacity only, no movement */
+  .motion-icon-soft-vector:hover,
+  .motion-icon-soft-vector:focus-visible {
+    transform: none;
+  }
+
+  /* Instant only for tap */
+  .motion-icon-tap-pop:active {
+    transform: none;
+  }
+}

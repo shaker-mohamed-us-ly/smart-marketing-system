@@ -11,6 +11,7 @@ import { BrandDNARecommendations } from "@/components/client/recommendations/Bra
 import { CompetitorSignalRecommendations } from "@/components/client/recommendations/CompetitorSignalRecommendations";
 import { RecommendationConfidencePanel } from "@/components/client/recommendations/RecommendationConfidencePanel";
 import { ActionImpactSimulator } from "@/components/client/recommendations/ActionImpactSimulator";
+import { centeredPlatformCanvas, pageSectionGap, extendedMain, compactSupport } from "@/lib/layout/layout-classes";
 import { getTranslations } from "next-intl/server";
 
 export default async function RecommendationsPage() {
@@ -78,8 +79,8 @@ export default async function RecommendationsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <div className="p-6 lg:p-8">
+      <div className={centeredPlatformCanvas}>
         <RecommendationsHero
           labels={{
             title: t("common.recommendations"),
@@ -92,22 +93,26 @@ export default async function RecommendationsPage() {
         <PriorityRecommendationsPanel labels={recommendationsLabels.priorityRecommendations} />
         <GrowthOpportunitiesPanel labels={recommendationsLabels.growthOpportunities} />
 
-        <div className="grid grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main Content - 9 Columns */}
-          <div className="col-span-12 lg:col-span-9 space-y-6">
-            <CreativeImprovementPanel labels={recommendationsLabels.creativeImprovements} />
-            <OfferStrategyRecommendations labels={recommendationsLabels.offerStrategyRecommendations} />
-            <PublishingRecommendationsPanel labels={recommendationsLabels.publishingRecommendations} />
-            <ConversionFixesPanel labels={recommendationsLabels.conversionFixes} />
-            <AudienceLearningRecommendations labels={recommendationsLabels.audienceLearningRecommendations} />
-            <BrandDNARecommendations labels={recommendationsLabels.brandDNARecommendations} />
-            <CompetitorSignalRecommendations labels={recommendationsLabels.competitorSignalRecommendations} />
+          <div className={extendedMain}>
+            <div className={pageSectionGap}>
+              <CreativeImprovementPanel labels={recommendationsLabels.creativeImprovements} />
+              <OfferStrategyRecommendations labels={recommendationsLabels.offerStrategyRecommendations} />
+              <PublishingRecommendationsPanel labels={recommendationsLabels.publishingRecommendations} />
+              <ConversionFixesPanel labels={recommendationsLabels.conversionFixes} />
+              <AudienceLearningRecommendations labels={recommendationsLabels.audienceLearningRecommendations} />
+              <BrandDNARecommendations labels={recommendationsLabels.brandDNARecommendations} />
+              <CompetitorSignalRecommendations labels={recommendationsLabels.competitorSignalRecommendations} />
+            </div>
           </div>
 
           {/* Right Side Panels - 3 Columns */}
-          <div className="col-span-12 lg:col-span-3 space-y-6">
-            <RecommendationConfidencePanel labels={recommendationsLabels.recommendationConfidence} />
-            <ActionImpactSimulator labels={recommendationsLabels.actionImpactSimulator} />
+          <div className={compactSupport}>
+            <div className={pageSectionGap}>
+              <RecommendationConfidencePanel labels={recommendationsLabels.recommendationConfidence} />
+              <ActionImpactSimulator labels={recommendationsLabels.actionImpactSimulator} />
+            </div>
           </div>
         </div>
       </div>

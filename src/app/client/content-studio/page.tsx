@@ -12,7 +12,7 @@ import { CopywritingPanel } from "@/components/client/content-studio/Copywriting
 import { PlatformAdaptationPanel } from "@/components/client/content-studio/PlatformAdaptationPanel";
 import { BrandGuardianReview } from "@/components/client/content-studio/BrandGuardianReview";
 import { ApprovalQueuePanel } from "@/components/client/content-studio/ApprovalQueuePanel";
-
+import { centeredPlatformCanvas, pageSectionGap, extendedMain, compactSupport } from "@/lib/layout/layout-classes";
 import { getTranslations } from "next-intl/server";
 
 export default async function ContentStudioPage() {
@@ -101,33 +101,37 @@ export default async function ContentStudioPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-8">
+    <div className="p-6 lg:p-8">
+      <div className={centeredPlatformCanvas}>
         <ContentStudioHero labels={contentStudioLabels.hero} />
         <CreativePipelineOverview labels={contentStudioLabels.creativePipeline} />
         <ProductionBriefPanel labels={contentStudioLabels.productionBrief} />
         <AssetTypeSelector activeType={t("clientContentStudio.assetType.poster")} labels={contentStudioLabels.assetTypeSelector} />
 
-        <div className="grid grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Main Content - 9 Columns */}
-          <div className="col-span-12 lg:col-span-9 space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <ProductAssetWorkbench labels={contentStudioLabels.productAssetWorkbench} />
-              <ServiceStoryWorkbench labels={contentStudioLabels.serviceStoryWorkbench} />
-            </div>
+          <div className={extendedMain}>
+            <div className={pageSectionGap}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <ProductAssetWorkbench labels={contentStudioLabels.productAssetWorkbench} />
+                <ServiceStoryWorkbench labels={contentStudioLabels.serviceStoryWorkbench} />
+              </div>
 
-            <CreativeDirectorInstructions labels={contentStudioLabels.creativeDirectorInstructions} />
-            <ProductionDirectorPromptPanel labels={contentStudioLabels.productionDirectorPrompt} />
-            <AssetVariationGrid labels={contentStudioLabels.assetVariationGrid} />
-            <VideoStoryboardPanel labels={contentStudioLabels.videoStoryboard} />
-            <CopywritingPanel labels={contentStudioLabels.copywriting} />
-            <PlatformAdaptationPanel labels={contentStudioLabels.platformAdaptation} />
+              <CreativeDirectorInstructions labels={contentStudioLabels.creativeDirectorInstructions} />
+              <ProductionDirectorPromptPanel labels={contentStudioLabels.productionDirectorPrompt} />
+              <AssetVariationGrid labels={contentStudioLabels.assetVariationGrid} />
+              <VideoStoryboardPanel labels={contentStudioLabels.videoStoryboard} />
+              <CopywritingPanel labels={contentStudioLabels.copywriting} />
+              <PlatformAdaptationPanel labels={contentStudioLabels.platformAdaptation} />
+            </div>
           </div>
 
           {/* Right Side Panels - 3 Columns */}
-          <div className="col-span-12 lg:col-span-3 space-y-6">
-            <BrandGuardianReview labels={contentStudioLabels.brandGuardianReview} />
-            <ApprovalQueuePanel labels={contentStudioLabels.approvalQueue} />
+          <div className={compactSupport}>
+            <div className={pageSectionGap}>
+              <BrandGuardianReview labels={contentStudioLabels.brandGuardianReview} />
+              <ApprovalQueuePanel labels={contentStudioLabels.approvalQueue} />
+            </div>
           </div>
         </div>
       </div>
