@@ -6,11 +6,17 @@
  */
 
 import { z } from 'zod';
-import { BrandOSError, isBrandOSError, type BrandErrorCode, type BrandOSError as BrandOSErrorType } from './types';
+import {
+  BrandOSError,
+  isBrandOSError,
+  type BrandErrorCode,
+  type BrandOSError as BrandOSErrorType,
+  type BrandActionError,
+} from './types';
 
 // Re-export for convenience
 export { BrandOSError, isBrandOSError };
-export type { BrandOSError as BrandOSErrorType };
+export type { BrandOSError as BrandOSErrorType, BrandActionError };
 
 // ============================================================================
 // Error Message Mapping (Fallback - i18n preferred)
@@ -22,13 +28,16 @@ export type { BrandOSError as BrandOSErrorType };
  */
 const ERROR_MESSAGES_EN: Record<BrandErrorCode, string> = {
   BRAND_AUTH_REQUIRED: 'You must be logged in to perform this action',
+  BRAND_ENV_MISSING: 'Supabase environment settings are incomplete in development. Check your environment file and try again.',
   BRAND_CREATE_VALIDATION: 'Invalid input. Please check your data and try again',
   BRAND_DUPLICATE_NAME: 'A brand with this name already exists',
   BRAND_CREATE_DB_FAILED: 'Failed to create brand. Please try again',
   BRAND_PROFILE_CREATE_FAILED: 'Failed to create brand profile. Please try again',
   BRAND_UPDATE_FAILED: 'Failed to update brand. Please try again',
   BRAND_NOT_FOUND: 'Brand not found',
-  BRAND_RLS_DENIED: 'You do not have permission to access this brand',
+  BRAND_RLS_DENIED: 'You do not have permission to access these brands. Check security policies.',
+  BRAND_LOAD_FAILED: 'An unexpected error occurred while loading brands. Please try again.',
+  BRAND_CREATE_FAILED: 'An unexpected error occurred while creating the brand. Please try again.',
   BRAND_LOGO_UPLOAD_FAILED: 'Failed to upload logo. Please try again',
   BRAND_LOGO_DELETE_FAILED: 'Failed to delete logo. Please try again',
   BRAND_CHANNELS_LOAD_FAILED: 'Failed to load connected channels. Please try again',
@@ -45,13 +54,16 @@ const ERROR_MESSAGES_EN: Record<BrandErrorCode, string> = {
  */
 const ERROR_MESSAGES_AR: Record<BrandErrorCode, string> = {
   BRAND_AUTH_REQUIRED: 'يجب تسجيل الدخول لتنفيذ هذا الإجراء',
+  BRAND_ENV_MISSING: 'إعدادات Supabase غير مكتملة في بيئة التطوير. تحقق من ملف البيئة ثم أعد المحاولة.',
   BRAND_CREATE_VALIDATION: 'إدخال غير صالح. يرجى التحقق من البيانات والمحاولة مرة أخرى',
   BRAND_DUPLICATE_NAME: 'علامة تجارية بهذا الاسم موجودة بالفعل',
   BRAND_CREATE_DB_FAILED: 'فشل إنشاء العلامة التجارية. يرجى المحاولة مرة أخرى',
   BRAND_PROFILE_CREATE_FAILED: 'فشل إنشاء ملف العلامة التجارية. يرجى المحاولة مرة أخرى',
   BRAND_UPDATE_FAILED: 'فشل تحديث العلامة التجارية. يرجى المحاولة مرة أخرى',
   BRAND_NOT_FOUND: 'العلامة التجارية غير موجودة',
-  BRAND_RLS_DENIED: 'ليس لديك صلاحية الوصول إلى هذه العلامة التجارية',
+  BRAND_RLS_DENIED: 'لا تملك صلاحية الوصول إلى هذه العلامات. تحقق من سياسات الأمان.',
+  BRAND_LOAD_FAILED: 'حدث خطأ غير متوقع أثناء تحميل العلامات التجارية. يرجى المحاولة مرة أخرى.',
+  BRAND_CREATE_FAILED: 'حدث خطأ غير متوقع أثناء إنشاء العلامة التجارية. يرجى المحاولة مرة أخرى.',
   BRAND_LOGO_UPLOAD_FAILED: 'فشل رفع الشعار. يرجى المحاولة مرة أخرى',
   BRAND_LOGO_DELETE_FAILED: 'فشل حذف الشعار. يرجى المحاولة مرة أخرى',
   BRAND_CHANNELS_LOAD_FAILED: 'فشل تحميل القنوات المتصلة. يرجى المحاولة مرة أخرى',
@@ -160,6 +172,23 @@ export function mapDuplicateBrandNameError(
 }
 
 // ============================================================================
+// Serializable Error Helper
+// ============================================================================
+
+/**
+ * Convert BrandOSError to a plain serializable object
+ * Next.js server actions strip custom Error class properties
+ * @param error - BrandOSError instance
+ * @returns Plain { code, message } object safe for serialization
+ */
+function toBrandActionError(error: BrandOSError): BrandActionError {
+  return {
+    code: error.code,
+    message: error.message,
+  };
+}
+
+// ============================================================================
 // Action Result Helpers
 // ============================================================================
 
@@ -177,22 +206,22 @@ export function makeBrandActionSuccess<T>(data: T): { success: true; data: T } {
  * @param error - BrandOSError
  * @param operation - Operation being performed (for dev context, optional)
  * @param zodError - Optional Zod validation error
- * @returns BrandActionFailure
+ * @returns BrandActionFailure with plain serializable error
  */
 export function makeBrandActionFailure(
   error: BrandOSError,
   operation?: string,
   zodError?: z.ZodError
-): { success: false; error: BrandOSError } {
-  // If operation provided, set it
+): { success: false; error: BrandActionError } {
+  // If operation provided, set it (for dev/debug only, not serialized)
   if (operation) {
     error.operation = operation;
   }
-  // If zodError provided, set as cause
+  // If zodError provided, set as cause (for dev/debug only, not serialized)
   if (zodError) {
     error.cause = zodError;
   }
-  return { success: false, error };
+  return { success: false, error: toBrandActionError(error) };
 }
 
 /**
@@ -200,14 +229,14 @@ export function makeBrandActionFailure(
  * @param error - Any error
  * @param operation - Operation being performed
  * @param locale - Locale for error message (optional)
- * @returns BrandActionFailure
+ * @returns BrandActionFailure with plain serializable error
  */
 export function toBrandActionFailure(
   error: unknown,
   operation?: string,
   locale?: 'ar' | 'en'
-): { success: false; error: BrandOSError } {
-  // If already BrandOSError, use it
+): { success: false; error: BrandActionError } {
+  // If already BrandOSError, serialize it
   if (isBrandOSError(error)) {
     return makeBrandActionFailure(error, locale);
   }

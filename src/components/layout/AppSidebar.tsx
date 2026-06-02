@@ -25,6 +25,7 @@ export interface AppSidebarProps extends HTMLAttributes<HTMLDivElement> {
 
 const clientNavigationBase: SidebarItem[] = [
   { href: "/client/dashboard", label: "dashboard", icon: getIconForRoute("/client/dashboard") },
+  { href: "/client/brand", label: "brands", icon: getIconForRoute("/client/brand") },
   { href: "/client/brand-dna", label: "brandDNA", icon: getIconForRoute("/client/brand-dna") },
   { href: "/client/campaigns", label: "campaigns", icon: getIconForRoute("/client/campaigns") },
   { href: "/client/content-studio", label: "contentStudio", icon: getIconForRoute("/client/content-studio") },
@@ -98,6 +99,7 @@ const AppSidebar = forwardRef<HTMLDivElement, AppSidebarProps>(
             variant="ghost"
             size="sm"
             onClick={handleCollapse}
+            aria-label={isCollapsed ? tSidebar('expandSidebar') : tSidebar('collapseSidebar')}
             className={cn("ml-auto", isCollapsed && "mx-auto")}
           >
             {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}

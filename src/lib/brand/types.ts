@@ -115,9 +115,11 @@ export type ConnectedChannelConnectionType = 'oauth' | 'api_key' | 'manual';
  * Input for creating a brand
  * Does NOT include user_id (comes from auth)
  * Does NOT include social URLs (handled by Connected Channels)
+ * brandType is stored in brand_core_profiles.brand_dna.metadata.brandType
  */
 export interface BrandCreateInput {
   name: string;
+  brandType: string;
   industry: string;
   description: string;
   website?: string;
@@ -190,7 +192,16 @@ export interface BrandLogoUploadResult {
 export interface BrandActionResult<T> {
   success: boolean;
   data?: T;
-  error?: BrandOSError;
+  error?: BrandActionError;
+}
+
+/**
+ * Plain serializable error for action results
+ * Use this instead of BrandOSError for cross-boundary serialization
+ */
+export interface BrandActionError {
+  code: BrandErrorCode;
+  message: string;
 }
 
 /**
@@ -206,7 +217,7 @@ export interface BrandActionSuccess<T> {
  */
 export interface BrandActionFailure {
   success: false;
-  error: BrandOSError;
+  error: BrandActionError;
 }
 
 // ============================================================================
@@ -219,6 +230,7 @@ export interface BrandActionFailure {
  */
 export type BrandErrorCode =
   | 'BRAND_AUTH_REQUIRED'
+  | 'BRAND_ENV_MISSING'
   | 'BRAND_CREATE_VALIDATION'
   | 'BRAND_DUPLICATE_NAME'
   | 'BRAND_CREATE_DB_FAILED'
@@ -226,6 +238,8 @@ export type BrandErrorCode =
   | 'BRAND_UPDATE_FAILED'
   | 'BRAND_NOT_FOUND'
   | 'BRAND_RLS_DENIED'
+  | 'BRAND_LOAD_FAILED'
+  | 'BRAND_CREATE_FAILED'
   | 'BRAND_LOGO_UPLOAD_FAILED'
   | 'BRAND_LOGO_DELETE_FAILED'
   | 'BRAND_CHANNELS_LOAD_FAILED'

@@ -82,6 +82,21 @@ export async function getBrands(): Promise<BrandActionResult<Brand[]>> {
 
     return makeBrandActionSuccess(data || []);
   } catch (error) {
+    // Detect missing env vars using duck typing (instanceof may fail in bundled code)
+    const errorMessage = error && typeof error === 'object' && 'message' in error
+      ? String((error as { message: unknown }).message)
+      : '';
+    if (errorMessage.toLowerCase().includes('supabase') && errorMessage.toLowerCase().includes('missing')) {
+      return makeBrandActionFailure(
+        new BrandOSError(
+          'BRAND_ENV_MISSING',
+          'Supabase environment settings are incomplete in development. Check your environment file and try again.',
+          errorMessage,
+          'getBrands',
+          error
+        )
+      );
+    }
     return toBrandActionFailure(error, 'getBrands');
   }
 }
@@ -139,6 +154,9 @@ export async function createBrand(input: BrandCreateInput): Promise<BrandActionR
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
+    // Dev-safe auth diagnostics (no tokens, no env values, no sensitive data)
+    console.log(`[createBrand] auth check: user=${user ? 'PRESENT' : 'MISSING'}`);
+
     if (!user) {
       return makeBrandActionFailure(
         new BrandOSError('BRAND_AUTH_REQUIRED', 'You must be logged in to create a brand')
@@ -154,7 +172,7 @@ export async function createBrand(input: BrandCreateInput): Promise<BrandActionR
       );
     }
 
-    const { name, industry, description, website } = validation.data;
+    const { name, brandType, industry, description, website } = validation.data;
 
     // Insert brand with user_id from auth only
     const { data: brand, error: brandError } = await supabase
@@ -179,11 +197,17 @@ export async function createBrand(input: BrandCreateInput): Promise<BrandActionR
     }
 
     // Create brand_core_profile after brand insert
+    // Store brandType in brand_dna.metadata.brandType
     const { error: profileError } = await supabase
       .from('brand_core_profiles')
       .insert({
         brand_id: brand.id,
         user_id: user.id,
+        brand_dna: {
+          metadata: {
+            brandType,
+          },
+        },
       });
 
     if (profileError) {

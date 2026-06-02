@@ -14,6 +14,7 @@ import {
   ALLOWED_LOGO_MIME_TYPES,
   MAX_LOGO_SIZE_BYTES,
   PLATFORM_VALUES,
+  BRAND_TYPE_VALUES,
 } from './constants';
 import type {
   BrandCreateInput,
@@ -38,6 +39,7 @@ export const BrandIdSchema = z.string().uuid('Invalid brand ID format');
 /**
  * Brand create input schema
  * - name: required, trimmed, 3-100 characters
+ * - brandType: required, must be one of allowed brand types
  * - industry: required
  * - description: required, 10-500 characters
  * - website: optional, valid URL if present
@@ -49,6 +51,19 @@ export const BrandCreateInputSchema = z.object({
     .min(MIN_BRAND_NAME_LENGTH, `Brand name must be at least ${MIN_BRAND_NAME_LENGTH} characters`)
     .max(MAX_BRAND_NAME_LENGTH, `Brand name must be at most ${MAX_BRAND_NAME_LENGTH} characters`)
     .trim(),
+  brandType: z.enum([
+    'ecommerce_store',
+    'local_store',
+    'company',
+    'service',
+    'personal_brand',
+    'restaurant_cafe',
+    'clinic_health_center',
+    'agency_service_office',
+    'single_product',
+    'startup',
+    'other',
+  ]),
   industry: z.string().min(1, 'Industry is required'),
   description: z
     .string()

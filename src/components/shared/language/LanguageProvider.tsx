@@ -118,7 +118,7 @@ export function useLanguage() {
       setLocale: () => {},
       direction: "rtl" as "rtl" | "ltr",
       dictionary: {} as any,
-      t: (key: string) => key,
+      t: (key: string) => "",
     };
   }
   return context;

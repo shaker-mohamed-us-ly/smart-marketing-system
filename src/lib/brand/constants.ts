@@ -172,3 +172,30 @@ export const LOGO_PATH_PATTERN = '{userId}/{brandId}/{filename}';
  * Pattern: {user_id}/{brand_id}/logo.{ext}
  */
 export const LOGO_PATH_PATTERN_WITH_EXT = '{userId}/{brandId}/logo.{ext}';
+
+// ============================================================================
+// Brand Type Constants
+// ============================================================================
+
+/**
+ * Brand type options
+ * Stored in brand_core_profiles.brand_dna.metadata.brandType
+ */
+export const BRAND_TYPES = {
+  ECOMMERCE_STORE: 'ecommerce_store',
+  LOCAL_STORE: 'local_store',
+  COMPANY: 'company',
+  SERVICE: 'service',
+  PERSONAL_BRAND: 'personal_brand',
+  RESTAURANT_CAFE: 'restaurant_cafe',
+  CLINIC_HEALTH_CENTER: 'clinic_health_center',
+  AGENCY_SERVICE_OFFICE: 'agency_service_office',
+  SINGLE_PRODUCT: 'single_product',
+  STARTUP: 'startup',
+  OTHER: 'other',
+} as const;
+
+/**
+ * Array of all brand type values
+ */
+export const BRAND_TYPE_VALUES = Object.values(BRAND_TYPES) as readonly (typeof BRAND_TYPES)[keyof typeof BRAND_TYPES][];

@@ -76,12 +76,12 @@ const AppHeader = forwardRef<HTMLDivElement, AppHeaderProps>(
 
           <ThemeToggle />
 
-          <Button variant="ghost" size="sm" className="relative hover-elevation">
+          <Button variant="ghost" size="sm" className="relative hover-elevation" aria-label={t('notifications')}>
             <Bell className="h-5 w-5" />
             <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-error" />
           </Button>
 
-          <Button variant="ghost" size="sm" className="hover-elevation">
+          <Button variant="ghost" size="sm" className="hover-elevation" aria-label={t('profile')}>
             <User className="h-5 w-5" />
           </Button>
 

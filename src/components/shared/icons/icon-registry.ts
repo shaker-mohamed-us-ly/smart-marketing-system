@@ -1,6 +1,7 @@
 import { LucideIcon } from "lucide-react";
 import {
   LayoutDashboard,
+  Building2,
   Dna,
   Target,
   PenTool,
@@ -26,6 +27,7 @@ export interface IconRegistryEntry {
 export const iconRegistry: Record<string, IconRegistryEntry> = {
   // Client Platform
   "/client/dashboard": { icon: LayoutDashboard },
+  "/client/brand": { icon: Building2 },
   "/client/brand-dna": { icon: Dna },
   "/client/campaigns": { icon: Target },
   "/client/content-studio": { icon: PenTool },

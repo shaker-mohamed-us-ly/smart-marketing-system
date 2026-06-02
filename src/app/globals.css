@@ -40,6 +40,8 @@
   --error-foreground: #ffffff;
   --info: #3b82f6;
   --info-foreground: #ffffff;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
 
   /* Background Gradients - Subtle, Premium */
   --gradient-radial: radial-gradient(var(--tw-gradient-stops));
@@ -164,6 +166,8 @@
   --color-error-foreground: var(--error-foreground);
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
   --font-sans: var(--font-inter), var(--font-ibm-plex-arabic), system-ui, -apple-system, sans-serif;
 }
 
@@ -186,6 +190,8 @@
   --border: #2d313a;
   --input: #2d313a;
   --ring: #6366f1;
+  --destructive: #f87171;
+  --destructive-foreground: #1a1d23;
 }
 
 * {
