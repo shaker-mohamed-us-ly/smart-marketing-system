@@ -7,6 +7,7 @@ import { BrandEmptyState } from '@/components/client/brand/BrandEmptyState';
 import { BrandCard } from '@/components/client/brand/BrandCard';
 import { BrandCreateDialog } from '@/components/client/brand/BrandCreateDialog';
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { getBrands } from '@/lib/brand/server-actions';
 import type { Brand } from '@/lib/brand/types';
 
@@ -14,6 +15,7 @@ export default function BrandPage() {
   const t = useTranslations('clientBrand.v1.ui');
   const tList = useTranslations('clientBrand.v1.ui.list');
   const tErrors = useTranslations('clientBrand.v1.ui.errors');
+  const tAuth = useTranslations('auth.authBlocker');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -76,9 +78,17 @@ export default function BrandPage() {
       ) : error ? (
         <div className="flex flex-col items-center justify-center py-12 gap-4">
           <div className="text-destructive">{error}</div>
-          <Button onClick={fetchBrands} variant="outline">
-            {tList('retry')}
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button onClick={fetchBrands} variant="outline">
+              {tList('retry')}
+            </Button>
+            <Link
+              href="/login?returnTo=/client/brand"
+              className="inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 h-10 px-4 text-base bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg"
+            >
+              {tAuth('cta')}
+            </Link>
+          </div>
         </div>
       ) : brands.length === 0 ? (
         <BrandEmptyState onCreateBrand={() => setIsCreateDialogOpen(true)} />

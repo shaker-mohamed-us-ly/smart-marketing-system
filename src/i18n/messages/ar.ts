@@ -3181,6 +3181,39 @@ const ar = {
       },
     },
   },
+  auth: {
+    login: {
+      title: "تسجيل الدخول",
+      subtitle: "أدخل بيانات حسابك للمتابعة",
+      emailLabel: "البريد الإلكتروني",
+      emailPlaceholder: "example@domain.com",
+      passwordLabel: "كلمة المرور",
+      passwordPlaceholder: "••••••••",
+      submit: "تسجيل الدخول",
+      submitting: "جاري تسجيل الدخول...",
+      or: "أو",
+      continueWithGoogle: "المتابعة باستخدام Google",
+      googleSubmitting: "جاري التحويل إلى Google...",
+    },
+    errors: {
+      invalidEmail: "يرجى إدخال بريد إلكتروني صالح",
+      passwordRequired: "يرجى إدخال كلمة المرور",
+      passwordTooShort: "كلمة المرور يجب أن تكون 6 أحرف على الأقل",
+      invalidCredentials: "البريد الإلكتروني أو كلمة المرور غير صحيحة",
+      emailNotConfirmed: "يرجى تأكيد بريدك الإلكتروني قبل تسجيل الدخول",
+      tooManyAttempts: "عدد محاولات كبير جداً. يرجى المحاولة لاحقاً",
+      networkError: "فشل الاتصال بالخادم. يرجى التحقق من الإنترنت",
+      envMissing: "إعدادات Supabase غير مكتملة في بيئة التطوير",
+      unknownError: "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى",
+      googleOAuthFailed: "فشل تسجيل الدخول عبر Google. يرجى المحاولة مرة أخرى.",
+      googleProviderNotConfigured: "لم يتم إعداد تسجيل الدخول عبر Google بعد.",
+    },
+    authBlocker: {
+      title: "يجب تسجيل الدخول",
+      message: "يجب تسجيل الدخول لعرض هذه الصفحة.",
+      cta: "الذهاب إلى تسجيل الدخول",
+    },
+  },
 };
 
 export default ar;

@@ -3191,6 +3191,39 @@ const en = {
       },
     },
   },
+  auth: {
+    login: {
+      title: "Sign In",
+      subtitle: "Enter your account credentials to continue",
+      emailLabel: "Email",
+      emailPlaceholder: "example@domain.com",
+      passwordLabel: "Password",
+      passwordPlaceholder: "••••••••",
+      submit: "Sign In",
+      submitting: "Signing in...",
+      or: "or",
+      continueWithGoogle: "Continue with Google",
+      googleSubmitting: "Redirecting to Google...",
+    },
+    errors: {
+      invalidEmail: "Please enter a valid email address",
+      passwordRequired: "Please enter your password",
+      passwordTooShort: "Password must be at least 6 characters",
+      invalidCredentials: "Email or password is incorrect",
+      emailNotConfirmed: "Please confirm your email before signing in",
+      tooManyAttempts: "Too many attempts. Please try again later",
+      networkError: "Failed to connect to server. Please check your internet",
+      envMissing: "Supabase environment settings are incomplete in development",
+      unknownError: "An unexpected error occurred. Please try again",
+      googleOAuthFailed: "Google sign-in failed. Please try again.",
+      googleProviderNotConfigured: "Google sign-in is not configured yet.",
+    },
+    authBlocker: {
+      title: "Sign In Required",
+      message: "You must be signed in to view this page.",
+      cta: "Go to Sign In",
+    },
+  },
 };
 
 export default en;
