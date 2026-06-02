@@ -32,6 +32,7 @@ const clientNavigationBase: SidebarItem[] = [
   { href: "/client/analytics", label: "analytics", icon: getIconForRoute("/client/analytics") },
   { href: "/client/recommendations", label: "recommendations", icon: getIconForRoute("/client/recommendations") },
   { href: "/client/settings", label: "settings", icon: getIconForRoute("/client/settings") },
+  { href: "/client/account", label: "account", icon: getIconForRoute("/client/account") },
 ];
 
 const controlNavigationBase: SidebarItem[] = [

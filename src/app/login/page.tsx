@@ -11,6 +11,7 @@ const SAFE_RETURN_PATHS = [
   "/client/analytics",
   "/client/recommendations",
   "/client/settings",
+  "/client/account",
   "/control/overview",
   "/control/clients",
   "/control/ai-brain",

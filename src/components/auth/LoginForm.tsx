@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Button } from "@/components/shared/Button";
 import { supabase } from "@/lib/supabase/client";
@@ -24,6 +24,36 @@ export function LoginForm({ returnTo }: LoginFormProps) {
     email?: string;
     password?: string;
   }>({});
+
+  // Surface OAuth callback errors from the URL query param
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlError = params.get("error");
+    if (urlError) {
+      switch (urlError) {
+        case "oauth_provider_error":
+          setError(tErrors("oauthProviderError"));
+          break;
+        case "oauth_missing_code":
+          setError(tErrors("oauthMissingCode"));
+          break;
+        case "oauth_env_missing":
+          setError(tErrors("oauthEnvMissing"));
+          break;
+        case "oauth_exchange_failed":
+          setError(tErrors("oauthExchangeFailed"));
+          break;
+        case "oauth_cookie_write_failed":
+          setError(tErrors("oauthCookieWriteFailed"));
+          break;
+        case "oauth_failed":
+        case "oauth_callback_failed":
+        default:
+          setError(tErrors("oauthCallbackFailed"));
+          break;
+      }
+    }
+  }, [tErrors]);
 
   const validate = useCallback((): boolean => {
     const errors: { email?: string; password?: string } = {};
@@ -82,7 +112,17 @@ export function LoginForm({ returnTo }: LoginFormProps) {
           return;
         }
 
-        // Success — redirect to sanitized returnTo
+        // Verify session was persisted in cookies before navigating
+        const { data: sessionData } = await supabase.auth.getSession();
+        if (!sessionData.session) {
+          setError(tErrors("sessionNotPersisting"));
+          return;
+        }
+
+        // Refresh server cache so subsequent server actions see the session
+        router.refresh();
+
+        // Navigate to the return destination
         router.push(returnTo);
       } catch (err) {
         const errMsg = err && typeof err === "object" && "message" in err

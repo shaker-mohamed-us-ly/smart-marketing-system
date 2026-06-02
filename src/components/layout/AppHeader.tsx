@@ -1,13 +1,15 @@
 "use client";
 
 import { cn } from "@/lib/utils/cn";
-import { HTMLAttributes, forwardRef, useMemo } from "react";
+import { HTMLAttributes, forwardRef, useMemo, useState, useEffect } from "react";
 import { Button } from "@/components/shared/Button";
-import { Search, Bell, User, TrendingUp, Activity } from "lucide-react";
+import { Search, Bell, User, TrendingUp, Activity, LogIn } from "lucide-react";
 import { SystemStatus } from "./SystemStatus";
 import { LanguageSwitcher } from "@/components/shared/LanguageSwitcher";
 import { ThemeToggle } from "@/components/shared/theme/ThemeToggle";
 import { useTranslations } from "next-intl";
+import { supabase } from "@/lib/supabase/client";
+import Link from "next/link";
 
 export interface AppHeaderProps extends HTMLAttributes<HTMLDivElement> {
   platform?: "client" | "control";
@@ -16,14 +18,28 @@ export interface AppHeaderProps extends HTMLAttributes<HTMLDivElement> {
 const AppHeader = forwardRef<HTMLDivElement, AppHeaderProps>(
   ({ platform = "client", className, ...props }, ref) => {
     const t = useTranslations('common');
+    const [userEmail, setUserEmail] = useState<string | null>(null);
     const hour = new Date().getHours();
     const timeOfDay = hour < 12 ? "morning" : hour < 18 ? "afternoon" : "evening";
-    
+
+    useEffect(() => {
+      // Check auth state on mount and subscribe to changes
+      supabase.auth.getUser().then(({ data }) => {
+        setUserEmail(data.user?.email || null);
+      });
+
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        setUserEmail(session?.user?.email || null);
+      });
+
+      return () => subscription.unsubscribe();
+    }, []);
+
     const smartGreeting = useMemo(() => {
       // Use dictionary greetings based on time of day
       return t(`greetings.${timeOfDay}`);
     }, [timeOfDay, t]);
-    
+
     const subtitle = useMemo(() => {
       if (platform === "client") {
         return t("clientPlatform");
@@ -81,9 +97,26 @@ const AppHeader = forwardRef<HTMLDivElement, AppHeaderProps>(
             <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-error" />
           </Button>
 
-          <Button variant="ghost" size="sm" className="hover-elevation" aria-label={t('profile')}>
-            <User className="h-5 w-5" />
-          </Button>
+          {userEmail ? (
+            <Link
+              href="/client/account"
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 h-8 px-3 hover:bg-accent hover:text-accent-foreground"
+              aria-label={t('profile')}
+              title={userEmail}
+            >
+              <User className="h-5 w-5" />
+              <span className="max-w-[120px] truncate hidden lg:inline">{userEmail}</span>
+            </Link>
+          ) : (
+            <Link
+              href="/login"
+              className="inline-flex items-center justify-center gap-1.5 rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 h-8 px-3 hover:bg-accent hover:text-accent-foreground"
+              aria-label={t('signIn')}
+            >
+              <LogIn className="h-5 w-5" />
+              <span className="hidden lg:inline">{t('signIn')}</span>
+            </Link>
+          )}
 
           <SystemStatus status="operational" showIndicator />
         </div>
