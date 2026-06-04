@@ -1,871 +1,1945 @@
 /* ============================================================
+
    Dashboard V8 — Premium Centered Canvas
+
    Visual system + motion (CSS-only, theme-aware)
 
+
+
    Sources / direction:
+
    - Material Design 3 (hierarchy, tokens, motion that guides attention)
+
    - Untitled UI (SaaS clarity, premium whitespace, fine borders/shadows)
+
    - shadcn/ui philosophy (CSS variable / token-based styling)
+
    - Framer-style interactions implemented with pure CSS
+
    - useAnimations-inspired micro-interactions (icons alive on hover)
 
+
+
    Theming:
+
    - Light = warm gray / off-white (NOT blue)
+
    - Dark  = graphite / charcoal (NOT blue)
+
    - All colors are CSS custom properties so they adapt to the active theme.
+
    ============================================================ */
+
+
 
 /* ---------- Theme tokens (light defaults) ---------- */
+
 .v8Root {
+
   --v8-canvas: #f4f3f1;
+
   --v8-canvas-2: #eceae6;
+
   --v8-panel: #ffffff;
+
   --v8-panel-2: #fbfaf9;
+
   --v8-card: #ffffff;
+
   --v8-border: rgba(120, 113, 108, 0.16);
+
   --v8-border-strong: rgba(120, 113, 108, 0.26);
+
   --v8-text: #1c1917;
+
   --v8-text-2: #57534e;
+
   --v8-text-3: #8a8580;
+
   --v8-shadow-panel: 0 12px 34px rgba(28, 25, 23, 0.06), 0 2px 8px rgba(28, 25, 23, 0.04);
-  --v8-shadow-card: 0 6px 18px rgba(28, 25, 23, 0.05);
+
+  --v8-shadow-card: 0 6px 18px rgba(28, 25, 23, 0.07);
+
   --v8-inner-hi: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+
   --v8-track: rgba(120, 113, 108, 0.14);
 
+  --v8-icon-frame-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 8px 18px rgba(0,0,0,0.12);
+
+  --v8-icon-frame-shadow-hover: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 26px rgba(0,0,0,0.16);
+
+  --v8-motion-fast: 160ms;
+
+  --v8-motion-smooth: 220ms;
+
+  --v8-motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+
+
   /* tone defaults (overridden per [data-tone]) */
+
   --tone-text: #57534e;
+
   --tone-bg: rgba(120, 113, 108, 0.08);
+
   --tone-border: rgba(120, 113, 108, 0.2);
+
   --tone-solid: #57534e;
 
+
+
   color: var(--v8-text);
+
 }
+
+
 
 /* ---------- Dark (graphite) overrides ---------- */
+
 :global(.dark) .v8Root {
+
   --v8-canvas: #0a0c10;
+
   --v8-canvas-2: #0e1116;
-  --v8-panel: #13171e;
-  --v8-panel-2: #161b23;
-  --v8-card: #171c25;
+
+  --v8-panel: #131419;
+
+  --v8-panel-2: #17181d;
+
+  --v8-card: #191a20;
+
   --v8-border: rgba(255, 255, 255, 0.08);
+
   --v8-border-strong: rgba(255, 255, 255, 0.15);
+
   --v8-text: #f2f4f7;
-  --v8-text-2: #aeb6c2;
-  --v8-text-3: #717a87;
+
+  --v8-text-2: #b0b5bf;
+
+  --v8-text-3: #787d87;
+
   --v8-shadow-panel: 0 18px 44px rgba(0, 0, 0, 0.5);
-  --v8-shadow-card: 0 10px 26px rgba(0, 0, 0, 0.38);
+
+  --v8-shadow-card: 0 10px 26px rgba(0, 0, 0, 0.32);
+
   --v8-inner-hi: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+
   --v8-track: rgba(255, 255, 255, 0.08);
+
 }
+
+
 
 /* ---------- Tone accent system (theme-aware) ---------- */
+
 .v8Root [data-tone="violet"] {
+
   --tone-text: #7c3aed; --tone-bg: rgba(124, 58, 237, 0.09); --tone-border: rgba(124, 58, 237, 0.22); --tone-solid: #8b5cf6;
+
 }
+
 .v8Root [data-tone="emerald"] {
+
   --tone-text: #059669; --tone-bg: rgba(5, 150, 105, 0.09); --tone-border: rgba(5, 150, 105, 0.22); --tone-solid: #10b981;
+
 }
+
 .v8Root [data-tone="amber"] {
+
   --tone-text: #d97706; --tone-bg: rgba(217, 119, 6, 0.10); --tone-border: rgba(217, 119, 6, 0.24); --tone-solid: #f59e0b;
+
 }
+
 .v8Root [data-tone="orange"] {
+
   --tone-text: #ea580c; --tone-bg: rgba(234, 88, 12, 0.10); --tone-border: rgba(234, 88, 12, 0.24); --tone-solid: #f97316;
+
 }
+
 .v8Root [data-tone="sky"] {
+
   --tone-text: #0284c7; --tone-bg: rgba(2, 132, 199, 0.10); --tone-border: rgba(2, 132, 199, 0.22); --tone-solid: #0ea5e9;
+
 }
+
 .v8Root [data-tone="slate"] {
+
   --tone-text: #475569; --tone-bg: rgba(71, 85, 105, 0.09); --tone-border: rgba(71, 85, 105, 0.2); --tone-solid: #64748b;
+
 }
+
 :global(.dark) .v8Root [data-tone="violet"] { --tone-text: #a78bfa; --tone-bg: rgba(167, 139, 250, 0.14); --tone-border: rgba(167, 139, 250, 0.3); --tone-solid: #a78bfa; }
+
 :global(.dark) .v8Root [data-tone="emerald"] { --tone-text: #34d399; --tone-bg: rgba(52, 211, 153, 0.14); --tone-border: rgba(52, 211, 153, 0.3); --tone-solid: #34d399; }
+
 :global(.dark) .v8Root [data-tone="amber"] { --tone-text: #fbbf24; --tone-bg: rgba(251, 191, 36, 0.14); --tone-border: rgba(251, 191, 36, 0.3); --tone-solid: #fbbf24; }
+
 :global(.dark) .v8Root [data-tone="orange"] { --tone-text: #fb923c; --tone-bg: rgba(251, 146, 60, 0.14); --tone-border: rgba(251, 146, 60, 0.3); --tone-solid: #fb923c; }
+
 :global(.dark) .v8Root [data-tone="sky"] { --tone-text: #56c5f5; --tone-bg: rgba(86, 197, 245, 0.14); --tone-border: rgba(86, 197, 245, 0.3); --tone-solid: #56c5f5; }
-:global(.dark) .v8Root [data-tone="slate"] { --tone-text: #94a3b8; --tone-bg: rgba(148, 163, 184, 0.12); --tone-border: rgba(148, 163, 184, 0.22); --tone-solid: #94a3b8; }
+
+:global(.dark) .v8Root [data-tone="slate"] { --tone-text: #a0aab8; --tone-bg: rgba(160, 170, 184, 0.12); --tone-border: rgba(160, 170, 184, 0.22); --tone-solid: #a0aab8; }
+
+
 
 /* ============================================================
+
    SHELL / CANVAS
+
    ============================================================ */
+
 /*
+
  * Surface ownership / breakout:
+
  * The AppShell <main> wrapper applies p-6 (24px) and lg:p-8 (32px) padding with
+
  * NO background of its own, so the app-root `bg-background radial-bg` shows
+
  * through that padding as a foreign frame around the dashboard (right, under
+
  * the topbar, left). V8 owns its page surface by cancelling that padding with
+
  * equal negative margins, so the V8 canvas background is continuous and
+
  * edge-to-edge inside the content area. Internal breathing room is then
+
  * re-applied by `.canvas`. Margins are symmetric → RTL/LTR safe.
+
  */
+
 .shell {
+
   width: auto;
+
   /* fill main height incl. the padding we break out of (base p-6 = 24px) */
+
   min-height: calc(100% + 48px);
+
   margin: -24px;
+
   background: var(--v8-canvas);
+
   background-image:
+
     radial-gradient(1100px 520px at 82% -8%, rgba(139, 92, 246, 0.07), transparent 60%),
-    radial-gradient(900px 460px at 6% 4%, rgba(14, 165, 233, 0.05), transparent 55%);
+
+    radial-gradient(900px 460px at 6% 4%, rgba(138, 133, 128, 0.05), transparent 55%);
+
 }
+
 :global(.dark) .shell {
+
   background-image:
-    radial-gradient(1100px 560px at 84% -10%, rgba(139, 92, 246, 0.13), transparent 60%),
-    radial-gradient(900px 480px at 4% 2%, rgba(14, 165, 233, 0.08), transparent 55%);
+
+    radial-gradient(1100px 560px at 84% -10%, rgba(139, 92, 246, 0.12), transparent 60%),
+
+    radial-gradient(900px 480px at 4% 2%, rgba(148, 163, 184, 0.04), transparent 55%);
+
 }
+
 /* AppShell switches main padding to lg:p-8 (32px) at >=1024px */
+
 @media (min-width: 1024px) {
+
   .shell { margin: -32px; min-height: calc(100% + 64px); }
+
 }
+
+
 
 .canvas {
+
   width: 100%;
-  max-width: 1200px;
+
+  max-width: 1280px;
+
   margin-inline: auto;
-  padding: 30px 28px 46px;
+
+  padding: 28px 32px 48px;
+
   display: flex;
+
   flex-direction: column;
-  gap: 24px;
-}
-@media (max-width: 640px) {
-  .canvas { padding: 18px 16px 34px; gap: 16px; }
+
+  gap: 28px;
+
 }
 
-/* ============================================================
-   PANEL / CARD SURFACES
-   ============================================================ */
-.panel {
-  position: relative;
-  background: var(--v8-panel);
-  border: 1px solid var(--v8-border);
-  border-radius: 24px;
-  box-shadow: var(--v8-shadow-panel), var(--v8-inner-hi);
+@media (max-width: 640px) {
+
+  .canvas { padding: 18px 16px 34px; gap: 16px; }
+
 }
+
+
+
+/* ============================================================
+
+   PANEL / CARD SURFACES
+
+   ============================================================ */
+
+.panel {
+
+  position: relative;
+
+  background: var(--v8-panel);
+
+  border: 1px solid var(--v8-border);
+
+  border-radius: 24px;
+
+  box-shadow: var(--v8-shadow-panel), var(--v8-inner-hi);
+
+}
+
+
 
 .card {
+
   position: relative;
+
   background: var(--v8-card);
+
   border: 1px solid var(--v8-border);
+
   border-radius: 18px;
+
   box-shadow: var(--v8-shadow-card), var(--v8-inner-hi);
+
   transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1),
+
               border-color 200ms ease, box-shadow 200ms ease;
-}
-.cardInteractive:hover {
-  transform: translateY(-3px);
-  border-color: var(--v8-border-strong);
+
+  overflow: hidden;
+
 }
 
-.sectionTitle { color: var(--v8-text); font-weight: 700; letter-spacing: -0.01em; }
+.cardInteractive:hover {
+
+  transform: translateY(-3px);
+
+  border-color: var(--v8-border-strong);
+
+  box-shadow: 0 12px 34px rgba(28, 25, 23, 0.10), var(--v8-inner-hi);
+
+}
+
+.cardInteractive:active {
+
+  transform: scale(0.985) translateY(-1px);
+
+}
+
+
+
+.sectionTitle { color: var(--v8-text); font-weight: 700; font-size: 16px; letter-spacing: -0.01em; line-height: 1.35; }
+
 .textMuted { color: var(--v8-text-2); }
+
 .textFaint { color: var(--v8-text-3); }
 
+
+
 /* ============================================================
+
    HERO / COMMAND HEADER
+
    ============================================================ */
+
 .hero {
+
   position: relative;
+
   overflow: hidden;
+
   display: grid;
-  grid-template-columns: 1.5fr 0.9fr;
-  gap: 22px;
+
+  grid-template-columns: 1.45fr 1fr;
+
+  gap: 24px;
+
   align-items: center;
-  padding: 26px 28px;
+
+  padding: 28px 32px;
+
   border-radius: 28px;
+
   background:
-    linear-gradient(135deg, rgba(139, 92, 246, 0.10), rgba(14, 165, 233, 0.05) 60%, transparent),
+
+    linear-gradient(135deg, rgba(139, 92, 246, 0.10), rgba(138, 133, 128, 0.05) 60%, transparent),
+
     var(--v8-panel);
-  border: 1px solid var(--v8-border);
+
+  border: 1px solid rgba(139, 92, 246, 0.18);
+
   box-shadow: var(--v8-shadow-panel), var(--v8-inner-hi);
+
 }
+
 :global(.dark) .hero {
+
   background:
-    linear-gradient(135deg, rgba(139, 92, 246, 0.16), rgba(14, 165, 233, 0.07) 55%, transparent),
+
+    linear-gradient(135deg, rgba(139, 92, 246, 0.15), rgba(148, 163, 184, 0.04) 55%, transparent),
+
     var(--v8-panel);
+
+  border: 1px solid rgba(167, 139, 250, 0.18);
+
 }
+
 .heroGlow {
+
   position: absolute;
+
   inset-inline-end: -80px;
+
   top: -120px;
+
   width: 320px; height: 320px;
+
   background: radial-gradient(circle, rgba(139, 92, 246, 0.35), transparent 62%);
+
   filter: blur(20px);
+
   pointer-events: none;
+
   opacity: 0.55;
+
 }
+
 .heroBadge {
+
   display: inline-flex; align-items: center; gap: 7px;
+
   padding: 6px 12px; border-radius: 999px;
+
   font-size: 12px; font-weight: 600;
+
   color: var(--tone-text);
+
   background: var(--tone-bg);
+
   border: 1px solid var(--tone-border);
+
 }
+
 .heroTitle { font-size: 34px; line-height: 1.16; font-weight: 800; letter-spacing: -0.02em; color: var(--v8-text); }
+
 .heroSubtitle { font-size: 14.5px; line-height: 1.6; color: var(--v8-text-2); max-width: 52ch; }
+
 .heroSidePanel {
+
   border-radius: 20px;
+
   border: 1px solid var(--v8-border);
+
   background: var(--v8-panel-2);
+
   padding: 16px 18px;
+
 }
+
 @media (max-width: 900px) {
-  .hero { grid-template-columns: 1fr; }
+
+  .hero { grid-template-columns: 1fr; gap: 16px; }
+
   .heroTitle { font-size: 27px; }
+
 }
+
+
 
 /* live status pill */
+
 .statusPill {
+
   display: inline-flex; align-items: center; gap: 8px;
+
   padding: 7px 13px; border-radius: 999px;
+
   font-size: 12.5px; font-weight: 600;
+
   color: var(--tone-text);
+
   background: var(--tone-bg);
+
   border: 1px solid var(--tone-border);
+
 }
+
 .statusDot { position: relative; width: 9px; height: 9px; border-radius: 999px; background: var(--tone-solid); }
+
 .statusDot::after {
+
   content: ""; position: absolute; inset: 0; border-radius: inherit;
+
   background: var(--tone-solid);
+
   animation: v8Pulse 2100ms ease-in-out infinite;
+
 }
+
+
 
 /* ============================================================
-   METRIC CARDS
-   ============================================================ */
-.metricGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-}
-@media (max-width: 1024px) { .metricGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .metricGrid { grid-template-columns: 1fr; } }
 
-.metricCard { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+   METRIC CARDS
+
+   ============================================================ */
+
+.metricGrid {
+
+  display: grid;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: 18px;
+
+}
+
+@media (max-width: 1024px) { .metricGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+@media (max-width: 560px) { .metricGrid { grid-template-columns: 1fr; gap: 14px; } }
+
+
+
+.metricCard {
+
+  padding: 20px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+
+  position: relative;
+
+}
+
+
+
+/* Top accent bar on metric cards — color-coded by tone */
+
+.metricCard::before {
+
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+
+  left: 0;
+
+  right: 0;
+
+  height: 3px;
+
+  background: var(--tone-solid);
+
+  opacity: 0.45;
+
+  border-radius: 18px 18px 0 0;
+
+}
+
+
+
+.metricCard[data-tone="violet"]::before { background: #8b5cf6; }
+
+.metricCard[data-tone="emerald"]::before { background: #10b981; }
+
+.metricCard[data-tone="amber"]::before { background: #f59e0b; }
+
+.metricCard[data-tone="orange"]::before { background: #f97316; }
+
+.metricCard[data-tone="sky"]::before { background: #0ea5e9; }
+
+.metricCard[data-tone="slate"]::before { background: #64748b; }
+
+
+
+:global(.dark) .metricCard[data-tone="violet"]::before { background: #a78bfa; }
+
+:global(.dark) .metricCard[data-tone="emerald"]::before { background: #34d399; }
+
+:global(.dark) .metricCard[data-tone="amber"]::before { background: #fbbf24; }
+
+:global(.dark) .metricCard[data-tone="orange"]::before { background: #fb923c; }
+
+:global(.dark) .metricCard[data-tone="sky"]::before { background: #56c5f5; }
+
+:global(.dark) .metricCard[data-tone="slate"]::before { background: #a0aab8; }
+
 .metricTopRow { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+
 .metricValue { font-size: 28px; font-weight: 800; line-height: 1.1; letter-spacing: -0.02em; color: var(--v8-text); }
+
 .metricTitle { font-size: 13.5px; font-weight: 600; color: var(--v8-text-2); }
+
 .metricDesc { font-size: 12px; color: var(--v8-text-3); }
+
 .trendChip {
+
   display: inline-flex; align-items: center; gap: 4px;
+
   padding: 4px 9px; border-radius: 999px;
+
   font-size: 12px; font-weight: 700;
+
   color: var(--tone-text); background: var(--tone-bg); border: 1px solid var(--tone-border);
+
 }
+
 .metricBar { height: 6px; border-radius: 999px; background: var(--v8-track); overflow: hidden; }
+
 .metricBarFill {
+
   height: 100%; border-radius: inherit;
+
   background: linear-gradient(90deg, var(--tone-solid), color-mix(in srgb, var(--tone-solid) 55%, transparent));
+
   transform-origin: left;
+
   animation: v8BarGrow 760ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+
 }
+
 :global([dir="rtl"]) .metricBarFill { transform-origin: right; }
 
+
+
 /* ============================================================
+
    WORKBENCH GRID
+
    ============================================================ */
+
 .workbench {
+
   display: grid;
+
   grid-template-columns: repeat(12, minmax(0, 1fr));
-  gap: 20px;
-}
-.colMain { grid-column: span 8 / span 8; }
-.colRail { grid-column: span 4 / span 4; }
-@media (max-width: 1024px) {
-  .colMain, .colRail { grid-column: span 12 / span 12; }
+
+  gap: 24px;
+
 }
 
-.panelPad { padding: 22px; }
+.colMain {
+
+  grid-column: span 8 / span 8;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 24px;
+
+}
+
+.colRail { grid-column: span 4 / span 4; }
+
+@media (max-width: 1024px) {
+
+  .colMain, .colRail { grid-column: span 12 / span 12; }
+
+}
+
+@media (max-width: 560px) {
+
+  .workbench { gap: 16px; }
+
+  .colMain { gap: 16px; }
+
+}
+
+
+
+.panelPad { padding: 24px; }
+
 .panelHead { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+
 .panelHeadLeft { display: flex; align-items: center; gap: 12px; }
 
+
+
 /* AI command banner inside command center */
+
 .commandBanner {
+
   position: relative; overflow: hidden;
+
   border-radius: 18px;
+
   padding: 18px 20px;
+
   background:
-    linear-gradient(135deg, rgba(139, 92, 246, 0.14), rgba(14, 165, 233, 0.06) 70%, transparent),
+
+    linear-gradient(135deg, rgba(139, 92, 246, 0.14), rgba(138, 133, 128, 0.06) 70%, transparent),
+
     var(--v8-panel-2);
+
   border: 1px solid var(--v8-border);
+
   display: flex; gap: 14px; align-items: flex-start;
+
 }
+
+:global(.dark) .commandBanner {
+
+  background:
+
+    linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(148, 163, 184, 0.03) 70%, transparent),
+
+    var(--v8-panel-2);
+
+}
+
 .commandBanner::before {
+
   content: ""; position: absolute; inset-block: 0; inset-inline-start: 0;
+
   width: 3px; background: linear-gradient(180deg, var(--tone-solid), transparent);
+
 }
+
+
 
 /* operations mini stats */
+
 .statRow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin: 14px 0 4px; }
+
 @media (max-width: 560px) { .statRow { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
 .statCell {
+
   border-radius: 14px; border: 1px solid var(--v8-border); background: var(--v8-panel-2);
+
   padding: 10px 12px; display: flex; flex-direction: column; gap: 3px;
+
 }
+
 .statLabel { font-size: 11.5px; color: var(--v8-text-3); }
+
 .statValue { font-size: 14px; font-weight: 700; color: var(--v8-text); }
 
+
+
 /* ============================================================
+
    ACTIVITY FLOW
+
    ============================================================ */
+
 .activityList { display: flex; flex-direction: column; }
+
 .activityRow {
+
   display: flex; align-items: center; gap: 13px;
+
   padding: 12px 8px;
+
   border-radius: 14px;
+
   transition: background-color 180ms ease;
+
 }
+
 .activityRow:hover { background: var(--v8-panel-2); }
+
 .activityRow + .activityRow { border-top: 1px solid var(--v8-border); }
+
 .activityBody { flex: 1; min-width: 0; }
+
 .activityTitle { font-size: 13.5px; font-weight: 600; color: var(--v8-text); }
+
 .activityDesc { font-size: 12.5px; color: var(--v8-text-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 .activityTime { font-size: 11.5px; color: var(--v8-text-3); white-space: nowrap; }
+
 .unreadDot { width: 7px; height: 7px; border-radius: 999px; background: var(--tone-solid); flex-shrink: 0; }
 
+
+
 /* ============================================================
+
    INSIGHT RAIL
+
    ============================================================ */
+
 .insightCard { padding: 15px 16px; display: flex; flex-direction: column; gap: 9px; }
+
 .insightHead { display: flex; align-items: center; gap: 11px; }
+
 .insightTitle { font-size: 13.5px; font-weight: 700; color: var(--v8-text); }
+
 .insightDesc { font-size: 12.5px; line-height: 1.55; color: var(--v8-text-2); }
+
 .badge {
+
   display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 999px;
+
   font-size: 11px; font-weight: 700; color: var(--tone-text);
+
   background: var(--tone-bg); border: 1px solid var(--tone-border);
+
 }
 
-/* ============================================================
-   OPERATIONS CONNECTION STRIP — Horizontal compact platform nodes
-   ============================================================ */
-.connectionStrip {
-  display: flex; flex-direction: row; align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-radius: 16px;
-  background: var(--v8-panel-2);
-  border: 1px solid var(--v8-border);
-  box-shadow: var(--v8-shadow-card), var(--v8-inner-hi);
-  overflow-x: auto;
-  scrollbar-width: none;
-  margin-top: 12px;
-}
-.connectionStrip::-webkit-scrollbar { display: none; }
-.connectionStripHeader {
-  display: flex; flex-direction: column; gap: 4px;
-  min-width: 140px;
-  flex-shrink: 0;
-}
-.connectionStripTitle {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 13px; font-weight: 700; color: var(--v8-text);
-}
-.connectionStripStatus {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 11px; font-weight: 600; color: var(--v8-text-2);
-}
-.connectionStripStatusItem {
-  display: flex; align-items: center; gap: 3px;
-}
-.connectionStripGrid {
-  display: flex; flex-direction: row; align-items: center;
-  gap: 10px;
-  flex: 1;
-  min-width: 0;
-}
-.connectionNode {
-  position: relative;
-  display: flex; flex-direction: row; align-items: center; gap: 8px;
-  padding: 8px 12px;
-  border-radius: 12px;
-  background: var(--v8-panel);
-  border: 1px solid var(--v8-border);
-  min-width: 140px;
-  flex-shrink: 0;
-  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
-              background-color 160ms ease, border-color 160ms ease,
-              box-shadow 180ms ease;
-  cursor: pointer;
-}
-.connectionNode:hover {
-  transform: translateY(-2px) scale(1.01);
-  background: var(--v8-panel);
-  border-color: var(--v8-border-strong);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
-}
-.connectionNode:active { transform: scale(0.97); }
-.connectionNode[data-state="online"] { border-color: var(--tone-emerald-solid); }
-.connectionNode[data-state="offline"] { opacity: 0.7; }
-.connectionNode[data-state="pending"] { border-color: var(--tone-amber-solid); }
-.connectionNodeIcon {
-  width: 24px; height: 24px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 6px;
-  background: var(--tone-bg);
-  color: var(--tone-text);
-  flex-shrink: 0;
-}
-.connectionNodeMeta {
-  display: flex; flex-direction: column; gap: 2px;
-  min-width: 0;
-  flex: 1;
-}
-.connectionNodeName {
-  font-size: 11.5px; font-weight: 700; color: var(--v8-text);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.connectionNodeStatus {
-  display: flex; align-items: center; gap: 4px;
-  font-size: 10px; font-weight: 600; color: var(--tone-text);
-}
-.connectionNodeSignal {
-  width: 40px; height: 2px; border-radius: 999px;
-  background: var(--v8-track);
-  overflow: hidden;
-  flex-shrink: 0;
-}
-.connectionNodeSignalFill {
-  height: 100%; border-radius: 999px;
-  background: var(--tone-solid);
-  transition: width 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.connectionNodeAction {
-  font-size: 9.5px; font-weight: 600; color: var(--tone-text);
-  opacity: 0.8;
-  transition: opacity 160ms ease;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.connectionNode:hover .connectionNodeAction { opacity: 1; }
-.connectionNodeAdd {
-  display: flex; flex-direction: row; align-items: center; gap: 8px;
-  padding: 8px 16px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--tone-bg), var(--tone-bg));
-  border: 1px dashed var(--tone-border);
-  min-width: 120px;
-  flex-shrink: 0;
-  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
-              background-color 160ms ease, border-color 160ms ease;
-  cursor: pointer;
-}
-.connectionNodeAdd:hover {
-  transform: translateY(-2px) scale(1.01);
-  border-color: var(--tone-solid);
-  background: var(--tone-bg);
-}
-.connectionNodeAddIcon {
-  width: 24px; height: 24px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 6px;
-  background: var(--tone-bg);
-  color: var(--tone-text);
-  flex-shrink: 0;
-}
-.connectionNodeAdd span {
-  font-size: 11px; font-weight: 600; color: var(--tone-text);
-  white-space: nowrap;
-}
 
-/* State animations (subtle, CSS-only) */
-@keyframes onlinePulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
-}
-@keyframes pendingBreath {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.65; }
-}
-@keyframes syncingRotate {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
 
-/* Apply animations to state icons */
-.connectionNode[data-state="online"] .connectionNodeStatus svg {
-  animation: onlinePulse 2s ease-in-out infinite;
-}
-.connectionNode[data-state="pending"] .connectionNodeStatus svg {
-  animation: pendingBreath 1.5s ease-in-out infinite;
-}
-.connectionNode[data-state="syncing"] .connectionNodeStatus svg {
-  animation: syncingRotate 2s linear infinite;
-}
 
-/* Responsive: tablet */
-@media (max-width: 1024px) {
-  .connectionStrip {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .connectionStripHeader {
-    min-width: auto;
-    flex-direction: row;
-    justify-content: space-between;
-  }
-  .connectionStripGrid {
-    flex-wrap: wrap;
-  }
-  .connectionNode {
-    min-width: calc(50% - 5px);
-  }
-}
 
-/* Responsive: mobile */
-@media (max-width: 640px) {
-  .connectionStrip {
-    padding: 10px 12px;
-  }
-  .connectionStripStatus {
-    display: none;
-  }
-  .connectionNode {
-    min-width: 100%;
-  }
-  .connectionNodeAdd {
-    min-width: 100%;
-  }
-}
-
-/* ============================================================
-   CHANNEL SIGNAL BOARD — Premium platform cards under metrics (legacy fallback)
-   ============================================================ */
-.channelSignalBoard {
-  display: flex; flex-direction: column; gap: 16px;
-  padding: 18px 20px;
-  border-radius: 18px;
-  background: var(--v8-panel);
-  border: 1px solid var(--v8-border);
-  box-shadow: var(--v8-shadow-panel), var(--v8-inner-hi);
-}
-.channelSignalHeader {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 16px;
-}
-.channelSignalStatus {
-  display: flex; align-items: center; gap: 16px;
-  font-size: 12.5px; font-weight: 600; color: var(--v8-text-2);
-}
-.channelSignalStatusItem {
-  display: flex; align-items: center; gap: 6px;
-}
-.channelSignalStatusDot {
-  width: 8px; height: 8px; border-radius: 999px;
-  background: var(--tone-solid);
-}
-.channelSignalGrid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-}
-.channelSignalCard {
-  position: relative;
-  display: flex; flex-direction: column; gap: 10px;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: var(--v8-panel-2);
-  border: 1px solid var(--v8-border);
-  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
-              background-color 160ms ease, border-color 160ms ease,
-              box-shadow 180ms ease;
-  cursor: pointer;
-}
-.channelSignalCard:hover {
-  transform: translateY(-3px) scale(1.02);
-  background: var(--v8-panel);
-  border-color: var(--v8-border-strong);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
-}
-.channelSignalCard:active { transform: scale(0.97); }
-.channelSignalCardTop {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 8px;
-}
-.channelSignalCardIcon {
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 10px;
-  background: var(--tone-bg);
-  color: var(--tone-text);
-}
-.channelSignalCardStatus {
-  font-size: 11px; font-weight: 600; color: var(--tone-text);
-  padding: 3px 8px; border-radius: 999px;
-  background: var(--tone-bg); border: 1px solid var(--tone-border);
-}
-.channelSignalCardName {
-  font-size: 13.5px; font-weight: 700; color: var(--v8-text);
-}
-.channelSignalCardMeta {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 8px;
-  font-size: 11.5px; color: var(--v8-text-2);
-}
-.channelSignalCardSignal {
-  flex: 1; height: 3px; border-radius: 999px;
-  background: var(--v8-track);
-  overflow: hidden;
-}
-.channelSignalCardSignalFill {
-  height: 100%; border-radius: 999px;
-  background: var(--tone-solid);
-  transition: width 400ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.channelSignalCardAction {
-  font-size: 11px; font-weight: 600; color: var(--tone-text);
-  opacity: 0.8;
-  transition: opacity 160ms ease;
-}
-.channelSignalCard:hover .channelSignalCardAction { opacity: 1; }
 
 /* Platform glyph styles */
+
 .platformGlyph {
+
   display: inline-flex; align-items: center; justify-content: center;
+
   width: 24px; height: 24px;
+
   color: var(--tone-text);
+
 }
+
 .platformGlyph svg { width: 100%; height: 100%; }
 
-/* Add Channel CTA */
-.channelSignalAdd {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 8px;
-  padding: 14px 16px;
-  border-radius: 16px;
-  background: linear-gradient(135deg, var(--tone-bg) 0%, var(--tone-bg) 100%);
-  border: 1px solid var(--tone-border);
-  color: var(--tone-text);
-  font-size: 12.5px; font-weight: 600;
-  transition: transform 180ms cubic-bezier(0.2, 0.8, 0.2, 1),
-              background-color 160ms ease, border-color 160ms ease,
-              box-shadow 180ms ease;
-  cursor: pointer;
-}
-.channelSignalAdd:hover {
-  transform: translateY(-3px) scale(1.02);
-  background: linear-gradient(135deg, var(--tone-bg) 0%, var(--tone-bg) 100%);
-  border-color: var(--tone-solid);
-  box-shadow: 0 10px 24px var(--tone-bg);
-}
-.channelSignalAdd:active { transform: scale(0.97); }
-.channelSignalAddIcon {
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 10px;
-  background: var(--tone-solid);
-  color: #fff;
+
+
+/* ============================================================
+
+   CHANNEL COMMAND CENTER — Redesigned compact channel hub
+
+   ============================================================ */
+
+.channelCommandCenter {
+
+  position: relative;
+
+  background: var(--v8-panel);
+
+  border: 1px solid var(--v8-border);
+
+  border-radius: 24px;
+
+  box-shadow: var(--v8-shadow-panel), var(--v8-inner-hi);
+
+  padding: 28px;
+
 }
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .channelSignalGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 640px) {
-  .channelSignalGrid { grid-template-columns: 1fr; }
-  .channelSignalStatus { display: none; }
+
+
+.channelCommandHeader {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 16px;
+
+  margin-bottom: 20px;
+
 }
 
-/* Legacy dock styles (preserved but unused) */
-.channelDock {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 18px;
-  border-radius: 18px;
-  background: var(--v8-panel);
-  border: 1px solid var(--v8-border);
-  overflow-x: auto;
-  scrollbar-width: none;
+
+
+.channelCommandMeta {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+
 }
-.channelDock::-webkit-scrollbar { display: none; }
-.channelDockItem {
-  flex-shrink: 0;
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
-  padding: 12px 16px;
-  border-radius: 14px;
-  background: var(--v8-panel-2);
-  border: 1px solid var(--v8-border);
-  min-width: 72px;
-  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1),
-              background-color 180ms ease, border-color 180ms ease,
-              box-shadow 200ms ease;
-  cursor: pointer;
+
+
+
+.channelCommandTitleRow {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 12px;
+
 }
-.channelDockItem:hover {
-  transform: translateY(-4px) scale(1.05);
-  background: var(--v8-panel);
-  border-color: var(--v8-border-strong);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
-.channelDockItem:active { transform: scale(0.97); }
-.channelDockIconWrapper { position: relative; }
-.channelDockStatusDot {
-  position: absolute; bottom: -2px; right: -2px;
-  width: 10px; height: 10px; border-radius: 999px;
-  border: 2px solid var(--v8-panel-2);
-  background: var(--tone-solid);
-}
-.channelDockName {
-  font-size: 11.5px; font-weight: 600; color: var(--v8-text);
-  text-align: center; max-width: 80px;
-  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.channelDockAdd {
-  flex-shrink: 0;
-  display: flex; align-items: center; gap: 8px;
-  padding: 12px 20px;
-  border-radius: 14px;
-  background: transparent;
-  border: 1px dashed var(--v8-border-strong);
+
+
+
+.channelCommandSubtitle {
+
+  font-size: 13px;
+
   color: var(--v8-text-2);
-  font-size: 12.5px; font-weight: 600;
-  transition: border-color 180ms ease, color 180ms ease, transform 180ms ease;
-  cursor: pointer;
-}
-.channelDockAdd:hover {
-  border-color: var(--tone-border);
-  color: var(--tone-text);
-  transform: translateY(-2px);
-}
-.channelDockAdd:active { transform: scale(0.97); }
 
-/* Legacy grid fallback (unused but preserved) */
-.channelGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; }
-@media (max-width: 1024px) { .channelGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (max-width: 560px) { .channelGrid { grid-template-columns: 1fr; } }
-.channelCard { padding: 16px; display: flex; flex-direction: column; gap: 11px; align-items: flex-start; }
-.channelName { font-size: 14px; font-weight: 700; color: var(--v8-text); }
-.channelStatus { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--tone-text); }
-.channelAddCard {
-  padding: 16px; display: flex; flex-direction: column; gap: 8px;
-  align-items: center; justify-content: center; text-align: center;
-  border: 1px dashed var(--v8-border-strong); border-radius: 18px;
-  background: transparent; color: var(--v8-text-2);
-  transition: border-color 200ms ease, color 200ms ease, transform 200ms ease;
-}
-.channelAddCard:hover { color: var(--tone-text); border-color: var(--tone-border); transform: translateY(-3px); }
+  line-height: 1.5;
 
-/* ============================================================
-   ICON FRAMES + micro-motion (useAnimations-inspired)
-   ============================================================ */
-.iconFrame {
-  display: inline-flex; align-items: center; justify-content: center;
-  border-radius: 13px;
-  color: var(--tone-text);
+}
+
+
+
+.channelCommandBadges {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  flex-wrap: wrap;
+
+  flex-shrink: 0;
+
+}
+
+
+
+.channelStatusBadge {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
   background: var(--tone-bg);
+
   border: 1px solid var(--tone-border);
-  box-shadow: var(--v8-inner-hi);
-  transition: transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
-              box-shadow 220ms ease, filter 220ms ease;
+
+  color: var(--tone-text);
+
 }
-.iconHoverHost:hover .iconFrame,
-.iconFrame:hover {
-  transform: translateY(-3px) rotate(-2deg) scale(1.02);
-  box-shadow: 0 10px 24px var(--tone-bg), var(--v8-inner-hi);
-  filter: saturate(1.2) brightness(1.05);
+
+
+
+.channelBadgeDot {
+
+  width: 7px;
+
+  height: 7px;
+
+  border-radius: 999px;
+
+  background: var(--tone-solid);
+
+  flex-shrink: 0;
+
 }
-.iconHoverHost:active .iconFrame,
-.iconFrame:active { transform: scale(0.96) rotate(0deg); }
+
+
+
+/* Channel Card Grid — flat wrap (no accordion groups) */
+
+.channelCommandGrid {
+
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+}
+
+
+
+/* Individual Channel Card — Compact Operational Row */
+
+.channelCommandCard {
+
+  position: relative;
+
+  display: flex;
+
+  flex-direction: row;
+
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 10px 14px;
+
+  border-radius: 14px;
+
+  background: var(--v8-card);
+
+  border: 1px solid var(--v8-border);
+
+  box-shadow: var(--v8-shadow-card), var(--v8-inner-hi);
+
+  transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1),
+
+              border-color 200ms ease, box-shadow 200ms ease;
+
+  cursor: pointer;
+
+  text-align: start;
+
+  overflow: hidden;
+
+}
+
+.channelCommandCard:hover {
+
+  transform: translateY(-1px);
+
+  border-color: var(--v8-border-strong);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07), var(--v8-inner-hi);
+
+}
+
+.channelCommandCard:active {
+
+  transform: scale(0.99) translateY(0);
+
+}
+
+/* Flat grid sizing: 2 per row on desktop, stack on mobile */
+
+.channelCommandGrid .channelCommandCard {
+
+  flex: 1 1 calc(50% - 4px);
+
+  min-width: 240px;
+
+  max-width: 100%;
+
+}
+
+.channelCommandCard[data-state="offline"] {
+
+  opacity: 0.75;
+
+}
+
+.channelCommandCard:focus-visible {
+
+  outline: 2px solid var(--tone-solid);
+
+  outline-offset: 2px;
+
+}
+
+
+
+/* Card Icon (row layout) */
+
+.channelCommandCardIcon {
+
+  width: 40px;
+
+  height: 40px;
+
+  min-width: 40px;
+
+  min-height: 40px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: var(--tone-bg);
+
+  color: var(--tone-text);
+
+  border: 1px solid var(--tone-border);
+
+  box-shadow: var(--v8-icon-frame-shadow);
+
+  transition: transform var(--v8-motion-smooth) var(--v8-motion-ease),
+
+              box-shadow var(--v8-motion-smooth) ease;
+
+  flex-shrink: 0;
+
+}
+
+.iconHoverHost:hover .channelCommandCardIcon,
+
+.channelCommandCardIcon:hover {
+
+  transform: translateY(-2px) scale(1.015);
+
+  box-shadow: var(--v8-icon-frame-shadow-hover);
+
+}
+
+.channelCommandCardIcon .platformGlyph {
+
+  width: 20px;
+
+  height: 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+}
+
+
+
+/* Card Body — name + meta stack */
+
+.channelCommandCardBody {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+
+  flex: 1;
+
+  min-width: 0;
+
+}
+
+
+
+/* Card Right — status + action */
+
+.channelCommandCardRight {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: flex-end;
+
+  gap: 4px;
+
+  flex-shrink: 0;
+
+}
+
+
+
+/* Brand Context Capsule */
+
+.brandContextCapsule {
+
+  position: relative;
+
+  display: grid;
+
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+
+  align-items: center;
+
+  gap: 12px;
+
+  min-height: 64px;
+
+  padding: 10px 14px;
+
+  margin-bottom: 14px;
+
+  border-radius: 16px;
+
+  background:
+
+    linear-gradient(135deg, rgba(139, 92, 246, 0.08), transparent 58%),
+
+    var(--v8-card);
+
+  border: 1px solid var(--v8-border);
+
+  box-shadow: var(--v8-shadow-card), var(--v8-inner-hi);
+
+  overflow: hidden;
+
+  transition: border-color 200ms ease, box-shadow 200ms ease;
+
+}
+
+.brandContextCapsule:hover {
+
+  border-color: var(--v8-border-strong);
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), var(--v8-inner-hi);
+
+}
+
+.brandContextFrame {
+
+  width: 44px;
+
+  height: 44px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: var(--tone-bg);
+
+  color: var(--tone-text);
+
+  border: 1px solid var(--tone-border);
+
+  box-shadow: var(--v8-icon-frame-shadow);
+
+  transition: transform var(--v8-motion-smooth) var(--v8-motion-ease),
+
+              box-shadow var(--v8-motion-smooth) ease;
+
+  flex-shrink: 0;
+
+}
+
+.brandContextCapsule:hover .brandContextFrame {
+
+  transform: translateY(-2px) scale(1.015);
+
+  box-shadow: var(--v8-icon-frame-shadow-hover);
+
+}
+
+
+
+.brandContextInitials {
+
+  font-size: 18px;
+
+  font-weight: 800;
+
+  line-height: 1;
+
+  letter-spacing: -0.02em;
+
+}
+
+
+
+.brandContextImage {
+
+  width: 44px;
+
+  height: 44px;
+
+  border-radius: 12px;
+
+  object-fit: cover;
+
+  border: 1px solid var(--tone-border);
+
+  box-shadow: var(--v8-icon-frame-shadow);
+
+  transition: transform var(--v8-motion-smooth) var(--v8-motion-ease),
+
+              box-shadow var(--v8-motion-smooth) ease;
+
+  flex-shrink: 0;
+
+}
+
+.brandContextCapsule:hover .brandContextImage {
+
+  transform: translateY(-2px) scale(1.015);
+
+  box-shadow: var(--v8-icon-frame-shadow-hover);
+
+}
+
+
+
+.brandContextMeta {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+
+  flex: 1;
+
+  min-width: 0;
+
+}
+
+.brandContextName {
+
+  font-size: 14.5px;
+
+  font-weight: 750;
+
+  color: var(--v8-text);
+
+  line-height: 1.25;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+}
+
+.brandContextLine {
+
+  font-size: 12px;
+
+  color: var(--v8-text-2);
+
+  line-height: 1.45;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+}
+
+.brandContextAction {
+
+  font-size: 11px;
+
+  font-weight: 650;
+
+  color: var(--tone-text);
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  background: rgba(139, 92, 246, 0.10);
+
+  border: 1px solid var(--tone-border);
+
+  cursor: pointer;
+
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+
+  flex-shrink: 0;
+
+}
+
+.brandContextAction:hover {
+
+  background: var(--tone-bg);
+
+  border-color: var(--v8-border-strong);
+
+  transform: translateY(-1px);
+
+}
+
+
+
+/* Settings CTA */
+
+.channelSettingsCta {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 8px 14px;
+
+  border-radius: 12px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  color: var(--v8-text-2);
+
+  background: var(--v8-card);
+
+  border: 1px solid var(--v8-border);
+
+  cursor: pointer;
+
+  transition: border-color 200ms ease, color 200ms ease;
+
+  flex-shrink: 0;
+
+}
+
+.channelSettingsCta:hover {
+
+  color: var(--v8-text);
+
+  border-color: var(--v8-border-strong);
+
+}
+
+
+
+/* Manage Channels CTA */
+
+.channelManageCta {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 8px;
+
+  width: min(100%, 260px);
+
+  margin: 16px auto 0;
+
+  padding: 9px 16px;
+
+  border-radius: 12px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  color: var(--v8-text-2);
+
+  background: var(--v8-card);
+
+  border: 1px solid var(--v8-border);
+
+  cursor: pointer;
+
+  transition: transform 180ms ease, background 160ms ease, border-color 160ms ease, color 160ms ease;
+
+}
+
+.channelManageCta:hover {
+
+  transform: translateY(-1px);
+
+  color: var(--tone-text);
+
+  background: var(--tone-bg);
+
+  border-color: var(--v8-border-strong);
+
+}
+
+
+
+/* Status Icon — small tone-aware indicator (replaces text chip) */
+
+.channelStatusIcon {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  width: 22px;
+
+  height: 22px;
+
+  border-radius: 7px;
+
+  background: var(--tone-bg);
+
+  border: 1px solid var(--tone-border);
+
+  color: var(--tone-text);
+
+  flex-shrink: 0;
+
+  transition: transform 160ms ease;
+
+}
+
+.channelCommandCard:hover .channelStatusIcon {
+
+  transform: scale(1.08);
+
+}
+
+
+
+/* Card Name, Meta & Action */
+
+.channelCommandCardName {
+
+  font-size: 13.5px;
+
+  font-weight: 700;
+
+  color: var(--v8-text);
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+}
+
+
+
+.channelCommandCardMeta {
+
+  font-size: 11.5px;
+
+  color: var(--v8-text-2);
+
+  line-height: 1.4;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+}
+
+
+
+.channelCommandCardAction {
+
+  font-size: 11.5px;
+
+  font-weight: 600;
+
+  color: var(--tone-text);
+
+  opacity: 0.7;
+
+  transition: opacity 160ms ease;
+
+}
+
+.channelCommandCard:hover .channelCommandCardAction {
+
+  opacity: 1;
+
+}
+
+
+
+/* Add Channel Card */
+
+.channelCommandAdd {
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+
+  padding: 18px;
+
+  border-radius: 18px;
+
+  background: transparent;
+
+  border: 1.5px dashed var(--v8-border-strong);
+
+  color: var(--v8-text-2);
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  transition: border-color 200ms ease, color 200ms ease, transform 200ms ease;
+
+  cursor: pointer;
+
+  min-height: 100%;
+
+}
+
+.channelCommandAdd:hover {
+
+  border-color: var(--tone-border);
+
+  color: var(--tone-text);
+
+  transform: translateY(-2px);
+
+}
+
+
+
+.channelCommandAddIcon {
+
+  width: 40px;
+
+  height: 40px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: var(--tone-bg);
+
+  color: var(--tone-text);
+
+  border: 1px solid var(--tone-border);
+
+  box-shadow: var(--v8-icon-frame-shadow);
+
+  transition: transform var(--v8-motion-smooth) var(--v8-motion-ease),
+
+              box-shadow var(--v8-motion-smooth) ease;
+
+}
+
+.channelCommandAdd:hover .channelCommandAddIcon {
+
+  transform: translateY(-2px) scale(1.015);
+
+  box-shadow: var(--v8-icon-frame-shadow-hover);
+
+}
+
+
 
 /* ============================================================
-   BUTTONS
-   ============================================================ */
-.btn {
-  position: relative; overflow: hidden; isolation: isolate;
-  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  height: 46px; padding-inline: 20px;
-  border-radius: 14px;
-  font-size: 14px; font-weight: 700;
-  cursor: pointer; user-select: none;
-  border: 1px solid transparent;
-  transition: transform 150ms cubic-bezier(0.34, 1.56, 0.64, 1),
-              box-shadow 200ms ease, border-color 200ms ease, background-color 200ms ease;
-}
-.btn:focus-visible { outline: 2px solid var(--tone-solid); outline-offset: 2px; }
-.btn:active { transform: scale(0.97); }
-/* keep label + icon above decorative sweep/aurora layers */
-.btn > span:not(.sweep):not(.aurora):not(.auroraMask) { position: relative; z-index: 2; }
 
-/* primary — liquid sweep */
+   ICON FRAMES + micro-motion (useAnimations-inspired)
+
+   ============================================================ */
+
+.iconFrame {
+
+  display: inline-flex; align-items: center; justify-content: center;
+
+  border-radius: 13px;
+
+  color: var(--tone-text);
+
+  background: var(--tone-bg);
+
+  border: 1px solid var(--tone-border);
+
+  box-shadow: var(--v8-icon-frame-shadow);
+
+  transition: transform var(--v8-motion-smooth) var(--v8-motion-ease),
+
+              box-shadow var(--v8-motion-smooth) ease;
+
+}
+
+.iconHoverHost:hover .iconFrame,
+
+.iconFrame:hover {
+
+  transform: translateY(-2px) scale(1.015);
+
+  box-shadow: var(--v8-icon-frame-shadow-hover);
+
+}
+
+.iconHoverHost:active .iconFrame,
+
+.iconFrame:active { transform: scale(0.98); }
+
+
+
+/* ============================================================
+
+   BUTTONS
+
+   ============================================================ */
+
+.btn {
+
+  position: relative; isolation: isolate;
+
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+
+  height: 44px; padding-inline: 28px;
+
+  border-radius: 22px;
+
+  font-size: 14px; font-weight: 700;
+
+  cursor: pointer; user-select: none;
+
+  border: 1px solid transparent;
+
+  white-space: nowrap;
+
+  transition: transform 150ms var(--v8-motion-ease),
+
+              box-shadow 200ms ease, border-color 200ms ease, background-color 200ms ease;
+
+}
+
+.btn:focus-visible { outline: 2px solid var(--tone-solid); outline-offset: 2px; }
+
+.btn:active { transform: scale(0.97); }
+
+/* keep label + icon above aurora decorative layer */
+
+.btn > span:not(.aurora):not(.auroraMask) { position: relative; z-index: 2; }
+
+
+
+/* primary — clean violet gradient pill */
+
 .btnPrimary {
+
   color: #fff;
-  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 50%, #0ea5e9 120%);
+
+  overflow: hidden;
+
+  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+
   box-shadow: 0 10px 24px rgba(99, 102, 241, 0.32);
+
 }
+
 .btnPrimary .iconFrame {
+
   color: #fff !important;
+
   background: rgba(255, 255, 255, 0.15) !important;
+
   border-color: rgba(255, 255, 255, 0.25) !important;
+
 }
-.btnPrimary .sweep {
-  content: ""; position: absolute; inset: 0;
-  background: linear-gradient(120deg, transparent 20%, rgba(255, 255, 255, 0.45) 50%, transparent 80%);
-  transform: translateX(-120%);
-  pointer-events: none;
+
+.btnPrimary:hover { box-shadow: 0 14px 32px rgba(99, 102, 241, 0.46); transform: translateY(-1px); }
+
+.btnPrimary:active { transform: scale(0.96) translateY(0); }
+
+
+
+/* Smaller icon frame inside buttons */
+
+.btn .iconFrame {
+
+  width: 24px !important;
+
+  height: 24px !important;
+
+  border-radius: 8px !important;
+
 }
-.btnPrimary:hover { box-shadow: 0 14px 30px rgba(99, 102, 241, 0.42); }
-.btnPrimary:hover .sweep { animation: v8Sweep 720ms cubic-bezier(0.2, 0.8, 0.2, 1); }
-:global([dir="rtl"]) .btnPrimary .sweep { transform: translateX(120%); }
-:global([dir="rtl"]) .btnPrimary:hover .sweep { animation: v8SweepRtl 720ms cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+.btn .iconFrame svg {
+
+  width: 14px !important;
+
+  height: 14px !important;
+
+}
+
+
 
 /* secondary — aurora border */
+
 .btnSecondary {
+
   color: var(--v8-text);
+
   background: var(--v8-panel);
+
   border-color: var(--v8-border-strong);
+
 }
+
 .btnSecondary .aurora {
-  position: absolute; inset: -2px; border-radius: inherit; z-index: 0;
+
+  position: absolute; inset: 0; border-radius: inherit; z-index: 0;
+
   background: conic-gradient(from 0deg, #8b5cf6, #0ea5e9, #10b981, #f59e0b, #8b5cf6);
-  filter: blur(9px); opacity: 0; transform: scale(0.98);
+
+  filter: blur(6px); opacity: 0; transform: scale(0.95);
+
   transition: opacity 200ms ease, transform 200ms ease; pointer-events: none;
+
 }
-.btnSecondary:hover { border-color: transparent; }
-.btnSecondary:hover .aurora { opacity: 0.55; transform: scale(1.03); }
+
+.btnSecondary:hover { border-color: transparent; transform: translateY(-1px); }
+
+.btnSecondary:hover .aurora { opacity: 0.65; transform: scale(1.06); }
+
+.btnSecondary:active { transform: scale(0.97) translateY(0); }
+
 .btnSecondary .auroraMask {
+
   position: absolute; inset: 1px; border-radius: inherit; background: var(--v8-panel); z-index: 1; pointer-events: none;
+
 }
+
+
 
 /* mini / ghost */
+
 .btnMini {
+
   height: 34px; padding-inline: 13px; border-radius: 11px;
+
   font-size: 12.5px; font-weight: 600;
+
   color: var(--tone-text); background: var(--tone-bg); border-color: var(--tone-border);
+
+  transition: transform 160ms cubic-bezier(0.2, 0.8, 0.2, 1),
+
+              box-shadow 180ms ease, border-color 180ms ease, background-color 180ms ease;
+
 }
-.btnMini:hover { transform: translateY(-1px); }
+
+.btnMini:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06); }
+
+.btnMini:active { transform: scale(0.97); }
+
+.btnMini:focus-visible { outline: 2px solid var(--tone-solid); outline-offset: 2px; }
+
+
 
 /* ============================================================
+
    REVEAL ANIMATIONS
+
    ============================================================ */
+
 .reveal { opacity: 0; transform: translateY(10px); animation: v8Reveal 280ms cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+
 .r1 { animation-delay: 40ms; }
+
 .r2 { animation-delay: 90ms; }
+
 .r3 { animation-delay: 140ms; }
+
 .r4 { animation-delay: 190ms; }
+
 .r5 { animation-delay: 240ms; }
 
+
+
 @keyframes v8Reveal { to { opacity: 1; transform: translateY(0); } }
+
 @keyframes v8Pulse { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(2.4); opacity: 0; } }
+
 @keyframes v8BarGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-@keyframes v8Sweep { from { transform: translateX(-120%); } to { transform: translateX(120%); } }
-@keyframes v8SweepRtl { from { transform: translateX(120%); } to { transform: translateX(-120%); } }
+
+
 
 /* ============================================================
+
    REDUCED MOTION
+
    ============================================================ */
+
 @media (prefers-reduced-motion: reduce) {
+
   .reveal { animation: none; opacity: 1; transform: none; }
+
   .metricBarFill { animation: none; transform: scaleX(1); }
+
   .statusDot::after { animation: none; opacity: 0; }
-  .btnPrimary:hover .sweep,
-  :global([dir="rtl"]) .btnPrimary:hover .sweep { animation: none; }
-  .card, .iconFrame, .btn, .channelAddCard, .channelDockItem, .channelDockAdd,
-  .channelSignalCard, .channelSignalAdd, .connectionNode, .connectionNodeAdd { transition: none; }
-  .cardInteractive:hover, .channelAddCard:hover, .channelDockItem:hover,
-  .channelDockAdd:hover, .channelSignalCard:hover, .channelSignalAdd:hover,
-  .connectionNode:hover, .connectionNodeAdd:hover { transform: none; }
-  .iconHoverHost:hover .iconFrame, .iconFrame:hover { transform: none; filter: none; }
-  .channelSignalCardSignalFill, .connectionNodeSignalFill { transition: none; }
-  .connectionNode[data-state="online"] .connectionNodeStatus svg,
-  .connectionNode[data-state="pending"] .connectionNodeStatus svg,
-  .connectionNode[data-state="syncing"] .connectionNodeStatus svg { animation: none; }
+
+  .card, .iconFrame, .btn, .btnMini,
+
+  .channelCommandCard, .channelCommandCardIcon, .brandContextFrame,
+
+  .brandContextImage, .channelCommandAddIcon, .channelStatusIcon { transition: none; }
+
+  .cardInteractive:hover, .channelCommandCard:hover,
+
+  .btn:hover, .btnPrimary:hover, .btnSecondary:hover, .btnMini:hover { transform: none; }
+
+  .iconHoverHost:hover .iconFrame, .iconFrame:hover,
+
+  .iconHoverHost:hover .channelCommandCardIcon, .channelCommandCardIcon:hover,
+
+  .brandContextCapsule:hover .brandContextFrame, .brandContextFrame:hover,
+
+  .brandContextCapsule:hover .brandContextImage, .brandContextImage:hover,
+
+  .channelCommandAdd:hover .channelCommandAddIcon, .channelCommandAddIcon:hover,
+
+  .channelCommandCard:hover .channelStatusIcon { transform: none; filter: none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 8px 18px rgba(0,0,0,0.12); }
+
+  .btnMini { will-change: auto; }
+
 }
+
+
+
+/* Channel Center Micro Polish Mobile Patch */
+
+@media (max-width: 560px) {
+
+  .brandContextCapsule {
+
+    grid-template-columns: 44px minmax(0, 1fr);
+
+  }
+
+
+
+  .brandContextAction {
+
+    grid-column: 1 / -1;
+
+    justify-self: stretch;
+
+    text-align: center;
+
+  }
+
+
+
+  .channelManageCta {
+
+    width: 100%;
+
+  }
+
+
+
+  .channelCommandGrid {
+
+    gap: 10px;
+
+  }
+
+
+
+  .channelCommandGrid .channelCommandCard {
+
+    flex: 1 1 100%;
+
+    min-width: 0;
+
+  }
+
+}
+
+
+

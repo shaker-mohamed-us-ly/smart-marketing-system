@@ -7,8 +7,6 @@ export interface AppShellProps extends HTMLAttributes<HTMLDivElement> {
   platform: "client" | "control";
   children: React.ReactNode;
   activeItem?: string;
-  sidebarCollapsed?: boolean;
-  onSidebarCollapseChange?: (collapsed: boolean) => void;
 }
 
 const AppShell = forwardRef<HTMLDivElement, AppShellProps>(
@@ -17,8 +15,6 @@ const AppShell = forwardRef<HTMLDivElement, AppShellProps>(
       platform,
       children,
       activeItem,
-      sidebarCollapsed = false,
-      onSidebarCollapseChange,
       className,
       ...props
     },
@@ -33,8 +29,6 @@ const AppShell = forwardRef<HTMLDivElement, AppShellProps>(
         <AppSidebar
           platform={platform}
           activeItem={activeItem}
-          collapsed={sidebarCollapsed}
-          onCollapseChange={onSidebarCollapseChange}
         />
         <div className="flex-1 flex flex-col min-w-0">
           <AppHeader platform={platform} />

@@ -1,13 +1,14 @@
 "use client";
 
 import { cn } from "@/lib/utils/cn";
-import { HTMLAttributes, forwardRef, useState, useMemo } from "react";
+import { HTMLAttributes, forwardRef, useMemo } from "react";
 import { NavItem } from "./NavItem";
-import { Button } from "@/components/shared/Button";
-import { ChevronLeft, ChevronRight, Sparkles, Cpu, Globe } from "lucide-react";
+import { Cpu } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { getIconForRoute } from "@/components/shared/icons/icon-registry";
-import { AppIcon } from "@/components/shared/icons/AppIcon";
+import { useTheme } from "@/components/shared/theme/ThemeProvider";
+import { usePathname } from "next/navigation";
+import styles from "./AppShell.module.css";
 
 export interface SidebarItem {
   href: string;
@@ -19,137 +20,151 @@ export interface AppSidebarProps extends HTMLAttributes<HTMLDivElement> {
   platform: "client" | "control";
   items?: SidebarItem[];
   activeItem?: string;
-  collapsed?: boolean;
-  onCollapseChange?: (collapsed: boolean) => void;
 }
 
-const clientNavigationBase: SidebarItem[] = [
-  { href: "/client/dashboard", label: "dashboard", icon: getIconForRoute("/client/dashboard") },
-  { href: "/client/brand", label: "brands", icon: getIconForRoute("/client/brand") },
-  { href: "/client/brand-dna", label: "brandDNA", icon: getIconForRoute("/client/brand-dna") },
-  { href: "/client/campaigns", label: "campaigns", icon: getIconForRoute("/client/campaigns") },
-  { href: "/client/content-studio", label: "contentStudio", icon: getIconForRoute("/client/content-studio") },
-  { href: "/client/analytics", label: "analytics", icon: getIconForRoute("/client/analytics") },
-  { href: "/client/recommendations", label: "recommendations", icon: getIconForRoute("/client/recommendations") },
-  { href: "/client/settings", label: "settings", icon: getIconForRoute("/client/settings") },
-  { href: "/client/account", label: "account", icon: getIconForRoute("/client/account") },
+export interface SidebarSection {
+  sectionKey: string;
+  items: SidebarItem[];
+}
+
+const clientNavigationSections: SidebarSection[] = [
+  {
+    sectionKey: "sectionCommand",
+    items: [
+      { href: "/client/dashboard", label: "dashboard", icon: getIconForRoute("/client/dashboard") },
+      { href: "/client/brand", label: "brands", icon: getIconForRoute("/client/brand") },
+      { href: "/client/brand-dna", label: "brandDNA", icon: getIconForRoute("/client/brand-dna") },
+      { href: "/client/campaigns", label: "campaigns", icon: getIconForRoute("/client/campaigns") },
+    ],
+  },
+  {
+    sectionKey: "sectionStudio",
+    items: [
+      { href: "/client/content-studio", label: "contentStudio", icon: getIconForRoute("/client/content-studio") },
+      { href: "/client/analytics", label: "analytics", icon: getIconForRoute("/client/analytics") },
+      { href: "/client/recommendations", label: "recommendations", icon: getIconForRoute("/client/recommendations") },
+    ],
+  },
+  {
+    sectionKey: "sectionSystem",
+    items: [
+      { href: "/client/settings", label: "settings", icon: getIconForRoute("/client/settings") },
+      { href: "/client/account", label: "account", icon: getIconForRoute("/client/account") },
+    ],
+  },
 ];
 
-const controlNavigationBase: SidebarItem[] = [
-  { href: "/control/overview", label: "overview", icon: getIconForRoute("/control/overview") },
-  { href: "/control/clients", label: "clients", icon: getIconForRoute("/control/clients") },
-  { href: "/control/ai-brain", label: "aiBrain", icon: getIconForRoute("/control/ai-brain") },
-  { href: "/control/integrations", label: "integrations", icon: getIconForRoute("/control/integrations") },
-  { href: "/control/learning-center", label: "learningCenter", icon: getIconForRoute("/control/learning-center") },
-  { href: "/control/monitoring", label: "monitoring", icon: getIconForRoute("/control/monitoring") },
-  { href: "/control/billing", label: "billing", icon: getIconForRoute("/control/billing") },
-  { href: "/control/backup", label: "backup", icon: getIconForRoute("/control/backup") },
-  { href: "/control/system-settings", label: "systemSettings", icon: getIconForRoute("/control/system-settings") },
+const controlNavigationSections: SidebarSection[] = [
+  {
+    sectionKey: "sectionCommand",
+    items: [
+      { href: "/control/overview", label: "overview", icon: getIconForRoute("/control/overview") },
+      { href: "/control/clients", label: "clients", icon: getIconForRoute("/control/clients") },
+      { href: "/control/ai-brain", label: "aiBrain", icon: getIconForRoute("/control/ai-brain") },
+      { href: "/control/integrations", label: "integrations", icon: getIconForRoute("/control/integrations") },
+    ],
+  },
+  {
+    sectionKey: "sectionStudio",
+    items: [
+      { href: "/control/learning-center", label: "learningCenter", icon: getIconForRoute("/control/learning-center") },
+      { href: "/control/monitoring", label: "monitoring", icon: getIconForRoute("/control/monitoring") },
+      { href: "/control/billing", label: "billing", icon: getIconForRoute("/control/billing") },
+    ],
+  },
+  {
+    sectionKey: "sectionSystem",
+    items: [
+      { href: "/control/backup", label: "backup", icon: getIconForRoute("/control/backup") },
+      { href: "/control/system-settings", label: "systemSettings", icon: getIconForRoute("/control/system-settings") },
+    ],
+  },
 ];
+
+const LogoImg = () => {
+  const { theme } = useTheme();
+  const t = useTranslations('common');
+  return (
+    <img
+      src={theme === "dark" ? "/brand/sms-logo-light.svg" : "/brand/sms-logo-dark.svg"}
+      alt={t("logoAlt")}
+      className={styles.sidebarLogo}
+    />
+  );
+};
 
 const AppSidebar = forwardRef<HTMLDivElement, AppSidebarProps>(
-  ({ platform, items, activeItem, collapsed = false, onCollapseChange, className, ...props }, ref) => {
-    const [isCollapsed, setIsCollapsed] = useState(collapsed);
+  ({ platform, items, activeItem, className, ...props }, ref) => {
     const t = useTranslations('common');
     const tSidebar = useTranslations('sidebar');
+    const pathname = usePathname();
+    const effectiveActiveItem = activeItem ?? pathname;
 
-    const handleCollapse = () => {
-      const newCollapsed = !isCollapsed;
-      setIsCollapsed(newCollapsed);
-      onCollapseChange?.(newCollapsed);
-    };
-
-    const navigationItems = useMemo(() => {
-      const baseItems = platform === "client" ? clientNavigationBase : controlNavigationBase;
-      return baseItems.map(item => ({
-        ...item,
-        label: t(item.label)
+    const navigationSections = useMemo(() => {
+      const baseSections = platform === "client" ? clientNavigationSections : controlNavigationSections;
+      return baseSections.map(section => ({
+        sectionKey: section.sectionKey,
+        sectionLabel: tSidebar(section.sectionKey),
+        items: section.items.map(item => ({
+          ...item,
+          label: t(item.label)
+        }))
       }));
-    }, [platform, t]);
+    }, [platform, t, tSidebar]);
 
     return (
       <aside
         ref={ref}
-        className={cn(
-          "flex flex-col border-r border-border/60 bg-card/80",
-          "transition-all duration-300",
-          isCollapsed ? "w-20" : "w-64",
-          className
-        )}
+        className={cn(styles.sidebar, className)}
         {...props}
       >
-        <div className="flex items-center justify-between p-6 border-b border-border/60">
-          {!isCollapsed && (
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-600 to-emerald-500 flex items-center justify-center">
-                {platform === "client" ? (
-                  <Globe className="h-5 w-5 text-white" />
-                ) : (
-                  <Cpu className="h-5 w-5 text-white" />
-                )}
-              </div>
-              <div>
-                <h2 className="font-semibold text-sm">
-                  {platform === "client" ? tSidebar("client") : tSidebar("control")}
-                </h2>
-                <p className="text-xs text-muted-foreground">{tSidebar("platform")}</p>
-              </div>
+        <div className={styles.sidebarHeader}>
+          <div className={styles.sidebarBrand}>
+            <div className={styles.sidebarBrandIcon}>
+              <LogoImg />
             </div>
-          )}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleCollapse}
-            aria-label={isCollapsed ? tSidebar('expandSidebar') : tSidebar('collapseSidebar')}
-            className={cn("ml-auto", isCollapsed && "mx-auto")}
-          >
-            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-          </Button>
+          </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-          {navigationItems.map((item) => (
-            <NavItem
-              key={item.href}
-              href={item.href}
-              label={item.label}
-              icon={item.icon}
-              active={activeItem === item.href}
-              collapsed={isCollapsed}
-            />
+        <nav className={styles.sidebarNav}>
+          {navigationSections.map((section) => (
+            <div key={section.sectionKey} style={{ display: 'flex', flexDirection: 'column' }}>
+              <div className={styles.navSectionLabel}>{section.sectionLabel}</div>
+              {section.items.map((item) => (
+                <NavItem
+                  key={item.href}
+                  href={item.href}
+                  label={item.label}
+                  icon={item.icon}
+                  active={effectiveActiveItem === item.href}
+                />
+              ))}
+            </div>
           ))}
         </nav>
 
-        {!isCollapsed && (
-          <div className="p-4 border-t border-border/60">
-            <div className="relative overflow-hidden p-3 rounded-xl bg-gradient-to-br from-violet-600/10 to-cyan-500/10 border border-border/60">
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center">
-                    <Cpu className="h-4 w-4 text-white" />
-                  </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{tSidebar("systemIntelligence")}</p>
-                    <p className="text-xs text-muted-foreground">{tSidebar("learningActive")}</p>
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">{tSidebar("health")}</span>
-                    <span className="text-success font-medium">98%</span>
-                  </div>
-                  <div className="h-1.5 w-full rounded-full bg-secondary/50 overflow-hidden">
-                    <div className="h-full w-[98%] rounded-full bg-gradient-to-r from-violet-600 to-cyan-500" />
-                  </div>
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">{tSidebar("learning")}</span>
-                    <span className="text-primary font-medium">{tSidebar("active")}</span>
-                  </div>
-                </div>
+        <div className={styles.sidebarWidget}>
+            <div className={styles.widgetHeader}>
+              <div className={styles.widgetIcon}>
+                <Cpu style={{ width: 15, height: 15 }} strokeWidth={1.75} />
+              </div>
+              <div>
+                <div className={styles.widgetTitle}>{tSidebar("systemIntelligence")}</div>
+                <div className={styles.widgetSubtitle}>{tSidebar("learningActive")}</div>
               </div>
             </div>
+            <div className={styles.widgetRow} style={{ marginBottom: 8 }}>
+              <span className={styles.widgetLabel}>{tSidebar("health")}</span>
+              <span className={styles.widgetValue}>98%</span>
+            </div>
+            <div className={styles.widgetBarTrack} style={{ marginBottom: 10 }}>
+              <div className={styles.widgetBarFill} style={{ width: "98%" }} />
+            </div>
+            <div className={styles.widgetRow}>
+              <span className={styles.widgetLabel}>{tSidebar("learning")}</span>
+              <span className={styles.widgetValue}>{tSidebar("active")}</span>
+            </div>
           </div>
-        )}
       </aside>
     );
   }

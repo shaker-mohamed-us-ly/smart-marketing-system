@@ -132,7 +132,9 @@ export default async function ClientDashboardV8() {
 
           <DashboardV8ChannelDock
             title={tr("channels.title")}
-            addChannelLabel={tr("channels.addChannelLabel")}
+            subtitle={tr("channels.subtitle")}
+            settingsLabel={tr("channels.settingsLabel")}
+            manageChannelsLabel={tr("channels.manageChannelsLabel")}
             onlineCount={2}
             offlineCount={1}
             pendingCount={1}
@@ -140,6 +142,14 @@ export default async function ClientDashboardV8() {
             offlineLabel={tr("channels.offlineLabel")}
             pendingStatusLabel={tr("channels.pendingStatusLabel")}
             syncingLabel={tr("channels.syncingLabel")}
+            groupOnlineLabel={tr("channels.groupOnlineLabel")}
+            groupOfflineLabel={tr("channels.groupOfflineLabel")}
+            groupPendingLabel={tr("channels.groupPendingLabel")}
+            groupSyncingLabel={tr("channels.groupSyncingLabel")}
+            brandName={tr("channels.brandName")}
+            brandMeta={tr("channels.brandMeta")}
+            brandActionLabel={tr("channels.viewBrandInfo")}
+            brandLogoUrl={undefined}
             channels={channels.map((channel) => {
               let actionLabel: string;
               if (channel.state === "online") {
@@ -156,8 +166,8 @@ export default async function ClientDashboardV8() {
                 platformKey: channel.platformKey,
                 tone: channel.tone,
                 state: channel.state,
-                signalLevel: channel.signalLevel,
                 name: tr(`channels.items.${channel.key}.name`),
+                metaLabel: tr(`channels.items.${channel.key}.meta`),
                 actionLabel,
               };
             })}

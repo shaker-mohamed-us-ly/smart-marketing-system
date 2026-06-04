@@ -23,4 +23,4 @@ export const v8IconSizes: Record<V8IconSize, { frame: number; icon: number }> = 
   chip: { frame: 30, icon: 15 },
 };
 
-export const V8_CANVAS_MAX_WIDTH = 1200;
+export const V8_CANVAS_MAX_WIDTH = 1280;

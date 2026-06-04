@@ -5,7 +5,7 @@
  * - Defines the V8 theme-variable scope (`v8Root`).
  * - Warm off-white (light) / graphite (dark) background with a subtle,
  *   non-noisy radial accent.
- * - Centers content to a premium max-width (~1200px) so cards never become
+ * - Centers content to a premium max-width (~1280px) so cards never become
  *   full-width and lifeless, and never collapse into a tiny vertical stack.
  */
 

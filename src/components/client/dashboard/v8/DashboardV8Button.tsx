@@ -68,7 +68,6 @@ export function DashboardV8Button({
       aria-label={ariaLabel}
       className={cn(styles.btn, styles.btnPrimary, className)}
     >
-      <span className={styles.sweep} aria-hidden="true" />
       {icon}
       <span>{children}</span>
     </button>

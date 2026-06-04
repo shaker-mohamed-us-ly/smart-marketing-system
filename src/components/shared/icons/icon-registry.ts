@@ -9,6 +9,7 @@ import {
   BarChart3,
   Lightbulb,
   Settings,
+  User,
   Eye,
   Users,
   Brain,
@@ -35,6 +36,7 @@ export const iconRegistry: Record<string, IconRegistryEntry> = {
   "/client/analytics": { icon: BarChart3 },
   "/client/recommendations": { icon: Lightbulb },
   "/client/settings": { icon: Settings },
+  "/client/account": { icon: User },
 
   // Control Platform
   "/control/overview": { icon: Eye },

@@ -135,7 +135,7 @@ const ar: Dictionary = {
     systemStatus: "حالة النظام",
   },
   sidebar: {
-    client: "العملاء",
+    client: "مساحة العميل",
     control: "التحكم",
     platform: "المنصة",
     systemIntelligence: "ذكاء النظام",

@@ -1,53 +1,42 @@
 "use client";
 
 import { cn } from "@/lib/utils/cn";
-import { HTMLAttributes, forwardRef, useState } from "react";
+import { HTMLAttributes, forwardRef } from "react";
 import Link from "next/link";
 import { LucideIcon } from "lucide-react";
-import { SidebarIcon } from "@/components/shared/icons/SidebarIcon";
+import styles from "./AppShell.module.css";
 
 export interface NavItemProps extends HTMLAttributes<HTMLAnchorElement> {
   href: string;
   icon?: LucideIcon;
   label: string;
   active?: boolean;
-  collapsed?: boolean;
 }
 
 const NavItem = forwardRef<HTMLAnchorElement, NavItemProps>(
-  ({ href, icon: Icon, label, active = false, collapsed = false, className, ...props }, ref) => {
-    const [isHovered, setIsHovered] = useState(false);
-
+  ({ href, icon: Icon, label, active = false, className, ...props }, ref) => {
     return (
       <Link
+        ref={ref}
         href={href}
         className={cn(
-          "group relative flex items-center gap-2.5 rounded-xl px-5 py-2.5 text-sm font-medium",
-          "transition-all duration-[280ms] ease-out",
-          {
-            "bg-primary/10 text-primary shadow-sm": active,
-            "text-muted-foreground hover:bg-secondary/50 hover:text-foreground": !active,
-          },
+          styles.navItem,
+          active && styles.navItemActive,
           className
         )}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
         {...props}
       >
         {Icon && (
-          <SidebarIcon 
-            icon={Icon} 
-            active={active}
-            size={16}
-            className="relative z-10"
-          />
+          <span className={styles.navIconFrame}>
+            <Icon
+              className={styles.navIconGlyph}
+              data-active={active ? "true" : undefined}
+              style={{ width: 18, height: 18 }}
+              strokeWidth={1.75}
+            />
+          </span>
         )}
-        {!collapsed && <span className="relative z-10">{label}</span>}
-        {active && !collapsed && (
-          <div className="ml-auto relative z-10">
-            <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-          </div>
-        )}
+        <span>{label}</span>
       </Link>
     );
   }

@@ -135,7 +135,7 @@ const en: Dictionary = {
     systemStatus: "System Status",
   },
   sidebar: {
-    client: "Client",
+    client: "Client Space",
     control: "Control",
     platform: "Platform",
     systemIntelligence: "System Intelligence",
