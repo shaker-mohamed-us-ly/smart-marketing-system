@@ -48,6 +48,12 @@
   --sms-v8-motion-smooth: 220ms;
   --sms-v8-motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 
+  /* ---------- Status / feedback ---------- */
+  --sms-v8-danger: #dc2626;
+  --sms-v8-danger-light: #ef4444;
+  --sms-v8-success: #059669;
+  --sms-v8-success-light: #10b981;
+
   /* ---------- Layout ---------- */
   --sms-v8-canvas-max-width: 1280px;
   --sms-v8-shell-padding: 24px;
@@ -83,6 +89,12 @@
   --sms-v8-shadow-card: 0 10px 26px rgba(0, 0, 0, 0.32);
   --sms-v8-inner-hi: inset 0 1px 0 rgba(255, 255, 255, 0.045);
   --sms-v8-track: rgba(255, 255, 255, 0.08);
+
+  /* ---------- Status / feedback (dark) ---------- */
+  --sms-v8-danger: #f87171;
+  --sms-v8-danger-light: #fca5a5;
+  --sms-v8-success: #34d399;
+  --sms-v8-success-light: #6ee7b7;
 
   --tone-text: #b0b5bf;
   --tone-bg: rgba(255, 255, 255, 0.06);

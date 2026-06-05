@@ -1,0 +1,203 @@
+/* ============================================================
+   Smart Marketing System — Unified Button (V8 Design)
+   ============================================================
+
+   Design principles:
+   - Light = warm gray / off-white (NOT blue)
+   - Dark  = graphite / charcoal (NOT blue)
+   - All colors via CSS custom properties for theme adaptability
+   - Motion is purposeful, not decorative
+   - Reduced motion fully respected
+
+   Usage: imported by Button.tsx only — no consumer changes needed.
+   ============================================================ */
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  overflow: hidden;
+
+  /* Motion */
+  transition: transform 150ms var(--sms-v8-motion-ease),
+              box-shadow 200ms ease,
+              border-color 200ms ease,
+              background-color 200ms ease,
+              opacity 200ms ease;
+}
+
+/* ---------- Focus visible ---------- */
+.btn:focus-visible {
+  outline: 2px solid var(--tone-solid, var(--sms-v8-text));
+  outline-offset: 2px;
+}
+
+/* ---------- Active / pressed ---------- */
+.btn:active:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  transform: scale(0.97);
+}
+
+/* ---------- Disabled ---------- */
+.btn:disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ---------- Loading ---------- */
+.btn[aria-busy="true"] {
+  cursor: wait;
+}
+
+/* ---------- Sizes ---------- */
+.sm {
+  height: 32px;
+  padding-inline: 12px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.md {
+  height: 40px;
+  padding-inline: 16px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.lg {
+  height: 48px;
+  padding-inline: 24px;
+  border-radius: 12px;
+  font-size: 16px;
+}
+
+/* ---------- Variants ---------- */
+
+/* Primary — tone-aware solid gradient */
+.primary {
+  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    var(--tone-solid, #7c3aed) 0%,
+    var(--tone-solid, #6366f1) 100%
+  );
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+.primary:hover:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+  transform: translateY(-1px);
+}
+
+/* Secondary — panel bg with border */
+.secondary {
+  color: var(--sms-v8-text);
+  background: var(--sms-v8-panel);
+  border-color: var(--sms-v8-border-strong);
+}
+.secondary:hover:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  background: var(--sms-v8-panel-2);
+  border-color: var(--sms-v8-border);
+  transform: translateY(-1px);
+}
+
+/* Ghost — transparent with tonal hover */
+.ghost {
+  color: var(--sms-v8-text);
+  background: transparent;
+  border-color: transparent;
+}
+.ghost:hover:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  background: var(--tone-bg, rgba(120, 113, 108, 0.08));
+  color: var(--tone-text, var(--sms-v8-text));
+  transform: translateY(-1px);
+}
+
+/* Outline — transparent with border */
+.outline {
+  color: var(--sms-v8-text);
+  background: transparent;
+  border-color: var(--sms-v8-border-strong);
+}
+.outline:hover:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  background: var(--tone-bg, rgba(120, 113, 108, 0.08));
+  border-color: var(--tone-border, var(--sms-v8-border));
+  transform: translateY(-1px);
+}
+
+/* Danger — red gradient, clear and unmistakable */
+.danger {
+  color: #ffffff;
+  background: linear-gradient(
+    135deg,
+    var(--sms-v8-danger, #dc2626) 0%,
+    var(--sms-v8-danger-light, #ef4444) 100%
+  );
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.2);
+}
+.danger:hover:not(:disabled):not([aria-disabled="true"]):not([aria-busy="true"]) {
+  box-shadow: 0 6px 20px rgba(220, 38, 38, 0.3);
+  transform: translateY(-1px);
+}
+
+/* ---------- Full width ---------- */
+.fullWidth {
+  width: 100%;
+}
+
+/* ---------- Icon only ---------- */
+.iconOnly {
+  padding-inline: 0;
+}
+.sm.iconOnly {
+  width: 32px;
+}
+.md.iconOnly {
+  width: 40px;
+}
+.lg.iconOnly {
+  width: 48px;
+}
+
+/* ---------- Loading spinner ---------- */
+.spinner {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: btnSpin 0.8s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes btnSpin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .btn {
+    transition: none;
+  }
+  .btn:hover,
+  .btn:active,
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    transform: none;
+  }
+  .spinner {
+    animation: none;
+    opacity: 0.5;
+  }
+}

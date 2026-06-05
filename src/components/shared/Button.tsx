@@ -1,36 +1,78 @@
 import { cn } from "@/lib/utils/cn";
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import { ButtonHTMLAttributes, forwardRef, ReactNode } from "react";
+import styles from "./Button.module.css";
+
+export type ButtonTone = "violet" | "emerald" | "amber" | "orange" | "sky" | "slate";
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "ghost" | "outline";
+  variant?: "primary" | "secondary" | "ghost" | "outline" | "danger";
   size?: "sm" | "md" | "lg";
+  tone?: ButtonTone;
+  loading?: boolean;
+  icon?: ReactNode;
+  iconPosition?: "start" | "end";
+  iconOnly?: boolean;
+  fullWidth?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", size = "md", ...props }, ref) => {
+  (
+    {
+      className,
+      variant = "primary",
+      size = "md",
+      tone,
+      loading = false,
+      icon,
+      iconPosition = "start",
+      iconOnly = false,
+      fullWidth = false,
+      disabled,
+      children,
+      "aria-label": ariaLabel,
+      ...props
+    },
+    ref
+  ) => {
+    // Dev-only warning for icon-only buttons missing aria-label
+    if (
+      process.env.NODE_ENV === "development" &&
+      iconOnly &&
+      !ariaLabel &&
+      !children
+    ) {
+      console.warn(
+        "[Button] iconOnly buttons must have an aria-label for accessibility."
+      );
+    }
+
+    const isDisabled = disabled || loading;
+
     return (
       <button
         ref={ref}
+        data-tone={tone}
+        disabled={isDisabled}
+        aria-disabled={isDisabled ? true : undefined}
+        aria-busy={loading ? true : undefined}
+        aria-label={ariaLabel}
         className={cn(
-          "inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
-          {
-            "bg-primary text-primary-foreground hover:bg-primary/90 shadow-md hover:shadow-lg":
-              variant === "primary",
-            "bg-secondary text-secondary-foreground hover:bg-secondary/80":
-              variant === "secondary",
-            "hover:bg-accent hover:text-accent-foreground": variant === "ghost",
-            "border border-input bg-background hover:bg-accent hover:text-accent-foreground":
-              variant === "outline",
-          },
-          {
-            "h-8 px-3 text-sm": size === "sm",
-            "h-10 px-4 text-base": size === "md",
-            "h-12 px-6 text-lg": size === "lg",
-          },
+          "inline-flex items-center justify-center gap-2",
+          styles.btn,
+          styles[variant],
+          styles[size],
+          fullWidth && styles.fullWidth,
+          iconOnly && styles.iconOnly,
           className
         )}
         {...props}
-      />
+      >
+        {loading && <span className={styles.spinner} aria-hidden="true" />}
+        {!iconOnly && icon && iconPosition === "start" && icon}
+        {!iconOnly && children}
+        {!iconOnly && icon && iconPosition === "end" && icon}
+        {iconOnly && icon}
+      </button>
     );
   }
 );
