@@ -59,3 +59,9 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - No commit, push, or stage without explicit user permission.
 - Always report `git status` and `git diff --stat` when asked about changes.
 - Reports are not proof of implementation unless backed by validation evidence.
+
+## Prompt Quality & Governance
+- All Cascade commands follow `.devin/rules/cascade-prompt-quality.md`.
+- **Prompt Master** (`nidhinjs/prompt-master`) and **Claude methodology** are used as **prompt governance only** — never install as a dependency.
+- Existing `git`, `backend`, `ui`, and `i18n` rules in `AGENTS.md` and `.devin/rules/*` remain authoritative.
+- External methodology source sync is **report-only** unless the user explicitly approves applying changes.
