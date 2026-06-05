@@ -3184,11 +3184,14 @@ const ar = {
           edit: "تعديل",
           archive: "أرشفة",
           moreOptions: "المزيد من خيارات العلامة",
+          statusActive: "نشط",
+          statusInactive: "غير نشط",
         },
         list: {
           loading: "جاري التحميل...",
           retry: "إعادة المحاولة",
           error: "فشل في تحميل العلامات التجارية",
+          brandCount: "{count} علامة تجارية",
         },
         errors: {
           BRAND_AUTH_REQUIRED: "يجب تسجيل الدخول لعرض العلامات التجارية.",

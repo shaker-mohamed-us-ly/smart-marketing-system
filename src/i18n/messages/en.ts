@@ -3194,11 +3194,14 @@ const en = {
           edit: "Edit",
           archive: "Archive",
           moreOptions: "More brand options",
+          statusActive: "Active",
+          statusInactive: "Inactive",
         },
         list: {
           loading: "Loading...",
           retry: "Retry",
           error: "Failed to load brands",
+          brandCount: "{count} brands",
         },
         errors: {
           BRAND_AUTH_REQUIRED: "You must be signed in to view brands.",

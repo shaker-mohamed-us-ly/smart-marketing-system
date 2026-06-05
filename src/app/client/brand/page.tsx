@@ -55,16 +55,28 @@ export default function BrandPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-6 py-10">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">{t('title')}</h1>
-            <p className="text-muted-foreground mt-2">{t('subtitle')}</p>
+    <div className="max-w-6xl mx-auto px-6 py-10" style={{ background: 'var(--sms-v8-canvas)' }}>
+      {/* Premium Hero Header */}
+      <div className="mb-10">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div>
+              <div className="flex items-center gap-3 mb-2">
+                <h1 className="text-[32px] font-bold tracking-tight" style={{ color: 'var(--sms-v8-text)' }}>
+                  {t('title')}
+                </h1>
+                {!isLoading && brands.length > 0 && (
+                  <span data-tone="violet" className="inline-flex items-center justify-center px-3 py-1 rounded-full text-sm font-semibold bg-[var(--tone-bg)] text-[var(--tone-text)] border border-[var(--tone-border)]">
+                    {brands.length}
+                  </span>
+                )}
+              </div>
+              <p className="text-base" style={{ color: 'var(--sms-v8-text-2)' }}>
+                {t('subtitle')}
+              </p>
+            </div>
           </div>
-          <Button onClick={() => setIsCreateDialogOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" />
+          <Button onClick={() => setIsCreateDialogOpen(true)} tone="violet" icon={<Plus className="h-4 w-4" />} iconPosition="start">
             {t('createBrand')}
           </Button>
         </div>
@@ -93,10 +105,19 @@ export default function BrandPage() {
       ) : brands.length === 0 ? (
         <BrandEmptyState onCreateBrand={() => setIsCreateDialogOpen(true)} />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {brands.map((brand) => (
-            <BrandCard key={brand.id} brand={brand} />
-          ))}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 px-1">
+            <div className="h-px flex-1" style={{ background: 'var(--sms-v8-border)' }} />
+            <span className="text-xs font-medium uppercase tracking-wider" style={{ color: 'var(--sms-v8-text-3)' }}>
+              {tList('brandCount', { count: brands.length })}
+            </span>
+            <div className="h-px flex-1" style={{ background: 'var(--sms-v8-border)' }} />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {brands.map((brand) => (
+              <BrandCard key={brand.id} brand={brand} />
+            ))}
+          </div>
         </div>
       )}
 
