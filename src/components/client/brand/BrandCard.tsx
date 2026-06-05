@@ -1,8 +1,9 @@
 import { useTranslations } from 'next-intl';
+import Link from 'next/link';
 import { Button } from '@/components/shared/Button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '@/components/shared/Card';
 import { IconFrame } from '@/components/shared/IconFrame';
-import { Building2, MoreHorizontal, Pencil, LayoutGrid } from 'lucide-react';
+import { Building2, MoreHorizontal, Pencil, ArrowLeft } from 'lucide-react';
 
 interface BrandCardProps {
   brand: {
@@ -48,7 +49,7 @@ export function BrandCard({ brand }: BrandCardProps) {
         <CardTitle className="text-[18px] leading-tight">{brand.name}</CardTitle>
         <CardDescription className="text-sm">{brand.industry}</CardDescription>
         <p className="text-sm text-[var(--sms-v8-text-3)] line-clamp-2 leading-relaxed">{brand.description}</p>
-        
+
         {/* Status indicator */}
         <div className="flex items-center gap-2 pt-1">
           <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-[var(--tone-bg)] text-[var(--tone-text)] border border-[var(--tone-border)]">
@@ -64,9 +65,11 @@ export function BrandCard({ brand }: BrandCardProps) {
         </span>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" tone="violet" icon={<Pencil className="h-3.5 w-3.5" />} iconOnly aria-label={t('edit')} />
-          <Button variant="primary" size="sm" icon={<LayoutGrid className="h-3.5 w-3.5" />} iconPosition="start">
-            {t('manageChannels')}
-          </Button>
+          <Link href={`/client/brand/${brand.id}`}>
+            <Button variant="primary" size="sm" icon={<ArrowLeft className="h-3.5 w-3.5" />} iconPosition="start">
+              {t('viewDetails')}
+            </Button>
+          </Link>
         </div>
       </CardFooter>
     </Card>
