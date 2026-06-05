@@ -1,0 +1,169 @@
+/* ============================================================
+   Smart Marketing System — Card Surface (V8 Design)
+   ============================================================
+
+   Design principles:
+   - Light = warm gray / off-white (NOT blue)
+   - Dark  = graphite / charcoal (NOT blue)
+   - All colors via CSS custom properties for theme adaptability
+   - Motion is purposeful, not decorative
+   - Reduced motion fully respected
+
+   Usage: imported by Card.tsx only — no consumer changes needed.
+   ============================================================ */
+
+/* ---------- Root surface ---------- */
+.surface {
+  position: relative;
+  overflow: hidden;
+  color: var(--sms-v8-text);
+  background: var(--sms-v8-card);
+  border: 1px solid var(--sms-v8-border);
+
+  /* Motion */
+  transition: transform 200ms var(--sms-v8-motion-ease),
+              border-color 200ms ease,
+              box-shadow 200ms ease;
+}
+
+/* ---------- Focus visible ---------- */
+.surface:focus-visible {
+  outline: 2px solid var(--tone-solid, var(--sms-v8-text));
+  outline-offset: 2px;
+}
+
+/* ---------- Variants ---------- */
+
+/* default — standard card surface (18px radius, card shadow) */
+.default {
+  border-radius: 18px;
+  box-shadow: var(--sms-v8-shadow-card), var(--sms-v8-inner-hi);
+}
+
+/* elevated — larger surface (24px radius, panel shadow) */
+.elevated {
+  border-radius: 24px;
+  box-shadow: var(--sms-v8-shadow-panel), var(--sms-v8-inner-hi);
+}
+
+/* panel — alias for elevated (semantic naming) */
+.panel {
+  border-radius: 24px;
+  box-shadow: var(--sms-v8-shadow-panel), var(--sms-v8-inner-hi);
+}
+
+/* subtle — minimal border, no heavy shadow */
+.subtle {
+  border-radius: 18px;
+  box-shadow: none;
+  background: transparent;
+  border-color: var(--sms-v8-border);
+}
+
+/* interactive — hover lift + active press */
+.interactive {
+  border-radius: 18px;
+  box-shadow: var(--sms-v8-shadow-card), var(--sms-v8-inner-hi);
+  cursor: pointer;
+}
+
+.interactive:hover {
+  transform: translateY(-3px);
+  border-color: var(--sms-v8-border-strong);
+  box-shadow: 0 12px 34px rgba(28, 25, 23, 0.10), var(--sms-v8-inner-hi);
+}
+
+.interactive:active {
+  transform: scale(0.985) translateY(-1px);
+}
+
+/* bordered — backward-compatible, maps to subtle with soft shadow */
+.bordered {
+  border-radius: 18px;
+  box-shadow: 0 1px 3px rgba(28, 25, 23, 0.04);
+  background: var(--sms-v8-card);
+}
+
+/* glass — soft glass with V8 tokens, limited blur */
+.glass {
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.55);
+  border-color: var(--sms-v8-border);
+  box-shadow: 0 4px 16px rgba(28, 25, 23, 0.05);
+}
+
+.dark .glass {
+  background: rgba(25, 26, 32, 0.55);
+}
+
+/* ---------- Padding sizes ---------- */
+.padNone { padding: 0; }
+.padSm { padding: 16px; }
+.padMd { padding: 24px; }
+.padLg { padding: 32px; }
+
+/* ---------- Full width ---------- */
+.fullWidth {
+  width: 100%;
+}
+
+/* ---------- Tone accent border ---------- */
+.toneAccent {
+  border-color: var(--tone-border, var(--sms-v8-border));
+}
+
+/* ---------- Sub-components ---------- */
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+  color: var(--sms-v8-text);
+}
+
+.description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--sms-v8-text-2);
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--sms-v8-border);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .surface,
+  .default,
+  .elevated,
+  .panel,
+  .subtle,
+  .interactive,
+  .bordered,
+  .glass {
+    transition: none;
+  }
+
+  .interactive:hover,
+  .interactive:active {
+    transform: none;
+  }
+}

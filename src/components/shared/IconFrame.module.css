@@ -1,0 +1,86 @@
+/* ============================================================
+   Smart Marketing System — IconFrame (V8 Design)
+   ============================================================
+
+   A tone-aware icon container with purposeful micro-motion.
+   No JavaScript hover state — all interaction via CSS.
+
+   Usage: imported by IconFrame.tsx only.
+   ============================================================ */
+
+/* ---------- Root ---------- */
+.iconFrame {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  color: var(--tone-text, var(--sms-v8-text));
+  background: var(--tone-bg, rgba(120, 113, 108, 0.08));
+  border: 1px solid var(--tone-border, rgba(120, 113, 108, 0.2));
+  box-shadow: var(--sms-v8-icon-frame-shadow);
+
+  transition: transform var(--sms-v8-motion-smooth) var(--sms-v8-motion-ease),
+              box-shadow var(--sms-v8-motion-smooth) ease;
+}
+
+/* ---------- Sizes ---------- */
+.sm {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+}
+
+.sm > * {
+  width: 16px;
+  height: 16px;
+}
+
+.md {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+}
+
+.md > * {
+  width: 20px;
+  height: 20px;
+}
+
+.lg {
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+}
+
+.lg > * {
+  width: 24px;
+  height: 24px;
+}
+
+/* ---------- Interactive ---------- */
+.interactive {
+  cursor: pointer;
+}
+
+.interactive:hover {
+  transform: translateY(-2px) scale(1.015);
+  box-shadow: var(--sms-v8-icon-frame-shadow-hover);
+}
+
+.interactive:active {
+  transform: scale(0.98);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .iconFrame,
+  .interactive {
+    transition: none;
+  }
+
+  .interactive:hover,
+  .interactive:active {
+    transform: none;
+  }
+}
