@@ -47,3 +47,78 @@ This is a methodology, not a tool to install:
 - Do not install AI Website Cloner repos.
 - Do not copy external code/assets.
 - Do not assume visual PASS without evidence.
+
+## Stale IDE stdio / MCP Transport Recovery Protocol
+
+### Error Signature
+
+| Error | Code | Meaning |
+|-------|------|---------|
+| `Cannot call write after a stream was destroyed` | `-32099` | IDE's stdio pipe to an MCP server is broken |
+| `transport error: transport closed` | various | JSON-RPC transport disconnected |
+
+> **This is NOT a product code bug.** The error originates from the IDE's MCP transport layer, not application code.
+
+### Root Cause
+
+MCP servers communicate with the IDE via stdin/stdout pipes. When the pipe breaks (IDE refresh, terminal reset, internal timeout), the IDE cannot reach the MCP server even though the **server process is still alive**.
+
+### Required First Response (NEVER skip)
+
+1. **Do NOT kill `node.exe` globally.** The MCP server may still be running.
+2. **Check processes:** `wmic process where "name='node.exe'" get ProcessId,CommandLine`
+3. **Check port 3000:** `netstat -ano | findstr :3000`
+4. **Test Playwright MCP:** `mcp1_browser_navigate` to `about:blank`
+5. **Test Context7 MCP:** `mcp0_resolve-library-id` for `"next.js"`
+
+### Process Classification
+
+| Type | CommandLine Pattern | Action |
+|------|---------------------|--------|
+| `NEXT_DEV_SERVER` | `next/dist/bin/next` or `start-server.js` | Leave running — do not stop without user approval |
+| `PLAYWRIGHT_MCP` | `@playwright/mcp/cli.js` | May be alive but unreachable |
+| `CONTEXT7_MCP` | `@upstash/context7-mcp` | May be alive but unreachable |
+| `UNKNOWN_NODE` | Unrecognized | Verify before stopping |
+
+### Recovery Sequence
+
+1. **Wait 30–60 seconds.** IDE may auto-reconnect to existing MCP processes.
+2. **Re-test MCP.** If `about:blank` and `resolve-library-id` work, transport has self-healed.
+3. **If still broken:** Ask user for approval to restart Windsurf/Cascade IDE.
+4. **If a specific PID must be stopped:** Get explicit user approval for the exact PID. Never use blanket `taskkill`.
+
+### Terminal Discipline
+
+Keep long-running processes in separate terminals to avoid shared stdio transport breakage:
+
+| Terminal | Purpose | Lifecycle |
+|----------|---------|-----------|
+| **A** | Dev server (`npm run dev`) | Persistent; do not close |
+| **B** | Validation (`typecheck`, `i18n:visible`) | Short-lived |
+| **C** | Git operations | Short-lived |
+| **D** | MCP/browser tests | Short-lived; avoid during fragile states |
+
+**Avoid parallel `npm` commands** when stability matters. Sequential execution prevents resource competition that can trigger IDE resets.
+
+### Browser QA Evidence Classification
+
+| MCP State | Allowed Claim |
+|-----------|---------------|
+| Transport verified (`about:blank` works) | Full Browser PASS with screenshots |
+| Transport broken, dev server running | `CLI_FALLBACK_EVIDENCE` — document as partial |
+| Transport broken, dev server down | `NO_EVIDENCE` — do not claim PASS |
+
+> **CLI screenshot fallback does NOT equal MCP Browser Proof.** Console logs, network requests, and computed styles from Playwright MCP are the required standard.
+
+### Forbidden Commands
+
+| Command | Why Forbidden | Safe Alternative |
+|---------|-------------|-----------------|
+| `taskkill /IM node.exe /F` | Kills ALL node processes including MCP servers | Targeted PID stop with user approval |
+| `Stop-Process -Name node` | Same blanket kill | Targeted `Stop-Process -Id <pid>` with approval |
+| Force-kill any MCP without PID check | Breaks transport, orphan processes | Verify PID, ask user, then stop |
+| Stopping dev server terminal while MCP active | Breaks shared stdio transport | Keep dev server terminal separate |
+
+### `.mcp.json` Rule
+
+Do not modify `.mcp.json` without explicit user approval. Playwright MCP and Context7 MCP are IDE-integrated and NOT listed in `.mcp.json`; editing the file will not fix transport issues and may break other MCP servers.
