@@ -36,43 +36,43 @@
 
 .v8Root {
 
-  --v8-canvas: #f4f3f1;
+  --v8-canvas: var(--sms-v8-canvas);
 
-  --v8-canvas-2: #eceae6;
+  --v8-canvas-2: var(--sms-v8-canvas-2);
 
-  --v8-panel: #ffffff;
+  --v8-panel: var(--sms-v8-panel);
 
-  --v8-panel-2: #fbfaf9;
+  --v8-panel-2: var(--sms-v8-panel-2);
 
-  --v8-card: #ffffff;
+  --v8-card: var(--sms-v8-card);
 
-  --v8-border: rgba(120, 113, 108, 0.16);
+  --v8-border: var(--sms-v8-border);
 
-  --v8-border-strong: rgba(120, 113, 108, 0.26);
+  --v8-border-strong: var(--sms-v8-border-strong);
 
-  --v8-text: #1c1917;
+  --v8-text: var(--sms-v8-text);
 
-  --v8-text-2: #57534e;
+  --v8-text-2: var(--sms-v8-text-2);
 
-  --v8-text-3: #8a8580;
+  --v8-text-3: var(--sms-v8-text-3);
 
-  --v8-shadow-panel: 0 12px 34px rgba(28, 25, 23, 0.06), 0 2px 8px rgba(28, 25, 23, 0.04);
+  --v8-shadow-panel: var(--sms-v8-shadow-panel);
 
-  --v8-shadow-card: 0 6px 18px rgba(28, 25, 23, 0.07);
+  --v8-shadow-card: var(--sms-v8-shadow-card);
 
-  --v8-inner-hi: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --v8-inner-hi: var(--sms-v8-inner-hi);
 
-  --v8-track: rgba(120, 113, 108, 0.14);
+  --v8-track: var(--sms-v8-track);
 
-  --v8-icon-frame-shadow: inset 0 1px 0 rgba(255,255,255,0.06), 0 8px 18px rgba(0,0,0,0.12);
+  --v8-icon-frame-shadow: var(--sms-v8-icon-frame-shadow);
 
-  --v8-icon-frame-shadow-hover: inset 0 1px 0 rgba(255,255,255,0.08), 0 12px 26px rgba(0,0,0,0.16);
+  --v8-icon-frame-shadow-hover: var(--sms-v8-icon-frame-shadow-hover);
 
-  --v8-motion-fast: 160ms;
+  --v8-motion-fast: var(--sms-v8-motion-fast);
 
-  --v8-motion-smooth: 220ms;
+  --v8-motion-smooth: var(--sms-v8-motion-smooth);
 
-  --v8-motion-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --v8-motion-ease: var(--sms-v8-motion-ease);
 
 
 
@@ -98,33 +98,33 @@
 
 :global(.dark) .v8Root {
 
-  --v8-canvas: #0a0c10;
+  --v8-canvas: var(--sms-v8-canvas);
 
-  --v8-canvas-2: #0e1116;
+  --v8-canvas-2: var(--sms-v8-canvas-2);
 
-  --v8-panel: #131419;
+  --v8-panel: var(--sms-v8-panel);
 
-  --v8-panel-2: #17181d;
+  --v8-panel-2: var(--sms-v8-panel-2);
 
-  --v8-card: #191a20;
+  --v8-card: var(--sms-v8-card);
 
-  --v8-border: rgba(255, 255, 255, 0.08);
+  --v8-border: var(--sms-v8-border);
 
-  --v8-border-strong: rgba(255, 255, 255, 0.15);
+  --v8-border-strong: var(--sms-v8-border-strong);
 
-  --v8-text: #f2f4f7;
+  --v8-text: var(--sms-v8-text);
 
-  --v8-text-2: #b0b5bf;
+  --v8-text-2: var(--sms-v8-text-2);
 
-  --v8-text-3: #787d87;
+  --v8-text-3: var(--sms-v8-text-3);
 
-  --v8-shadow-panel: 0 18px 44px rgba(0, 0, 0, 0.5);
+  --v8-shadow-panel: var(--sms-v8-shadow-panel);
 
-  --v8-shadow-card: 0 10px 26px rgba(0, 0, 0, 0.32);
+  --v8-shadow-card: var(--sms-v8-shadow-card);
 
-  --v8-inner-hi: inset 0 1px 0 rgba(255, 255, 255, 0.045);
+  --v8-inner-hi: var(--sms-v8-inner-hi);
 
-  --v8-track: rgba(255, 255, 255, 0.08);
+  --v8-track: var(--sms-v8-track);
 
 }
 

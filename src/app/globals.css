@@ -1,3 +1,4 @@
+@import url("src/lib/design/v8-tokens.css");
 @import "tailwindcss";
 
 :root {
