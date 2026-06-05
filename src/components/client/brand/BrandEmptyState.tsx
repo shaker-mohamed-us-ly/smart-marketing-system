@@ -1,5 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/shared/Button';
+import { IconFrame } from '@/components/shared/IconFrame';
 import { Plus } from 'lucide-react';
 
 interface BrandEmptyStateProps {
@@ -13,8 +14,10 @@ export function BrandEmptyState({ onCreateBrand }: BrandEmptyStateProps) {
     <div className="flex flex-col items-center justify-center py-16 px-4">
       <div className="text-center max-w-md">
         {/* Icon */}
-        <div className="mx-auto mb-6 h-20 w-20 rounded-2xl bg-muted/50 flex items-center justify-center">
-          <Plus className="h-10 w-10 text-muted-foreground" />
+        <div className="mx-auto mb-6">
+          <IconFrame size="lg" tone="slate" decorative>
+            <Plus className="h-10 w-10" />
+          </IconFrame>
         </div>
 
         {/* Title */}

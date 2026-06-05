@@ -3162,6 +3162,7 @@ const ar = {
           duplicateName: "توجد علامة تجارية بنفس الاسم.",
           createBrandGenericError: "حدث خطأ غير متوقع أثناء إنشاء العلامة التجارية. يرجى المحاولة مرة أخرى.",
           submit: "إنشاء العلامة التجارية",
+          submitLoading: "جاري الإنشاء...",
           cancel: "إلغاء",
         },
         brandTypes: {

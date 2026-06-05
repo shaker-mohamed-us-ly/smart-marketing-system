@@ -3172,6 +3172,7 @@ const en = {
           duplicateName: "A brand with this name already exists.",
           createBrandGenericError: "An unexpected error occurred while creating the brand. Please try again.",
           submit: "Create Brand",
+          submitLoading: "Creating...",
           cancel: "Cancel",
         },
         brandTypes: {

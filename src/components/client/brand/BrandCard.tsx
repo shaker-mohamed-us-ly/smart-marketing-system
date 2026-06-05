@@ -1,5 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/shared/Button';
+import { Card, CardContent, CardFooter, CardHeader } from '@/components/shared/Card';
+import { IconFrame } from '@/components/shared/IconFrame';
 import { Building2, MoreHorizontal } from 'lucide-react';
 
 interface BrandCardProps {
@@ -19,9 +21,8 @@ export function BrandCard({ brand }: BrandCardProps) {
   const t = useTranslations('clientBrand.v1.ui.card');
 
   return (
-    <div className="group relative rounded-xl border border-border/60 bg-card/80 p-6 hover:border-border hover:shadow-lg transition-all duration-200">
-      {/* Header */}
-      <div className="flex items-start justify-between mb-4">
+    <Card variant="default" padding="md" className="group relative hover:border-border hover:shadow-lg transition-all duration-200">
+      <CardHeader className="flex items-start justify-between mb-0 pb-0">
         {/* Logo or Placeholder */}
         {brand.logo_url ? (
           <img
@@ -30,26 +31,24 @@ export function BrandCard({ brand }: BrandCardProps) {
             className="h-12 w-12 rounded-lg object-cover"
           />
         ) : (
-          <div className="h-12 w-12 rounded-lg bg-muted/50 flex items-center justify-center">
-            <Building2 className="h-6 w-6 text-muted-foreground" />
-          </div>
+          <IconFrame size="md" tone="slate" decorative>
+            <Building2 className="h-6 w-6" />
+          </IconFrame>
         )}
 
         {/* Actions */}
         <Button variant="ghost" size="sm" className="h-8 w-8 p-0" aria-label={t('moreOptions')}>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
-      </div>
+      </CardHeader>
 
-      {/* Content */}
-      <div className="space-y-2">
+      <CardContent className="space-y-2 pt-4">
         <h3 className="font-semibold text-lg">{brand.name}</h3>
         <p className="text-sm text-muted-foreground">{brand.industry}</p>
         <p className="text-sm text-muted-foreground line-clamp-2">{brand.description}</p>
-      </div>
+      </CardContent>
 
-      {/* Footer */}
-      <div className="mt-4 pt-4 border-t border-border/60 flex items-center justify-between">
+      <CardFooter className="mt-0 pt-4 border-t border-border/60 flex items-center justify-between">
         <span className="text-xs text-muted-foreground">
           {new Date(brand.created_at).toLocaleDateString()}
         </span>
@@ -61,7 +60,7 @@ export function BrandCard({ brand }: BrandCardProps) {
             {t('manageChannels')}
           </Button>
         </div>
-      </div>
-    </div>
+      </CardFooter>
+    </Card>
   );
 }

@@ -55,7 +55,7 @@ export default function BrandPage() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="max-w-6xl mx-auto px-6 py-10">
       {/* Header */}
       <div className="mb-8">
         <div className="flex items-center justify-between">

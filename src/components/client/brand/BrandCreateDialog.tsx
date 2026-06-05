@@ -374,7 +374,7 @@ export function BrandCreateDialog({ open, onOpenChange, onBrandCreated }: BrandC
               disabled={isSubmitting}
               className="flex-1"
             >
-              {isSubmitting ? '...' : tForm('submit')}
+              {isSubmitting ? tForm('submitLoading') : tForm('submit')}
             </Button>
           </div>
         </form>
