@@ -3196,6 +3196,12 @@ const en = {
           moreOptions: "More brand options",
           statusActive: "Active",
           statusInactive: "Inactive",
+          identityReady: "Identity Ready",
+          identityDraft: "Draft",
+          moveToTrash: "Move to Trash",
+          trashComingSoon: "Trash will be enabled after safe deletion setup",
+          logoAlt: "{name} logo",
+          noLogo: "No logo",
         },
         details: {
           backToBrands: "Back to Brands",

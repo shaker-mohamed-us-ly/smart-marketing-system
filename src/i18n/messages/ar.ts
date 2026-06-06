@@ -3186,6 +3186,12 @@ const ar = {
           moreOptions: "المزيد من خيارات العلامة",
           statusActive: "نشط",
           statusInactive: "غير نشط",
+          identityReady: "الهوية جاهزة",
+          identityDraft: "مسودة",
+          moveToTrash: "نقل إلى سلة المحذوفات",
+          trashComingSoon: "سيتم تفعيل سلة المحذوفات بعد إعداد الحذف الآمن",
+          logoAlt: "شعار {name}",
+          noLogo: "لا يوجد شعار",
         },
         details: {
           backToBrands: "العودة إلى العلامات",
