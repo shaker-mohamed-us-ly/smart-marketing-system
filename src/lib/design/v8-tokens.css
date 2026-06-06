@@ -29,7 +29,10 @@
 
   --sms-v8-text: #1c1917;
   --sms-v8-text-2: #57534e;
-  --sms-v8-text-3: #8a8580;
+  --sms-v8-text-3: #78726c;
+
+  --sms-v8-surface: #fbfaf9;
+  --sms-v8-surface-2: #f5f4f2;
 
   --sms-v8-sidebar-bg: linear-gradient(180deg, #fafaf9 0%, #f5f4f2 100%);
   --sms-v8-sidebar-border: rgba(120, 113, 108, 0.12);
@@ -80,6 +83,9 @@
   --sms-v8-text: #f2f4f7;
   --sms-v8-text-2: #b0b5bf;
   --sms-v8-text-3: #787d87;
+
+  --sms-v8-surface: #131419;
+  --sms-v8-surface-2: #17181d;
 
   --sms-v8-sidebar-bg: linear-gradient(180deg, #111318 0%, #0d0f14 100%);
   --sms-v8-sidebar-border: rgba(255, 255, 255, 0.06);

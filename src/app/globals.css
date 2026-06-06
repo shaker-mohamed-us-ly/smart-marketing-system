@@ -2,17 +2,17 @@
 @import "tailwindcss";
 
 :root {
-  /* Luxury-Tech Color Palette */
-  --background: #fafbfc;
-  --foreground: #1a1d23;
+  /* Luxury-Tech Color Palette — bridged to V8 tokens for system-wide consistency */
+  --background: #f4f3f1;
+  --foreground: #1c1917;
   --card: #ffffff;
-  --card-foreground: #1a1d23;
+  --card-foreground: #1c1917;
   
   /* Base Colors - Soft White, Warm Neutral, Graphite, Premium Gray */
-  --soft-white: #fafbfc;
-  --warm-neutral: #f5f6f7;
+  --soft-white: #fafaf9;
+  --warm-neutral: #f5f4f2;
   --graphite: #2d313a;
-  --premium-gray: #6b7280;
+  --premium-gray: #57534e;
   
   /* Accent Colors - Intelligent Blue, Elegant Violet, Subtle Emerald, Luxury Cyan */
   --primary: #4f46e5;
@@ -22,14 +22,14 @@
   --subtle-emerald: #10b981;
   --luxury-cyan: #06b6d4;
   
-  --secondary: #f5f6f7;
-  --secondary-foreground: #1a1d23;
-  --accent: #f5f6f7;
-  --accent-foreground: #1a1d23;
-  --muted: #f5f6f7;
-  --muted-foreground: #6b7280;
-  --border: #e5e7eb;
-  --input: #e5e7eb;
+  --secondary: #eceae6;
+  --secondary-foreground: #1c1917;
+  --accent: #eceae6;
+  --accent-foreground: #1c1917;
+  --muted: #eceae6;
+  --muted-foreground: #57534e;
+  --border: rgba(120, 113, 108, 0.16);
+  --input: rgba(120, 113, 108, 0.16);
   --ring: #4f46e5;
   
   /* Status Colors - Refined, Not Over-Saturated */
@@ -176,23 +176,23 @@
    Theme class is now the single source of truth for dark mode. */
 
 .dark {
-  --background: #0f1115;
-  --foreground: #f5f6f7;
-  --card: #1a1d23;
-  --card-foreground: #f5f6f7;
+  --background: #0a0c10;
+  --foreground: #f2f4f7;
+  --card: #191a20;
+  --card-foreground: #f2f4f7;
   --primary: #6366f1;
   --primary-foreground: #ffffff;
-  --secondary: #252830;
-  --secondary-foreground: #f5f6f7;
-  --accent: #252830;
-  --accent-foreground: #f5f6f7;
-  --muted: #252830;
-  --muted-foreground: #9ca3af;
-  --border: #2d313a;
-  --input: #2d313a;
+  --secondary: #17181d;
+  --secondary-foreground: #f2f4f7;
+  --accent: #17181d;
+  --accent-foreground: #f2f4f7;
+  --muted: #17181d;
+  --muted-foreground: #b0b5bf;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
   --ring: #6366f1;
   --destructive: #f87171;
-  --destructive-foreground: #1a1d23;
+  --destructive-foreground: #0a0c10;
 }
 
 * {
@@ -205,8 +205,8 @@ html {
 
 html,
 body {
-  background: var(--background);
-  color: var(--foreground);
+  background: var(--sms-v8-canvas, var(--background));
+  color: var(--sms-v8-text, var(--foreground));
   min-height: 100vh;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -222,9 +222,12 @@ button,
 input,
 textarea,
 select {
-  font-family: var(--font-ibm-plex-arabic), var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-family: "IBM Plex Sans Arabic", Tahoma, "Segoe UI", Arial, var(--font-inter), system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  font-synthesis: none;
+  font-feature-settings: "kern" 1, "liga" 1;
 }
 
 /* Scrollbar utility for hiding scrollbar while keeping scrolling functional */
@@ -237,20 +240,58 @@ select {
   display: none;
 }
 
-/* Arabic typography improvements */
+/* Override next/font synthetic fallback injection — remove "IBM Plex Sans Arabic Fallback" from stack */
+html:root,
+:root {
+  --font-ibm-plex-arabic: "IBM Plex Sans Arabic", Tahoma, "Segoe UI", Arial, sans-serif !important;
+}
+
+/* Direct font-family override on html to bypass next/font variable */
+html {
+  font-family: "IBM Plex Sans Arabic", Tahoma, "Segoe UI", Arial, sans-serif;
+}
+
+/* Heading typography — eliminate aggressive tracking-tight for sharper text */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.01em !important;
+}
+
+/* Arabic typography improvements — sharper line-height and stronger hierarchy */
 html[lang="ar"] h1,
 html[lang="ar"] h2,
 html[lang="ar"] h3,
 html[lang="ar"] h4,
 html[lang="ar"] h5,
 html[lang="ar"] h6 {
-  line-height: 1.4;
+  line-height: 1.35;
+  font-weight: 700;
+  letter-spacing: 0 !important;
+  text-wrap: pretty;
 }
 
 html[lang="ar"] p,
 html[lang="ar"] span,
 html[lang="ar"] div {
-  line-height: 1.6;
+  line-height: 1.65;
+}
+
+html[lang="ar"] small,
+html[lang="ar"] .text-sm {
+  line-height: 1.55;
+}
+
+/* Small text rendering repair — Arabic clarity rules */
+html[lang="ar"] * {
+  letter-spacing: normal !important;
+}
+
+/* Ensure no element uses font-size below 12px for readable content */
+html[lang="ar"] p,
+html[lang="ar"] span,
+html[lang="ar"] div,
+html[lang="ar"] li {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Premium Selection */
@@ -274,21 +315,21 @@ html[lang="ar"] div {
 
 /* Premium Surface Hierarchy */
 .surface-elevated {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(229, 231, 235, 0.6);
+  border: 1px solid rgba(120, 113, 108, 0.14);
 }
 
 .surface-glass {
-  background: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.82);
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(229, 231, 235, 0.4);
+  border: 1px solid rgba(120, 113, 108, 0.14);
 }
 
 .surface-floating {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(16px);
-  border: 1px solid rgba(229, 231, 235, 0.8);
+  border: 1px solid rgba(120, 113, 108, 0.18);
   box-shadow: var(--shadow-elevated);
 }
 
@@ -395,7 +436,14 @@ html[lang="ar"] div {
 /* RTL Support */
 [dir="rtl"] {
   direction: rtl;
-  font-family: var(--font-ibm-plex-arabic), var(--font-inter), system-ui, -apple-system, sans-serif;
+  font-family: "IBM Plex Sans Arabic", Tahoma, "Segoe UI", Arial, var(--font-inter), system-ui, -apple-system, sans-serif;
+}
+
+/* Unify sidebar background with body to eliminate left-side visual strip */
+[class*="sidebar"],
+aside[class*="AppShell"] {
+  background: var(--background) !important;
+  background-image: none !important;
 }
 
 [dir="rtl"] .animate-slide-in {
