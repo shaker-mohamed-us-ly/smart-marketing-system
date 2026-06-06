@@ -7,6 +7,7 @@ import { Button } from '@/components/shared/Button';
 import { IconFrame } from '@/components/shared/IconFrame';
 import { Card, CardContent } from '@/components/shared/Card';
 import { BrandOverviewTab } from './BrandOverviewTab';
+import { BrandIdentityTab } from './BrandIdentityTab';
 import type { Brand } from '@/lib/brand/types';
 import {
   ArrowLeft,
@@ -131,8 +132,14 @@ export function BrandDetailsShell({ brand }: BrandDetailsShellProps) {
 
       {/* Tab Content */}
       <div>
-        {activeTab === 'overview' && <BrandOverviewTab brand={brand} />}
-        {activeTab !== 'overview' && (
+        {activeTab === 'overview' && (
+          <BrandOverviewTab
+            brand={brand}
+            onNavigateToIdentity={() => setActiveTab('identity')}
+          />
+        )}
+        {activeTab === 'identity' && <BrandIdentityTab brand={brand} />}
+        {activeTab !== 'overview' && activeTab !== 'identity' && (
           <Card variant="subtle" padding="lg">
             <CardContent className="flex flex-col items-center justify-center py-16 gap-4">
               <IconFrame size="lg" tone="slate" decorative>

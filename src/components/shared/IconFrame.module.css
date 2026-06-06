@@ -22,6 +22,8 @@
 
   transition: transform var(--sms-v8-motion-smooth) var(--sms-v8-motion-ease),
               box-shadow var(--sms-v8-motion-smooth) ease;
+
+  font-synthesis: none;
 }
 
 /* ---------- Sizes ---------- */

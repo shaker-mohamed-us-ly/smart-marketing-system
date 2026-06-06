@@ -14,6 +14,7 @@ import {
 
 interface BrandQuickActionsProps {
   brand: Brand;
+  onNavigateToIdentity?: () => void;
 }
 
 interface ActionConfig {
@@ -21,9 +22,10 @@ interface ActionConfig {
   icon: React.ReactNode;
   tone: 'violet' | 'emerald' | 'amber' | 'sky';
   disabled: boolean;
+  onClick?: () => void;
 }
 
-export function BrandQuickActions({ brand }: BrandQuickActionsProps) {
+export function BrandQuickActions({ brand, onNavigateToIdentity }: BrandQuickActionsProps) {
   const t = useTranslations('clientBrand.v1.ui.details');
 
   const actions: ActionConfig[] = [
@@ -32,6 +34,7 @@ export function BrandQuickActions({ brand }: BrandQuickActionsProps) {
       icon: <Fingerprint className="h-4 w-4" />,
       tone: 'violet',
       disabled: brand.onboarding_status !== 'created',
+      onClick: onNavigateToIdentity,
     },
     {
       key: 'connectChannels',
@@ -68,6 +71,7 @@ export function BrandQuickActions({ brand }: BrandQuickActionsProps) {
             icon={action.icon}
             iconPosition="start"
             disabled={action.disabled}
+            onClick={action.onClick}
             fullWidth
             className="justify-between"
           >
