@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl';
 import { Button } from '@/components/shared/Button';
 import { Card, CardContent } from '@/components/shared/Card';
 import { IconFrame } from '@/components/shared/IconFrame';
-import { Plus } from 'lucide-react';
+import { Plus, Sparkles } from 'lucide-react';
 
 interface BrandEmptyStateProps {
   onCreateBrand: () => void;
@@ -14,20 +14,24 @@ export function BrandEmptyState({ onCreateBrand }: BrandEmptyStateProps) {
   return (
     <Card variant="elevated" padding="lg" className="w-full">
       <CardContent className="flex flex-col items-center justify-center py-14 px-6">
-        {/* Icon */}
-        <div className="mx-auto mb-8">
+        {/* Icon with subtle ambient ring */}
+        <div className="relative mx-auto mb-8">
+          <div
+            className="absolute inset-0 rounded-2xl blur-xl opacity-20"
+            style={{ background: 'var(--tone-solid)' }}
+          />
           <IconFrame size="lg" tone="violet" decorative>
-            <Plus className="h-12 w-12" />
+            <Sparkles className="h-10 w-10" />
           </IconFrame>
         </div>
 
         {/* Title */}
-        <h2 className="text-2xl font-semibold mb-3" style={{ color: 'var(--sms-v8-text)' }}>
+        <h2 className="text-xl font-semibold mb-2 text-center" style={{ color: 'var(--sms-v8-text)' }}>
           {t('title')}
         </h2>
 
         {/* Description */}
-        <p className="text-base mb-8 max-w-sm text-center leading-relaxed" style={{ color: 'var(--sms-v8-text-2)' }}>
+        <p className="text-sm mb-8 max-w-sm text-center leading-relaxed" style={{ color: 'var(--sms-v8-text-2)' }}>
           {t('description')}
         </p>
 
@@ -37,7 +41,7 @@ export function BrandEmptyState({ onCreateBrand }: BrandEmptyStateProps) {
         </Button>
 
         {/* Hint */}
-        <p className="text-sm mt-5 text-center" style={{ color: 'var(--sms-v8-text-3)' }}>
+        <p className="text-xs mt-4 text-center" style={{ color: 'var(--sms-v8-text-3)' }}>
           {t('hint')}
         </p>
       </CardContent>

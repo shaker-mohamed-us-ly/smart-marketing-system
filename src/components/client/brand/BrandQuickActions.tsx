@@ -7,7 +7,6 @@ import type { Brand } from '@/lib/brand/types';
 import {
   Fingerprint,
   Link2,
-  FolderOpen,
   Settings,
   ChevronLeft,
 } from 'lucide-react';
@@ -20,7 +19,7 @@ interface BrandQuickActionsProps {
 interface ActionConfig {
   key: string;
   icon: React.ReactNode;
-  tone: 'violet' | 'emerald' | 'amber' | 'sky';
+  tone: 'violet' | 'emerald' | 'amber' | 'sky' | 'slate';
   disabled: boolean;
   onClick?: () => void;
 }
@@ -43,16 +42,10 @@ export function BrandQuickActions({ brand, onNavigateToIdentity }: BrandQuickAct
       disabled: brand.onboarding_status !== 'profile_complete',
     },
     {
-      key: 'manageAssets',
-      icon: <FolderOpen className="h-4 w-4" />,
-      tone: 'amber',
-      disabled: true,
-    },
-    {
       key: 'brandSettings',
       icon: <Settings className="h-4 w-4" />,
-      tone: 'sky',
-      disabled: true,
+      tone: 'slate',
+      disabled: false,
     },
   ];
 

@@ -280,11 +280,6 @@ html[lang="ar"] .text-sm {
   line-height: 1.55;
 }
 
-/* Small text rendering repair — Arabic clarity rules */
-html[lang="ar"] * {
-  letter-spacing: normal !important;
-}
-
 /* Ensure no element uses font-size below 12px for readable content */
 html[lang="ar"] p,
 html[lang="ar"] span,

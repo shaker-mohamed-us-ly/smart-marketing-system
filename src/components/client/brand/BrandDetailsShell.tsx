@@ -8,6 +8,9 @@ import { IconFrame } from '@/components/shared/IconFrame';
 import { Card, CardContent } from '@/components/shared/Card';
 import { BrandOverviewTab } from './BrandOverviewTab';
 import { BrandIdentityTab } from './BrandIdentityTab';
+import { BrandChannelsTab } from './BrandChannelsTab';
+import { BrandAssetsTab } from './BrandAssetsTab';
+import { BrandSettingsTab } from './BrandSettingsTab';
 import type { Brand } from '@/lib/brand/types';
 import {
   ArrowLeft,
@@ -64,7 +67,7 @@ export function BrandDetailsShell({ brand }: BrandDetailsShellProps) {
 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3 flex-wrap">
-              <h1 className="text-[28px] font-bold tracking-tight" style={{ color: 'var(--sms-v8-text)' }}>
+              <h1 className="text-[28px] font-bold" style={{ color: 'var(--sms-v8-text)' }}>
                 {brand.name}
               </h1>
               <span
@@ -103,19 +106,9 @@ export function BrandDetailsShell({ brand }: BrandDetailsShellProps) {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className="flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors relative"
+            className="flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap transition-colors relative hover:text-[var(--sms-v8-text-2)]"
             style={{
               color: activeTab === tab.key ? 'var(--sms-v8-accent)' : 'var(--sms-v8-text-3)',
-            }}
-            onMouseEnter={(e) => {
-              if (activeTab !== tab.key) {
-                e.currentTarget.style.color = 'var(--sms-v8-text-2)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (activeTab !== tab.key) {
-                e.currentTarget.style.color = 'var(--sms-v8-text-3)';
-              }
             }}
           >
             {tab.icon}
@@ -139,21 +132,9 @@ export function BrandDetailsShell({ brand }: BrandDetailsShellProps) {
           />
         )}
         {activeTab === 'identity' && <BrandIdentityTab brand={brand} />}
-        {activeTab !== 'overview' && activeTab !== 'identity' && (
-          <Card variant="subtle" padding="lg">
-            <CardContent className="flex flex-col items-center justify-center py-16 gap-4">
-              <IconFrame size="lg" tone="slate" decorative>
-                {tabs.find((t) => t.key === activeTab)?.icon}
-              </IconFrame>
-              <p className="text-sm font-medium" style={{ color: 'var(--sms-v8-text-2)' }}>
-                {t('comingSoonTitle')}
-              </p>
-              <p className="text-xs" style={{ color: 'var(--sms-v8-text-3)' }}>
-                {t('comingSoonDescription')}
-              </p>
-            </CardContent>
-          </Card>
-        )}
+        {activeTab === 'channels' && <BrandChannelsTab brand={brand} />}
+        {activeTab === 'assets' && <BrandAssetsTab brand={brand} />}
+        {activeTab === 'settings' && <BrandSettingsTab brand={brand} />}
       </div>
     </div>
   );

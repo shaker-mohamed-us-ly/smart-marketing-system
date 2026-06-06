@@ -103,10 +103,10 @@ export function BrandIdentityTab({ brand }: BrandIdentityTabProps) {
           </div>
 
           <div
-            className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm"
-            style={{ background: 'var(--sms-v8-surface-2)', color: 'var(--sms-v8-text-3)', border: '1px solid var(--sms-v8-border)' }}
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
+            style={{ background: 'var(--sms-v8-surface)', color: 'var(--sms-v8-text-3)', border: '1px solid var(--sms-v8-border)' }}
           >
-            <AlertCircle className="h-4 w-4 shrink-0" style={{ color: 'var(--tone-solid)' }} />
+            <AlertCircle className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--sms-v8-text-3)' }} />
             <span>{t('previewOnly')}</span>
           </div>
         </CardContent>

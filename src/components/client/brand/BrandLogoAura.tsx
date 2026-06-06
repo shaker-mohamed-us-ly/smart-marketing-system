@@ -55,18 +55,16 @@ export function BrandLogoAura({ brandName, industry, logoUrl, palette }: BrandLo
     .toUpperCase();
 
   return (
-    <div className={styles.auraContainer} data-fallback={fallbackNotice}>
+    <div className={styles.logoContainer} data-fallback={fallbackNotice}>
       <div
-        className={styles.auraRing}
+        className={styles.logoTile}
         style={
           {
             '--aura-1': auraColors[0],
             '--aura-2': auraColors[1],
-            '--aura-3': auraColors[2],
           } as React.CSSProperties
         }
-      />
-      <div className={styles.logoTile}>
+      >
         {logoUrl ? (
           <img
             src={logoUrl}
