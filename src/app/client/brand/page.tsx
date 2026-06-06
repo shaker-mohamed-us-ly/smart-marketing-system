@@ -8,6 +8,7 @@ import { BrandCreateDialog } from '@/components/client/brand/BrandCreateDialog';
 import { BrandCommandCenterHeader } from '@/components/client/brand/BrandCommandCenterHeader';
 import { BrandDnaJourneyTree } from '@/components/client/brand/BrandDnaJourneyTree';
 import { BrandPlanLimitGate } from '@/components/client/brand/BrandPlanLimitGate';
+import { BrandNextBestActionPanel } from '@/components/client/brand/BrandNextBestActionPanel';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { getBrands } from '@/lib/brand/server-actions';
@@ -72,6 +73,12 @@ export default function BrandPage() {
         brandCount={brands.length}
         onCreateBrand={() => setIsCreateDialogOpen(true)}
         maxBrands={MAX_BRANDS}
+      />
+
+      {/* Hero Operational Panel — dominant guidance surface, not a card */}
+      <BrandNextBestActionPanel
+        brands={brands}
+        onCreateBrand={() => setIsCreateDialogOpen(true)}
       />
 
       {/* Content */}

@@ -44,6 +44,98 @@ export function BrandEmptyState({ onCreateBrand }: BrandEmptyStateProps) {
         <p className="text-xs mt-4 text-center" style={{ color: 'var(--sms-v8-text-3)' }}>
           {t('hint')}
         </p>
+
+        {/* Getting Started Checklist — honest guidance, no fake progress */}
+        <div
+          className="w-full max-w-sm mt-10 pt-8 border-t"
+          style={{ borderColor: 'var(--sms-v8-border-strong)' }}
+        >
+          <div className="flex items-center justify-center gap-2 mb-5">
+            <div className="h-px w-8" style={{ background: 'var(--sms-v8-border)' }} />
+            <p
+              className="text-xs font-bold uppercase tracking-widest"
+              style={{ color: 'var(--sms-v8-text-3)' }}
+            >
+              {t('checklistTitle')}
+            </p>
+            <div className="h-px w-8" style={{ background: 'var(--sms-v8-border)' }} />
+          </div>
+
+          <div className="space-y-4">
+            {/* Step 1 — current step: filled violet circle with white number */}
+            <div className="flex items-center gap-3">
+              <div
+                className="flex items-center justify-center w-8 h-8 rounded-full shrink-0 text-xs font-bold"
+                style={{
+                  background: 'var(--tone-solid)',
+                  color: '#ffffff',
+                  border: '2px solid var(--tone-solid)',
+                }}
+                data-tone="violet"
+              >
+                1
+              </div>
+              <span className="text-sm font-semibold" style={{ color: 'var(--sms-v8-text)' }}>
+                {t('step1Label')}
+              </span>
+              <span
+                className="text-[10px] font-bold px-2.5 py-1 rounded-full ml-auto shrink-0"
+                style={{
+                  background: 'var(--tone-bg)',
+                  color: 'var(--tone-text)',
+                  border: '1px solid var(--tone-border)',
+                }}
+                data-tone="violet"
+              >
+                {t('step1Status')}
+              </span>
+            </div>
+
+            {/* Step 2 — upcoming: outlined circle with gray number */}
+            <div className="flex items-center gap-3 opacity-55">
+              <div
+                className="flex items-center justify-center w-8 h-8 rounded-full shrink-0 text-xs font-semibold"
+                style={{
+                  background: 'var(--sms-v8-surface-2)',
+                  color: 'var(--sms-v8-text-3)',
+                  border: '2px solid var(--sms-v8-border)',
+                }}
+              >
+                2
+              </div>
+              <span className="text-sm" style={{ color: 'var(--sms-v8-text-2)' }}>
+                {t('step2Label')}
+              </span>
+            </div>
+
+            {/* Step 3 — upcoming with honest "coming later" badge: outlined circle with gray number */}
+            <div className="flex items-center gap-3 opacity-55">
+              <div
+                className="flex items-center justify-center w-8 h-8 rounded-full shrink-0 text-xs font-semibold"
+                style={{
+                  background: 'var(--sms-v8-surface-2)',
+                  color: 'var(--sms-v8-text-3)',
+                  border: '2px solid var(--sms-v8-border)',
+                }}
+              >
+                3
+              </div>
+              <span className="text-sm" style={{ color: 'var(--sms-v8-text-2)' }}>
+                {t('step3Label')}
+              </span>
+              <span
+                className="text-[10px] font-semibold px-2 py-0.5 rounded-full ml-auto shrink-0"
+                style={{
+                  background: 'var(--sms-v8-surface-2)',
+                  color: 'var(--sms-v8-text-3)',
+                  border: '1px solid var(--sms-v8-border)',
+                }}
+              >
+                {t('step3Hint')}
+              </span>
+            </div>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );

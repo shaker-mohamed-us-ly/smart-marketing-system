@@ -35,7 +35,7 @@ export function BrandCommandCenterHeader({ brandCount, onCreateBrand, maxBrands 
               </span>
             )}
           </div>
-          <p className="text-sm" style={{ color: 'var(--sms-v8-text-3)' }}>
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--sms-v8-text-3)' }}>
             {t('subtitle')}
           </p>
         </div>
