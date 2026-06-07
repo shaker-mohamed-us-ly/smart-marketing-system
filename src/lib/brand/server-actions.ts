@@ -22,6 +22,7 @@ import {
   validateConnectedChannelPlaceholderInput,
   validateBrandCoreProfileUpdateInput,
   validateBrandLogoFile,
+  validateBrandDnaEditorInput,
 } from './validation';
 import {
   BrandOSError,
@@ -50,6 +51,7 @@ import type {
   BrandCoreProfileUpdateInput,
   ConnectedChannelPlaceholderInput,
   BrandLogoUploadResult,
+  BrandDnaEditorInput,
 } from './types';
 
 // ============================================================================
@@ -141,6 +143,65 @@ export async function getBrand(id: string): Promise<BrandActionResult<Brand>> {
     return makeBrandActionSuccess(data);
   } catch (error) {
     return toBrandActionFailure(error, 'getBrand');
+  }
+}
+
+/**
+ * Get a single brand with its core profile
+ * Requires auth, validates UUID, relies on RLS for access control
+ * Returns brand + associated core profile (null if no profile exists)
+ */
+export async function getBrandWithProfile(
+  id: string
+): Promise<BrandActionResult<{ brand: Brand; profile: BrandCoreProfile | null }>> {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return makeBrandActionFailure(
+        new BrandOSError('BRAND_AUTH_REQUIRED', 'You must be logged in to view this brand')
+      );
+    }
+
+    const idValidation = validateBrandId(id);
+    if (!idValidation.success) {
+      return makeBrandActionFailure(
+        new BrandOSError('BRAND_INVALID_INPUT', 'Invalid brand ID format')
+      );
+    }
+
+    // Fetch brand
+    const { data: brand, error: brandError } = await supabase
+      .from('brands')
+      .select('*')
+      .eq('id', idValidation.data)
+      .single();
+
+    if (brandError) {
+      if (brandError.code === 'PGRST116') {
+        return makeBrandActionFailure(
+          new BrandOSError('BRAND_NOT_FOUND', 'Brand not found')
+        );
+      }
+      return makeBrandActionFailure(mapSupabaseErrorToBrandError(brandError, 'getBrandWithProfile'));
+    }
+
+    // Fetch core profile (may not exist yet)
+    const { data: profile, error: profileError } = await supabase
+      .from('brand_core_profiles')
+      .select('*')
+      .eq('brand_id', idValidation.data)
+      .single();
+
+    // PGRST116 = no rows, which is fine (profile may not exist)
+    if (profileError && profileError.code !== 'PGRST116') {
+      return makeBrandActionFailure(mapSupabaseErrorToBrandError(profileError, 'getBrandWithProfile'));
+    }
+
+    return makeBrandActionSuccess({ brand, profile: profile || null });
+  } catch (error) {
+    return toBrandActionFailure(error, 'getBrandWithProfile');
   }
 }
 
@@ -491,6 +552,113 @@ export async function updateBrandCoreProfile(
     return makeBrandActionSuccess(data);
   } catch (error) {
     return toBrandActionFailure(error, 'updateBrandCoreProfile');
+  }
+}
+
+/**
+ * Update brand DNA (identity editor fields)
+ * Requires auth, verifies brand ownership
+ * Merges DNA editor input into brand_core_profiles.brand_dna JSONB
+ * Does not overwrite other brand_dna fields (e.g., metadata.brandType)
+ */
+export async function updateBrandDna(
+  brandId: string,
+  input: BrandDnaEditorInput
+): Promise<BrandActionResult<BrandCoreProfile>> {
+  try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      return makeBrandActionFailure(
+        new BrandOSError('BRAND_AUTH_REQUIRED', 'You must be logged in to update brand DNA')
+      );
+    }
+
+    const idValidation = validateBrandId(brandId);
+    if (!idValidation.success) {
+      return makeBrandActionFailure(
+        new BrandOSError('BRAND_INVALID_INPUT', 'Invalid brand ID format')
+      );
+    }
+
+    const validation = validateBrandDnaEditorInput(input);
+    if (!validation.success) {
+      return makeBrandActionFailure(
+        new BrandOSError('BRAND_CREATE_VALIDATION', 'Invalid DNA input'),
+        'updateBrandDna',
+        validation.errors
+      );
+    }
+
+    // Verify brand ownership via RLS select
+    const { data: brand, error: brandError } = await supabase
+      .from('brands')
+      .select('id')
+      .eq('id', idValidation.data)
+      .single();
+
+    if (brandError) {
+      if (brandError.code === 'PGRST116') {
+        return makeBrandActionFailure(
+          new BrandOSError('BRAND_NOT_FOUND', 'Brand not found')
+        );
+      }
+      return makeBrandActionFailure(mapSupabaseErrorToBrandError(brandError, 'updateBrandDna'));
+    }
+
+    // Fetch existing profile to merge brand_dna
+    const { data: existingProfile, error: fetchError } = await supabase
+      .from('brand_core_profiles')
+      .select('brand_dna')
+      .eq('brand_id', idValidation.data)
+      .single();
+
+    if (fetchError && fetchError.code !== 'PGRST116') {
+      return makeBrandActionFailure(mapSupabaseErrorToBrandError(fetchError, 'updateBrandDna'));
+    }
+
+    // Build merged brand_dna
+    const existingDna = (existingProfile?.brand_dna as Record<string, unknown>) || {};
+    const dnaFields = validation.data;
+
+    const mergedDna: Record<string, unknown> = {
+      ...existingDna,
+      identityType: dnaFields.identityType ?? existingDna.identityType,
+      dna: {
+        ...((existingDna.dna as Record<string, unknown>) || {}),
+        ...(dnaFields.audience !== undefined && { audience: dnaFields.audience }),
+        ...(dnaFields.tone !== undefined && { tone: dnaFields.tone }),
+        ...(dnaFields.values !== undefined && { values: dnaFields.values }),
+        ...(dnaFields.positioning !== undefined && { positioning: dnaFields.positioning }),
+        ...(dnaFields.differentiation !== undefined && { differentiation: dnaFields.differentiation }),
+        ...(dnaFields.visualDirection !== undefined && { visualDirection: dnaFields.visualDirection }),
+        ...(dnaFields.contentRules !== undefined && { contentRules: dnaFields.contentRules }),
+        ...(dnaFields.ctaStyle !== undefined && { ctaStyle: dnaFields.ctaStyle }),
+        ...(dnaFields.offerStyle !== undefined && { offerStyle: dnaFields.offerStyle }),
+        ...(dnaFields.trustProof !== undefined && { trustProof: dnaFields.trustProof }),
+        ...(dnaFields.seasonalNotes !== undefined && { seasonalNotes: dnaFields.seasonalNotes }),
+      },
+    };
+
+    // Upsert profile (update if exists, insert if not)
+    const { data, error } = await supabase
+      .from('brand_core_profiles')
+      .upsert({
+        brand_id: idValidation.data,
+        user_id: user.id,
+        brand_dna: mergedDna,
+      }, { onConflict: 'brand_id' })
+      .select()
+      .single();
+
+    if (error) {
+      return makeBrandActionFailure(mapSupabaseErrorToBrandError(error, 'updateBrandDna'));
+    }
+
+    return makeBrandActionSuccess(data);
+  } catch (error) {
+    return toBrandActionFailure(error, 'updateBrandDna');
   }
 }
 

@@ -108,6 +108,45 @@ export type ConnectedChannelStatus = 'disconnected' | 'connecting' | 'connected'
 export type ConnectedChannelConnectionType = 'oauth' | 'api_key' | 'manual';
 
 // ============================================================================
+// Identity Brand Type
+// ============================================================================
+
+/**
+ * Strategic identity brand types (6 options)
+ * Used in DNA Editor, stored in brand_core_profiles.brand_dna.identityType
+ */
+export type BrandIdentityType =
+  | 'company'
+  | 'service'
+  | 'product'
+  | 'after_sales'
+  | 'seasonal'
+  | 'hybrid';
+
+// ============================================================================
+// DNA Editor Input
+// ============================================================================
+
+/**
+ * Input for the DNA Editor form
+ * All fields optional — saved into brand_core_profiles.brand_dna.dna
+ */
+export interface BrandDnaEditorInput {
+  identityType?: BrandIdentityType;
+  audience?: string;
+  tone?: string;
+  values?: string;
+  positioning?: string;
+  differentiation?: string;
+  visualDirection?: string;
+  contentRules?: string;
+  ctaStyle?: string;
+  offerStyle?: string;
+  trustProof?: string;
+  seasonalNotes?: string;
+}
+
+// ============================================================================
 // Input Types (for validation and server actions)
 // ============================================================================
 

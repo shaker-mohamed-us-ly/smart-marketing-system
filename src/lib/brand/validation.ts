@@ -15,12 +15,14 @@ import {
   MAX_LOGO_SIZE_BYTES,
   PLATFORM_VALUES,
   BRAND_TYPE_VALUES,
+  IDENTITY_BRAND_TYPE_VALUES,
 } from './constants';
 import type {
   BrandCreateInput,
   BrandUpdateInput,
   BrandCoreProfileUpdateInput,
   ConnectedChannelPlaceholderInput,
+  BrandDnaEditorInput,
 } from './types';
 
 // ============================================================================
@@ -138,6 +140,30 @@ export const ConnectedChannelPlaceholderInputSchema = z.object({
 });
 
 // ============================================================================
+// DNA Editor Validation Schemas
+// ============================================================================
+
+/**
+ * DNA Editor input schema
+ * All fields optional. Strings trimmed and max-length enforced.
+ * identityType must be one of the 6 strategic types.
+ */
+export const BrandDnaEditorInputSchema = z.object({
+  identityType: z.enum(['company', 'service', 'product', 'after_sales', 'seasonal', 'hybrid']).optional(),
+  audience: z.string().max(300).trim().optional(),
+  tone: z.string().max(300).trim().optional(),
+  values: z.string().max(300).trim().optional(),
+  positioning: z.string().max(300).trim().optional(),
+  differentiation: z.string().max(300).trim().optional(),
+  visualDirection: z.string().max(300).trim().optional(),
+  contentRules: z.string().max(300).trim().optional(),
+  ctaStyle: z.string().max(300).trim().optional(),
+  offerStyle: z.string().max(300).trim().optional(),
+  trustProof: z.string().max(300).trim().optional(),
+  seasonalNotes: z.string().max(300).trim().optional(),
+});
+
+// ============================================================================
 // Logo Validation Helpers
 // ============================================================================
 
@@ -238,6 +264,19 @@ export function validateBrandCoreProfileUpdateInput(
   input: unknown
 ): ValidationResult<BrandCoreProfileUpdateInput> {
   const result = BrandCoreProfileUpdateInputSchema.safeParse(input);
+  if (result.success) {
+    return { success: true, data: result.data };
+  }
+  return { success: false, errors: result.error };
+}
+
+/**
+ * Validate DNA editor input
+ */
+export function validateBrandDnaEditorInput(
+  input: unknown
+): ValidationResult<BrandDnaEditorInput> {
+  const result = BrandDnaEditorInputSchema.safeParse(input);
   if (result.success) {
     return { success: true, data: result.data };
   }

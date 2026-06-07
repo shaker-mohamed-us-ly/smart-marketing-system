@@ -1,4 +1,4 @@
-import { getBrand } from '@/lib/brand/server-actions';
+import { getBrandWithProfile } from '@/lib/brand/server-actions';
 import { BrandDetailsShell } from '@/components/client/brand/BrandDetailsShell';
 import { notFound } from 'next/navigation';
 
@@ -8,7 +8,7 @@ interface BrandDetailPageProps {
 
 export default async function BrandDetailPage({ params }: BrandDetailPageProps) {
   const { brandId } = await params;
-  const result = await getBrand(brandId);
+  const result = await getBrandWithProfile(brandId);
 
   if (!result.success || !result.data) {
     notFound();
@@ -16,7 +16,7 @@ export default async function BrandDetailPage({ params }: BrandDetailPageProps) 
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10" style={{ background: 'var(--sms-v8-canvas)' }}>
-      <BrandDetailsShell brand={result.data} />
+      <BrandDetailsShell brand={result.data.brand} profile={result.data.profile} />
     </div>
   );
 }

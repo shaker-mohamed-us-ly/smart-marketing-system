@@ -1,95 +1,150 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/shared/Card';
 import { IconFrame } from '@/components/shared/IconFrame';
-import { BrandIdentityPathCards } from './BrandIdentityPathCards';
-import { BrandVoicePanel } from './BrandVoicePanel';
-import { BrandVisualDirectionPanel } from './BrandVisualDirectionPanel';
-import { BrandSourceIntelligencePanel } from './BrandSourceIntelligencePanel';
+import { Button } from '@/components/shared/Button';
+import { BrandTypeSelector } from './BrandTypeSelector';
+import { BrandDnaEditor } from './BrandDnaEditor';
+import { BrandDnaPreview } from './BrandDnaPreview';
 import { BrandDnaCanvas } from './BrandDnaCanvas';
-import { BrandCampaignTranslationPanel } from './BrandCampaignTranslationPanel';
-import { BrandReadinessChecklist } from './BrandReadinessChecklist';
-import type { Brand } from '@/lib/brand/types';
+import type { Brand, BrandCoreProfile, BrandIdentityType, BrandDnaEditorInput } from '@/lib/brand/types';
 import {
-  Fingerprint, AlertCircle, Building2, FileText, Gauge, Activity,
-  Link2, Sparkles, Megaphone, ArrowRight, ListChecks, ChevronDown
+  Fingerprint, Pencil, CheckCircle2, AlertCircle,
 } from 'lucide-react';
-import { useState } from 'react';
 
 interface BrandIdentityTabProps {
   brand: Brand;
+  profile?: BrandCoreProfile | null;
+  onBrandUpdated?: () => void;
 }
 
-export function BrandIdentityTab({ brand }: BrandIdentityTabProps) {
-  const t = useTranslations('clientBrand.v1.ui.details.identityStudio');
-  const [showDetails, setShowDetails] = useState(false);
+function extractDnaFromProfile(profile?: BrandCoreProfile | null): {
+  identityType?: BrandIdentityType | null;
+  dna?: BrandDnaEditorInput | null;
+} {
+  if (!profile?.brand_dna) return {};
+  const bd = profile.brand_dna as Record<string, unknown>;
+  const dnaBlock = (bd.dna as Record<string, string>) || {};
 
-  const statusLabel =
-    brand.onboarding_status === 'created'
-      ? t('dnaSummary.phaseStatus.created')
-      : brand.onboarding_status === 'profile_complete'
-        ? t('dnaSummary.phaseStatus.profileComplete')
-        : brand.onboarding_status === 'channels_connected'
-          ? t('dnaSummary.phaseStatus.channelsConnected')
-          : t('dnaSummary.phaseStatus.ready');
+  return {
+    identityType: (bd.identityType as BrandIdentityType) || null,
+    dna: {
+      identityType: (bd.identityType as BrandIdentityType) || undefined,
+      audience: dnaBlock.audience || '',
+      tone: dnaBlock.tone || '',
+      values: dnaBlock.values || '',
+      positioning: dnaBlock.positioning || '',
+      differentiation: dnaBlock.differentiation || '',
+      visualDirection: dnaBlock.visualDirection || '',
+      contentRules: dnaBlock.contentRules || '',
+      ctaStyle: dnaBlock.ctaStyle || '',
+      offerStyle: dnaBlock.offerStyle || '',
+      trustProof: dnaBlock.trustProof || '',
+      seasonalNotes: dnaBlock.seasonalNotes || '',
+    },
+  };
+}
+
+export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdentityTabProps) {
+  const t = useTranslations('clientBrand.v1.ui.details.identityStudio');
+  const tEditor = useTranslations('clientBrand.v1.ui.details.identityStudio.dnaEditor');
+
+  const { identityType: initialIdentityType, dna: initialDna } = extractDnaFromProfile(profile);
+
+  const [isEditing, setIsEditing] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saveError, setSaveError] = useState<string | null>(null);
+  const [localIdentityType, setLocalIdentityType] = useState<BrandIdentityType | null>(initialIdentityType || null);
+  const [localDna, setLocalDna] = useState<BrandDnaEditorInput | null>(initialDna || null);
+
+  const handleTypeSelect = useCallback((type: BrandIdentityType) => {
+    setLocalIdentityType(type);
+    setSaveSuccess(false);
+  }, []);
+
+  const handleSaveDna = useCallback(async (data: BrandDnaEditorInput) => {
+    setIsSaving(true);
+    setSaveError(null);
+    setSaveSuccess(false);
+
+    try {
+      const { updateBrandDna } = await import('@/lib/brand/server-actions');
+      const payload: BrandDnaEditorInput = {
+        ...data,
+        identityType: localIdentityType || undefined,
+      };
+
+      const result = await updateBrandDna(brand.id, payload);
+
+      if (result.success) {
+        setSaveSuccess(true);
+        setIsEditing(false);
+        setLocalDna(data);
+        if (onBrandUpdated) {
+          onBrandUpdated();
+        }
+      } else {
+        setSaveError(tEditor('error'));
+      }
+    } catch (err) {
+      console.error('[BrandIdentityTab] DNA save error:', err);
+      setSaveError(tEditor('error'));
+    } finally {
+      setIsSaving(false);
+    }
+  }, [brand.id, localIdentityType, onBrandUpdated, tEditor]);
+
+  const handleCancel = useCallback(() => {
+    setIsEditing(false);
+    setSaveError(null);
+    setSaveSuccess(false);
+    // Reset to saved values
+    setLocalIdentityType(initialIdentityType || null);
+    setLocalDna(initialDna || null);
+  }, [initialIdentityType, initialDna]);
 
   return (
     <div className="space-y-6">
-      {/* ── Zone A: DNA Summary + Start Here ── */}
+      {/* Header */}
       <Card variant="elevated" padding="lg" tone="violet">
         <CardHeader className="pb-3">
-          <div className="flex items-center gap-3">
-            <IconFrame size="md" tone="violet" decorative>
-              <Fingerprint className="h-5 w-5" />
-            </IconFrame>
-            <div>
-              <CardTitle className="text-base">{t('dnaSummary.title')}</CardTitle>
-              <CardDescription className="text-sm">{t('dnaSummary.subtitle', { brandName: brand.name })}</CardDescription>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <IconFrame size="md" tone="violet" decorative>
+                <Fingerprint className="h-5 w-5" />
+              </IconFrame>
+              <div>
+                <CardTitle className="text-base">{t('dnaSummary.title')}</CardTitle>
+                <CardDescription className="text-sm">{t('dnaSummary.subtitle', { brandName: brand.name })}</CardDescription>
+              </div>
             </div>
+            {!isEditing && (
+              <Button
+                variant="outline"
+                size="sm"
+                icon={<Pencil className="h-4 w-4" />}
+                iconPosition="start"
+                onClick={() => setIsEditing(true)}
+              >
+                {tEditor('edit')}
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Compact 4-item meta row */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-            {[
-              { icon: <Building2 className="h-4 w-4" />, label: t('dnaSummary.industry'), value: brand.industry },
-              { icon: <FileText className="h-4 w-4" />, label: t('dnaSummary.brandPromise'), value: brand.description || t('dnaSummary.noDescription') },
-              { icon: <Gauge className="h-4 w-4" />, label: t('dnaSummary.readiness'), value: statusLabel },
-              { icon: <Activity className="h-4 w-4" />, label: t('dnaSummary.status'), value: brand.status === 'active' ? t('dnaSummary.statusActive') : t('dnaSummary.statusInactive') },
-            ].map((item, i) => (
-              <div key={i} className="flex items-start gap-2.5">
-                <IconFrame size="sm" tone="slate" decorative>{item.icon}</IconFrame>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm font-medium" style={{ color: 'var(--sms-v8-text-3)' }}>{item.label}</p>
-                  <p className="text-sm font-semibold truncate" style={{ color: 'var(--sms-v8-text)' }}>{item.value}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Start Here — 3 steps */}
-          <div
-            className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 rounded-lg border"
-            style={{ background: 'var(--sms-v8-surface-2)', borderColor: 'var(--sms-v8-border)' }}
-          >
-            <div className="flex items-center gap-2 shrink-0">
-              <IconFrame size="sm" tone="amber" decorative><Sparkles className="h-4 w-4" /></IconFrame>
-              <span className="text-sm font-semibold" style={{ color: 'var(--sms-v8-text)' }}>{t('guide.title')}</span>
+          {/* Honest status notice */}
+          {saveSuccess && (
+            <div
+              className="flex items-center gap-2 p-3 rounded-lg"
+              style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid var(--sms-v8-border)' }}
+            >
+              <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: '#059669' }} />
+              <p className="text-sm font-medium" style={{ color: 'var(--sms-v8-text)' }}>{tEditor('success')}</p>
             </div>
-            <div className="flex items-center gap-3 sm:gap-4 flex-wrap">
-              {[
-                { icon: <Link2 className="h-3.5 w-3.5" />, label: t('guide.steps.addSources') },
-                { icon: <Fingerprint className="h-3.5 w-3.5" />, label: t('guide.steps.reviewSignals') },
-                { icon: <Megaphone className="h-3.5 w-3.5" />, label: t('guide.steps.buildCampaigns') },
-              ].map((step, i, arr) => (
-                <div key={i} className="flex items-center gap-2">
-                  <span className="text-sm" style={{ color: 'var(--sms-v8-text-2)' }}>{step.label}</span>
-                  {i < arr.length - 1 && <ArrowRight className="h-3 w-3 hidden sm:block" style={{ color: 'var(--sms-v8-text-3)' }} />}
-                </div>
-              ))}
-            </div>
-          </div>
+          )}
 
           <div
             className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
@@ -101,44 +156,32 @@ export function BrandIdentityTab({ brand }: BrandIdentityTabProps) {
         </CardContent>
       </Card>
 
-      {/* ── Zone B: DNA Snapshot (compact) ── */}
-      <BrandDnaCanvas brand={brand} compact />
+      {/* Brand Type Selector */}
+      <BrandTypeSelector
+        selectedType={localIdentityType}
+        onSelect={handleTypeSelect}
+        disabled={isSaving}
+      />
 
-      {/* ── Zone C: Campaign Preview (3 recipes) ── */}
-      <BrandCampaignTranslationPanel compact />
-
-      {/* ── Secondary: Source Intelligence (compact) ── */}
-      <BrandSourceIntelligencePanel compact />
-
-      {/* ── Secondary: Readiness (compact next actions) ── */}
-      <BrandReadinessChecklist brand={brand} compact />
-
-      {/* ── Details-on-demand ── */}
-      <div className="flex justify-center">
-        <button
-          onClick={() => setShowDetails(!showDetails)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium border"
-          style={{
-            background: 'var(--sms-v8-surface)',
-            borderColor: 'var(--sms-v8-border)',
-            color: 'var(--sms-v8-text-2)',
-          }}
-        >
-          <ListChecks className="h-4 w-4" />
-          <span>{showDetails ? t('hideDetails') : t('showDetails')}</span>
-          <ChevronDown className="h-4 w-4 transition-transform" style={{ transform: showDetails ? 'rotate(180deg)' : 'rotate(0deg)' }} />
-        </button>
-      </div>
-
-      {showDetails && (
-        <div className="space-y-6">
-          <BrandIdentityPathCards />
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <BrandVoicePanel />
-            <BrandVisualDirectionPanel />
-          </div>
-        </div>
+      {/* DNA Editor or Preview */}
+      {isEditing ? (
+        <BrandDnaEditor
+          initialData={localDna ? { ...localDna, identityType: localIdentityType || undefined } : undefined}
+          onSave={handleSaveDna}
+          onCancel={handleCancel}
+          isSaving={isSaving}
+          saveSuccess={saveSuccess}
+          saveError={saveError}
+        />
+      ) : (
+        <BrandDnaPreview
+          dna={localDna}
+          identityType={localIdentityType}
+        />
       )}
+
+      {/* Legacy DNA Canvas (compact, honest preview) */}
+      <BrandDnaCanvas brand={brand} compact />
     </div>
   );
 }

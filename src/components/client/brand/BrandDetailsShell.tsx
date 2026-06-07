@@ -12,7 +12,7 @@ import { BrandIdentityTab } from './BrandIdentityTab';
 import { BrandChannelsTab } from './BrandChannelsTab';
 import { BrandAssetsTab } from './BrandAssetsTab';
 import { BrandSettingsTab } from './BrandSettingsTab';
-import type { Brand } from '@/lib/brand/types';
+import type { Brand, BrandCoreProfile } from '@/lib/brand/types';
 import {
   ArrowLeft,
   Building2,
@@ -25,6 +25,7 @@ import {
 
 interface BrandDetailsShellProps {
   brand: Brand;
+  profile?: BrandCoreProfile | null;
 }
 
 type TabKey = 'overview' | 'identity' | 'channels' | 'assets' | 'settings';
@@ -37,7 +38,7 @@ const tabs: { key: TabKey; labelKey: string; icon: React.ReactNode }[] = [
   { key: 'settings', labelKey: 'settings', icon: <Settings className="h-4 w-4" /> },
 ];
 
-export function BrandDetailsShell({ brand }: BrandDetailsShellProps) {
+export function BrandDetailsShell({ brand, profile }: BrandDetailsShellProps) {
   const t = useTranslations('clientBrand.v1.ui.details');
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabKey>('overview');
@@ -134,10 +135,13 @@ export function BrandDetailsShell({ brand }: BrandDetailsShellProps) {
         {activeTab === 'overview' && (
           <BrandOverviewTab
             brand={brand}
+            profile={profile}
             onNavigateToIdentity={() => setActiveTab('identity')}
           />
         )}
-        {activeTab === 'identity' && <BrandIdentityTab brand={brand} />}
+        {activeTab === 'identity' && (
+          <BrandIdentityTab brand={brand} profile={profile} onBrandUpdated={handleBrandUpdated} />
+        )}
         {activeTab === 'channels' && <BrandChannelsTab brand={brand} />}
         {activeTab === 'assets' && <BrandAssetsTab brand={brand} />}
         {activeTab === 'settings' && <BrandSettingsTab brand={brand} onBrandUpdated={handleBrandUpdated} />}

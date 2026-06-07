@@ -174,7 +174,7 @@ export const LOGO_PATH_PATTERN = '{userId}/{brandId}/{filename}';
 export const LOGO_PATH_PATTERN_WITH_EXT = '{userId}/{brandId}/logo.{ext}';
 
 // ============================================================================
-// Brand Type Constants
+// Brand Type Constants (operational — used in create form)
 // ============================================================================
 
 /**
@@ -199,3 +199,25 @@ export const BRAND_TYPES = {
  * Array of all brand type values
  */
 export const BRAND_TYPE_VALUES = Object.values(BRAND_TYPES) as readonly (typeof BRAND_TYPES)[keyof typeof BRAND_TYPES][];
+
+// ============================================================================
+// Identity Brand Type Constants (strategic — used in DNA editor)
+// ============================================================================
+
+/**
+ * Strategic identity brand types
+ * Stored in brand_core_profiles.brand_dna.identityType
+ */
+export const IDENTITY_BRAND_TYPES = {
+  COMPANY: 'company',
+  SERVICE: 'service',
+  PRODUCT: 'product',
+  AFTER_SALES: 'after_sales',
+  SEASONAL: 'seasonal',
+  HYBRID: 'hybrid',
+} as const;
+
+/**
+ * Array of all identity brand type values
+ */
+export const IDENTITY_BRAND_TYPE_VALUES = Object.values(IDENTITY_BRAND_TYPES) as readonly (typeof IDENTITY_BRAND_TYPES)[keyof typeof IDENTITY_BRAND_TYPES][];

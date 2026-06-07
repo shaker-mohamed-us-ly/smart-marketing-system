@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/shared/Card';
 import { IconFrame } from '@/components/shared/IconFrame';
-import type { Brand, BrandOnboardingStatus } from '@/lib/brand/types';
+import type { Brand, BrandCoreProfile, BrandOnboardingStatus } from '@/lib/brand/types';
 import {
   Check,
   Circle,
@@ -17,6 +17,7 @@ import {
 
 interface BrandProgressStepperProps {
   brand: Brand;
+  profile?: BrandCoreProfile | null;
 }
 
 interface StepConfig {
@@ -60,7 +61,7 @@ function getStepState(
   return 'pending';
 }
 
-export function BrandProgressStepper({ brand }: BrandProgressStepperProps) {
+export function BrandProgressStepper({ brand, profile }: BrandProgressStepperProps) {
   const t = useTranslations('clientBrand.v1.ui.details');
   const currentStatus = brand.onboarding_status;
 

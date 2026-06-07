@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/shared/Card';
 import { Button } from '@/components/shared/Button';
-import type { Brand } from '@/lib/brand/types';
+import type { Brand, BrandCoreProfile } from '@/lib/brand/types';
 import {
   Fingerprint,
   Link2,
@@ -13,6 +13,7 @@ import {
 
 interface BrandQuickActionsProps {
   brand: Brand;
+  profile?: BrandCoreProfile | null;
   onNavigateToIdentity?: () => void;
 }
 
@@ -24,22 +25,30 @@ interface ActionConfig {
   onClick?: () => void;
 }
 
-export function BrandQuickActions({ brand, onNavigateToIdentity }: BrandQuickActionsProps) {
+function hasDna(profile?: BrandCoreProfile | null): boolean {
+  if (!profile?.brand_dna) return false;
+  const bd = profile.brand_dna as Record<string, unknown>;
+  const dna = (bd.dna as Record<string, string>) || {};
+  return !!bd.identityType || Object.values(dna).some((v) => !!v?.trim());
+}
+
+export function BrandQuickActions({ profile, onNavigateToIdentity }: BrandQuickActionsProps) {
   const t = useTranslations('clientBrand.v1.ui.details');
+  const hasAnyDna = hasDna(profile);
 
   const actions: ActionConfig[] = [
     {
-      key: 'completeIdentity',
+      key: hasAnyDna ? 'completeIdentity' : 'completeIdentity',
       icon: <Fingerprint className="h-4 w-4" />,
       tone: 'violet',
-      disabled: brand.onboarding_status !== 'created',
+      disabled: false,
       onClick: onNavigateToIdentity,
     },
     {
       key: 'connectChannels',
       icon: <Link2 className="h-4 w-4" />,
       tone: 'emerald',
-      disabled: brand.onboarding_status !== 'profile_complete',
+      disabled: true,
     },
     {
       key: 'brandSettings',
