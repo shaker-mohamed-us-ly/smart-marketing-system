@@ -143,7 +143,7 @@ export function BrandDetailsShell({ brand, profile }: BrandDetailsShellProps) {
           <BrandIdentityTab brand={brand} profile={profile} onBrandUpdated={handleBrandUpdated} />
         )}
         {activeTab === 'channels' && <BrandChannelsTab brand={brand} />}
-        {activeTab === 'assets' && <BrandAssetsTab brand={brand} />}
+        {activeTab === 'assets' && <BrandAssetsTab brand={brand} onBrandUpdated={handleBrandUpdated} />}
         {activeTab === 'settings' && <BrandSettingsTab brand={brand} onBrandUpdated={handleBrandUpdated} />}
       </div>
     </div>

@@ -18,15 +18,23 @@ function extractIdentityType(profile?: BrandCoreProfile | null): BrandIdentityTy
   return (bd.identityType as BrandIdentityType) || null;
 }
 
-function getDnaCompletion(profile?: BrandCoreProfile | null): {
+function getDnaCompletion(profile?: BrandCoreProfile | null, logoUrl?: string | null): {
   hasType: boolean;
   hasAudience: boolean;
   hasTone: boolean;
   hasPositioning: boolean;
   hasVisualDirection: boolean;
+  hasLogo: boolean;
 } {
   if (!profile?.brand_dna) {
-    return { hasType: false, hasAudience: false, hasTone: false, hasPositioning: false, hasVisualDirection: false };
+    return {
+      hasType: false,
+      hasAudience: false,
+      hasTone: false,
+      hasPositioning: false,
+      hasVisualDirection: false,
+      hasLogo: !!logoUrl,
+    };
   }
   const bd = profile.brand_dna as Record<string, unknown>;
   const dna = (bd.dna as Record<string, string>) || {};
@@ -36,6 +44,7 @@ function getDnaCompletion(profile?: BrandCoreProfile | null): {
     hasTone: !!dna.tone?.trim(),
     hasPositioning: !!dna.positioning?.trim(),
     hasVisualDirection: !!dna.visualDirection?.trim(),
+    hasLogo: !!logoUrl,
   };
 }
 
@@ -44,9 +53,9 @@ export function BrandOverviewTab({ brand, profile, onNavigateToIdentity }: Brand
   const tCompletion = useTranslations('clientBrand.v1.ui.details.identityStudio.dnaCompletion');
 
   const identityType = extractIdentityType(profile);
-  const completion = getDnaCompletion(profile);
+  const completion = getDnaCompletion(profile, brand.logo_url);
   const completedCount = Object.values(completion).filter(Boolean).length;
-  const totalCount = 5;
+  const totalCount = 6;
 
   const completionLabel =
     completedCount === 0 ? tCompletion('incomplete')
@@ -106,6 +115,7 @@ export function BrandOverviewTab({ brand, profile, onNavigateToIdentity }: Brand
                 { key: 'hasTone', label: tCompletion('hasTone'), done: completion.hasTone },
                 { key: 'hasPositioning', label: tCompletion('hasPositioning'), done: completion.hasPositioning },
                 { key: 'hasVisualDirection', label: tCompletion('hasVisualDirection'), done: completion.hasVisualDirection },
+                { key: 'hasLogo', label: tCompletion('hasLogo'), done: completion.hasLogo },
               ].map((item) => (
                 <div key={item.key} className="flex items-center gap-2.5">
                   {item.done ? (
