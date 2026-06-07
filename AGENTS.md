@@ -65,3 +65,11 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Prompt Master** (`nidhinjs/prompt-master`) and **Claude methodology** are used as **prompt governance only** — never install as a dependency.
 - Existing `git`, `backend`, `ui`, and `i18n` rules in `AGENTS.md` and `.devin/rules/*` remain authoritative.
 - External methodology source sync is **report-only** unless the user explicitly approves applying changes.
+
+## Smart Repair OS
+
+Smart Repair OS is documented in `.devin/rules/smart-repair-os-protocol.md`. Use it for tooling/browser/test failures and scoped system bugs. Never auto-fix Auth, Supabase/RLS, migrations, package/env, or destructive data operations without explicit user approval. Every repair must emit a FIX stamp and pass evidence gates.
+
+- **Tooling Repair Engine:** `scripts/tooling/cascade-self-healing-engine.mjs` — browser/CDP/dev server/Git tooling recovery.
+- **System Repair Engine:** `scripts/tooling/cascade-system-repair-engine.mjs` — scoped i18n/TypeScript/Zod/UI/test bug diagnosis and repair planning.
+- **Unified Orchestrator:** `scripts/tooling/smart-repair-os.mjs` — coordinates both engines with safety level classification.
