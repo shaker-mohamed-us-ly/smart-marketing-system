@@ -36,6 +36,7 @@ import {
   Check,
   ChevronRight,
   ChevronLeft,
+  RotateCcw,
 } from 'lucide-react';
 
 interface BrandOperatingProfileBuilderProps {
@@ -161,6 +162,17 @@ export function BrandOperatingProfileBuilder({ initialProfile, onSave, disabled 
     onSave(profile);
   }, [profile, onSave]);
 
+  const handleReset = useCallback(() => {
+    setProfile({
+      businessModel: undefined,
+      salesMotion: undefined,
+      growthIntent: undefined,
+      identityMaturity: undefined,
+    });
+    setCurrentStep(0);
+    setShowSummary(false);
+  }, []);
+
   const currentStepConfig = steps[currentStep];
   const stepKey = stepKeys[currentStep];
 
@@ -221,6 +233,9 @@ export function BrandOperatingProfileBuilder({ initialProfile, onSave, disabled 
           <div className="flex gap-3 pt-2">
             <Button variant="outline" size="sm" onClick={handleBack} disabled={disabled} className="flex-1">
               {t('edit')}
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleReset} disabled={disabled} className="flex-1" icon={<RotateCcw className="h-3.5 w-3.5" />} iconPosition="start">
+              {t('reset')}
             </Button>
             <Button size="sm" onClick={handleSave} disabled={disabled} className="flex-1">
               {t('save')}
@@ -330,9 +345,23 @@ export function BrandOperatingProfileBuilder({ initialProfile, onSave, disabled 
           >
             {t('cancel')}
           </Button>
-          <span className="text-xs" style={{ color: 'var(--sms-v8-text-3)' }}>
-            {currentStep + 1} / {totalSteps}
-          </span>
+          <div className="flex items-center gap-3">
+            {completedSteps > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleReset}
+                disabled={disabled}
+                icon={<RotateCcw className="h-3.5 w-3.5" />}
+                iconPosition="start"
+              >
+                {t('reset')}
+              </Button>
+            )}
+            <span className="text-xs" style={{ color: 'var(--sms-v8-text-3)' }}>
+              {currentStep + 1} / {totalSteps}
+            </span>
+          </div>
           <Button
             variant="ghost"
             size="sm"

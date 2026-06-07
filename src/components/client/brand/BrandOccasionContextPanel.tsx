@@ -40,7 +40,7 @@ const occasions: { key: BrandOccasionMode; icon: React.ReactNode; tone: 'violet'
 export function BrandOccasionContextPanel({ initialContext, onSave, disabled }: BrandOccasionContextPanelProps) {
   const t = useTranslations('clientBrand.v1.ui.details.identityStudio.occasionContext');
 
-  const [expanded, setExpanded] = useState(!!initialContext?.enabled);
+  const [expanded, setExpanded] = useState(true);
   const [enabled, setEnabled] = useState(!!initialContext?.enabled);
   const [selectedMode, setSelectedMode] = useState<BrandOccasionMode | undefined>(initialContext?.activeMode || undefined);
 
@@ -136,11 +136,9 @@ export function BrandOccasionContextPanel({ initialContext, onSave, disabled }: 
             })}
           </div>
 
-          {enabled && (
-            <Button size="sm" onClick={handleSave} disabled={disabled} fullWidth>
-              {t('save')}
-            </Button>
-          )}
+          <Button size="sm" onClick={handleSave} disabled={disabled} fullWidth>
+            {t('save')}
+          </Button>
         </CardContent>
       )}
     </Card>

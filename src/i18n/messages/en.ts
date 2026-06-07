@@ -3879,6 +3879,7 @@ const en = {
               edit: "Edit",
               cancel: "Cancel",
               save: "Save Operating Profile",
+              reset: "Reset",
               next: "Next",
               previewTitle: "Operating Profile Summary",
             },
