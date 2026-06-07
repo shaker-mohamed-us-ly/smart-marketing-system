@@ -124,6 +124,66 @@ export type BrandIdentityType =
   | 'hybrid';
 
 // ============================================================================
+// Brand Operating Profile (VNext)
+// ============================================================================
+
+/**
+ * Operating Profile — how the brand runs
+ * Stored in brand_core_profiles.brand_dna.operatingProfile
+ */
+export type BrandBusinessModel =
+  | 'company'
+  | 'service_business'
+  | 'product_brand'
+  | 'retail'
+  | 'personal_expert'
+  | 'hybrid';
+
+export type BrandSalesMotion =
+  | 'direct_purchase'
+  | 'consultation'
+  | 'quote_request'
+  | 'catalog'
+  | 'subscription';
+
+export type BrandGrowthIntent =
+  | 'trust'
+  | 'conversion'
+  | 'awareness'
+  | 'retention'
+  | 'launch'
+  | 'repositioning';
+
+export type BrandIdentityMaturity =
+  | 'none'
+  | 'logo_only'
+  | 'colors_logo'
+  | 'full_identity'
+  | 'refresh';
+
+export type BrandOccasionMode =
+  | 'ramadan'
+  | 'eid'
+  | 'national_day'
+  | 'sale'
+  | 'launch'
+  | 'new_branch'
+  | 'back_to_school'
+  | 'custom';
+
+export interface BrandOperatingProfile {
+  businessModel?: BrandBusinessModel;
+  salesMotion?: BrandSalesMotion;
+  growthIntent?: BrandGrowthIntent;
+  identityMaturity?: BrandIdentityMaturity;
+}
+
+export interface BrandOccasionContext {
+  enabled?: boolean;
+  activeMode?: BrandOccasionMode;
+}
+
+// ============================================================================
 // DNA Editor Input
 // ============================================================================
 
@@ -133,6 +193,8 @@ export type BrandIdentityType =
  */
 export interface BrandDnaEditorInput {
   identityType?: BrandIdentityType;
+  operatingProfile?: BrandOperatingProfile;
+  occasionContext?: BrandOccasionContext;
   audience?: string;
   tone?: string;
   values?: string;

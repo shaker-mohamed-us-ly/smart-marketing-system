@@ -2,17 +2,25 @@
 
 import { useState, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/shared/Card';
-import { IconFrame } from '@/components/shared/IconFrame';
-import { Button } from '@/components/shared/Button';
 import { BrandTypeSelector } from './BrandTypeSelector';
 import { BrandDnaEditor } from './BrandDnaEditor';
 import { BrandDnaPreview } from './BrandDnaPreview';
 import { BrandDnaCanvas } from './BrandDnaCanvas';
-import type { Brand, BrandCoreProfile, BrandIdentityType, BrandDnaEditorInput } from '@/lib/brand/types';
-import {
-  Fingerprint, Pencil, CheckCircle2, AlertCircle,
-} from 'lucide-react';
+import { BrandOperatingProfileBuilder } from './BrandOperatingProfileBuilder';
+import { BrandOperatingProfilePreview } from './BrandOperatingProfilePreview';
+import { BrandOccasionContextPanel } from './BrandOccasionContextPanel';
+import { BrandProfileIntelligenceHero } from './BrandProfileIntelligenceHero';
+import { BrandStrategyUseMap } from './BrandStrategyUseMap';
+import { Card, CardContent } from '@/components/shared/Card';
+import { AlertTriangle } from 'lucide-react';
+import type {
+  Brand,
+  BrandCoreProfile,
+  BrandIdentityType,
+  BrandDnaEditorInput,
+  BrandOperatingProfile,
+  BrandOccasionContext,
+} from '@/lib/brand/types';
 
 interface BrandIdentityTabProps {
   brand: Brand;
@@ -20,8 +28,10 @@ interface BrandIdentityTabProps {
   onBrandUpdated?: () => void;
 }
 
-function extractDnaFromProfile(profile?: BrandCoreProfile | null): {
+function extractIdentityData(profile?: BrandCoreProfile | null): {
   identityType?: BrandIdentityType | null;
+  operatingProfile?: BrandOperatingProfile | null;
+  occasionContext?: BrandOccasionContext | null;
   dna?: BrandDnaEditorInput | null;
 } {
   if (!profile?.brand_dna) return {};
@@ -30,8 +40,12 @@ function extractDnaFromProfile(profile?: BrandCoreProfile | null): {
 
   return {
     identityType: (bd.identityType as BrandIdentityType) || null,
+    operatingProfile: (bd.operatingProfile as BrandOperatingProfile) || null,
+    occasionContext: (bd.occasionContext as BrandOccasionContext) || null,
     dna: {
       identityType: (bd.identityType as BrandIdentityType) || undefined,
+      operatingProfile: (bd.operatingProfile as BrandOperatingProfile) || undefined,
+      occasionContext: (bd.occasionContext as BrandOccasionContext) || undefined,
       audience: dnaBlock.audience || '',
       tone: dnaBlock.tone || '',
       values: dnaBlock.values || '',
@@ -51,19 +65,94 @@ export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdenti
   const t = useTranslations('clientBrand.v1.ui.details.identityStudio');
   const tEditor = useTranslations('clientBrand.v1.ui.details.identityStudio.dnaEditor');
 
-  const { identityType: initialIdentityType, dna: initialDna } = extractDnaFromProfile(profile);
+  const {
+    identityType: initialIdentityType,
+    operatingProfile: initialOperatingProfile,
+    occasionContext: initialOccasionContext,
+    dna: initialDna,
+  } = extractIdentityData(profile);
 
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+
   const [localIdentityType, setLocalIdentityType] = useState<BrandIdentityType | null>(initialIdentityType || null);
+  const [localOperatingProfile, setLocalOperatingProfile] = useState<BrandOperatingProfile | null>(initialOperatingProfile || null);
+  const [localOccasionContext, setLocalOccasionContext] = useState<BrandOccasionContext | null>(initialOccasionContext || null);
   const [localDna, setLocalDna] = useState<BrandDnaEditorInput | null>(initialDna || null);
+
+  const hasDna = !!localDna && Object.entries(localDna).some(([k, v]) => {
+    if (k === 'identityType' || k === 'operatingProfile' || k === 'occasionContext') return false;
+    return typeof v === 'string' && v.trim().length > 0;
+  });
 
   const handleTypeSelect = useCallback((type: BrandIdentityType) => {
     setLocalIdentityType(type);
     setSaveSuccess(false);
   }, []);
+
+  const handleSaveOperatingProfile = useCallback(async (op: BrandOperatingProfile) => {
+    setIsSaving(true);
+    setSaveError(null);
+    setSaveSuccess(false);
+
+    try {
+      const { updateBrandDna } = await import('@/lib/brand/server-actions');
+      const payload: BrandDnaEditorInput = {
+        ...(localDna || {}),
+        identityType: localIdentityType || undefined,
+        operatingProfile: op,
+        occasionContext: localOccasionContext || undefined,
+      };
+
+      const result = await updateBrandDna(brand.id, payload);
+
+      if (result.success) {
+        setSaveSuccess(true);
+        setLocalOperatingProfile(op);
+        if (onBrandUpdated) onBrandUpdated();
+      } else {
+        setSaveError(tEditor('error'));
+      }
+    } catch (err) {
+      console.error('[BrandIdentityTab] profile save error:', err);
+      setSaveError(tEditor('error'));
+    } finally {
+      setIsSaving(false);
+    }
+  }, [brand.id, localDna, localIdentityType, localOccasionContext, onBrandUpdated, tEditor]);
+
+  const handleSaveOccasionContext = useCallback(async (oc: BrandOccasionContext) => {
+    setIsSaving(true);
+    setSaveError(null);
+    setSaveSuccess(false);
+
+    try {
+      const { updateBrandDna } = await import('@/lib/brand/server-actions');
+      const payload: BrandDnaEditorInput = {
+        ...(localDna || {}),
+        identityType: localIdentityType || undefined,
+        operatingProfile: localOperatingProfile || undefined,
+        occasionContext: oc,
+      };
+
+      const result = await updateBrandDna(brand.id, payload);
+
+      if (result.success) {
+        setSaveSuccess(true);
+        setLocalOccasionContext(oc);
+        if (onBrandUpdated) onBrandUpdated();
+      } else {
+        setSaveError(tEditor('error'));
+      }
+    } catch (err) {
+      console.error('[BrandIdentityTab] occasion save error:', err);
+      setSaveError(tEditor('error'));
+    } finally {
+      setIsSaving(false);
+    }
+  }, [brand.id, localDna, localIdentityType, localOperatingProfile, onBrandUpdated, tEditor]);
 
   const handleSaveDna = useCallback(async (data: BrandDnaEditorInput) => {
     setIsSaving(true);
@@ -75,6 +164,8 @@ export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdenti
       const payload: BrandDnaEditorInput = {
         ...data,
         identityType: localIdentityType || undefined,
+        operatingProfile: localOperatingProfile || undefined,
+        occasionContext: localOccasionContext || undefined,
       };
 
       const result = await updateBrandDna(brand.id, payload);
@@ -83,9 +174,7 @@ export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdenti
         setSaveSuccess(true);
         setIsEditing(false);
         setLocalDna(data);
-        if (onBrandUpdated) {
-          onBrandUpdated();
-        }
+        if (onBrandUpdated) onBrandUpdated();
       } else {
         setSaveError(tEditor('error'));
       }
@@ -95,78 +184,83 @@ export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdenti
     } finally {
       setIsSaving(false);
     }
-  }, [brand.id, localIdentityType, onBrandUpdated, tEditor]);
+  }, [brand.id, localIdentityType, localOperatingProfile, localOccasionContext, onBrandUpdated, tEditor]);
 
   const handleCancel = useCallback(() => {
     setIsEditing(false);
     setSaveError(null);
     setSaveSuccess(false);
-    // Reset to saved values
     setLocalIdentityType(initialIdentityType || null);
+    setLocalOperatingProfile(initialOperatingProfile || null);
+    setLocalOccasionContext(initialOccasionContext || null);
     setLocalDna(initialDna || null);
-  }, [initialIdentityType, initialDna]);
+  }, [initialIdentityType, initialOperatingProfile, initialOccasionContext, initialDna]);
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <Card variant="elevated" padding="lg" tone="violet">
-        <CardHeader className="pb-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <IconFrame size="md" tone="violet" decorative>
-                <Fingerprint className="h-5 w-5" />
-              </IconFrame>
-              <div>
-                <CardTitle className="text-base">{t('dnaSummary.title')}</CardTitle>
-                <CardDescription className="text-sm">{t('dnaSummary.subtitle', { brandName: brand.name })}</CardDescription>
-              </div>
-            </div>
-            {!isEditing && (
-              <Button
-                variant="outline"
-                size="sm"
-                icon={<Pencil className="h-4 w-4" />}
-                iconPosition="start"
-                onClick={() => setIsEditing(true)}
-              >
-                {tEditor('edit')}
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Honest status notice */}
-          {saveSuccess && (
-            <div
-              className="flex items-center gap-2 p-3 rounded-lg"
-              style={{ background: 'rgba(16,185,129,0.08)', border: '1px solid var(--sms-v8-border)' }}
-            >
-              <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: '#059669' }} />
-              <p className="text-sm font-medium" style={{ color: 'var(--sms-v8-text)' }}>{tEditor('success')}</p>
-            </div>
-          )}
+      {/* Hero Intelligence Panel */}
+      <BrandProfileIntelligenceHero
+        profile={localOperatingProfile}
+        hasDna={hasDna}
+        onBuildProfile={() => setIsEditing(true)}
+        onEditDna={() => setIsEditing(true)}
+        disabled={isSaving}
+      />
 
-          <div
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs"
-            style={{ background: 'var(--sms-v8-surface)', color: 'var(--sms-v8-text-3)', border: '1px solid var(--sms-v8-border)' }}
-          >
-            <AlertCircle className="h-3.5 w-3.5 shrink-0" style={{ color: 'var(--sms-v8-text-3)' }} />
-            <span>{t('previewOnly')}</span>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Operating Profile Builder */}
+      <BrandOperatingProfileBuilder
+        initialProfile={localOperatingProfile}
+        onSave={handleSaveOperatingProfile}
+        disabled={isSaving}
+      />
 
-      {/* Brand Type Selector */}
-      <BrandTypeSelector
-        selectedType={localIdentityType}
-        onSelect={handleTypeSelect}
+      {/* Operating Profile Preview (when saved) */}
+      {localOperatingProfile?.businessModel && (
+        <BrandOperatingProfilePreview profile={localOperatingProfile} />
+      )}
+
+      {/* Legacy seasonal notice */}
+      {initialIdentityType === 'seasonal' && (
+        <Card variant="subtle" padding="md">
+          <CardContent className="flex items-start gap-3">
+            <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" style={{ color: 'var(--sms-v8-text-3)' }} />
+            <div>
+              <p className="text-sm font-medium" style={{ color: 'var(--sms-v8-text)' }}>
+                {t('legacySeasonalNoticeTitle')}
+              </p>
+              <p className="text-xs mt-1 leading-relaxed" style={{ color: 'var(--sms-v8-text-3)' }}>
+                {t('legacySeasonalNoticeDescription')}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Legacy Brand Type Selector (preserve existing data) */}
+      {initialIdentityType && (
+        <BrandTypeSelector
+          selectedType={localIdentityType}
+          onSelect={handleTypeSelect}
+          disabled={isSaving}
+        />
+      )}
+
+      {/* Occasion Context Panel */}
+      <BrandOccasionContextPanel
+        initialContext={localOccasionContext}
+        onSave={handleSaveOccasionContext}
         disabled={isSaving}
       />
 
       {/* DNA Editor or Preview */}
       {isEditing ? (
         <BrandDnaEditor
-          initialData={localDna ? { ...localDna, identityType: localIdentityType || undefined } : undefined}
+          initialData={localDna ? {
+            ...localDna,
+            identityType: localIdentityType || undefined,
+            operatingProfile: localOperatingProfile || undefined,
+            occasionContext: localOccasionContext || undefined,
+          } : undefined}
           onSave={handleSaveDna}
           onCancel={handleCancel}
           isSaving={isSaving}
@@ -174,13 +268,19 @@ export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdenti
           saveError={saveError}
         />
       ) : (
-        <BrandDnaPreview
-          dna={localDna}
-          identityType={localIdentityType}
-        />
+        <>
+          <BrandDnaPreview
+            dna={localDna}
+            identityType={localIdentityType}
+          />
+          <BrandStrategyUseMap
+            dna={localDna}
+            profile={localOperatingProfile}
+          />
+        </>
       )}
 
-      {/* Legacy DNA Canvas (compact, honest preview) */}
+      {/* Legacy DNA Canvas */}
       <BrandDnaCanvas brand={brand} compact />
     </div>
   );

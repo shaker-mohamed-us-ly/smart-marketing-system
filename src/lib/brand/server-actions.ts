@@ -622,9 +622,25 @@ export async function updateBrandDna(
     const existingDna = (existingProfile?.brand_dna as Record<string, unknown>) || {};
     const dnaFields = validation.data;
 
+    // Merge operatingProfile if provided
+    const existingOp = (existingDna.operatingProfile as Record<string, unknown>) || {};
+    const newOp = dnaFields.operatingProfile;
+    const mergedOp = newOp
+      ? { ...existingOp, ...newOp }
+      : existingOp;
+
+    // Merge occasionContext if provided
+    const existingOcc = (existingDna.occasionContext as Record<string, unknown>) || {};
+    const newOcc = dnaFields.occasionContext;
+    const mergedOcc = newOcc
+      ? { ...existingOcc, ...newOcc }
+      : existingOcc;
+
     const mergedDna: Record<string, unknown> = {
       ...existingDna,
       identityType: dnaFields.identityType ?? existingDna.identityType,
+      ...(Object.keys(mergedOp).length > 0 && { operatingProfile: mergedOp }),
+      ...(Object.keys(mergedOcc).length > 0 && { occasionContext: mergedOcc }),
       dna: {
         ...((existingDna.dna as Record<string, unknown>) || {}),
         ...(dnaFields.audience !== undefined && { audience: dnaFields.audience }),

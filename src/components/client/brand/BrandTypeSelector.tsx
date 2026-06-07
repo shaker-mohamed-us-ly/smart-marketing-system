@@ -9,7 +9,6 @@ import {
   Wrench,
   Package,
   HeadphonesIcon,
-  CalendarDays,
   Layers,
   Check,
 } from 'lucide-react';
@@ -25,7 +24,6 @@ const typeConfigs: { key: BrandIdentityType; icon: React.ReactNode; tone: IconFr
   { key: 'service', icon: <Wrench className="h-5 w-5" />, tone: 'sky' },
   { key: 'product', icon: <Package className="h-5 w-5" />, tone: 'emerald' },
   { key: 'after_sales', icon: <HeadphonesIcon className="h-5 w-5" />, tone: 'amber' },
-  { key: 'seasonal', icon: <CalendarDays className="h-5 w-5" />, tone: 'orange' },
   { key: 'hybrid', icon: <Layers className="h-5 w-5" />, tone: 'slate' },
 ];
 

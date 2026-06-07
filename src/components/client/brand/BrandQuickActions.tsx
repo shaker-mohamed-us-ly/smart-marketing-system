@@ -38,23 +38,23 @@ export function BrandQuickActions({ profile, onNavigateToIdentity }: BrandQuickA
 
   const actions: ActionConfig[] = [
     {
-      key: hasAnyDna ? 'completeIdentity' : 'completeIdentity',
+      key: 'completeIdentity',
       icon: <Fingerprint className="h-4 w-4" />,
       tone: 'violet',
       disabled: false,
       onClick: onNavigateToIdentity,
     },
     {
+      key: 'manageAssets',
+      icon: <Settings className="h-4 w-4" />,
+      tone: 'slate',
+      disabled: false,
+    },
+    {
       key: 'connectChannels',
       icon: <Link2 className="h-4 w-4" />,
       tone: 'emerald',
       disabled: true,
-    },
-    {
-      key: 'brandSettings',
-      icon: <Settings className="h-4 w-4" />,
-      tone: 'slate',
-      disabled: false,
     },
   ];
 

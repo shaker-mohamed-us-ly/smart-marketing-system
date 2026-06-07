@@ -23,7 +23,6 @@ import {
   MousePointerClick,
   Gift,
   ShieldCheck,
-  CalendarDays,
 } from 'lucide-react';
 
 interface BrandDnaEditorProps {
@@ -44,18 +43,17 @@ interface FieldConfig {
 const coreFields: FieldConfig[] = [
   { key: 'audience', icon: <Users className="h-4 w-4" />, tone: 'sky' },
   { key: 'tone', icon: <Mic className="h-4 w-4" />, tone: 'violet' },
-  { key: 'values', icon: <Heart className="h-4 w-4" />, tone: 'orange' },
   { key: 'positioning', icon: <Target className="h-4 w-4" />, tone: 'amber' },
-  { key: 'differentiation', icon: <Sparkles className="h-4 w-4" />, tone: 'emerald' },
+  { key: 'visualDirection', icon: <Eye className="h-4 w-4" />, tone: 'orange' },
 ];
 
 const advancedFields: FieldConfig[] = [
-  { key: 'visualDirection', icon: <Eye className="h-4 w-4" />, tone: 'orange' },
+  { key: 'values', icon: <Heart className="h-4 w-4" />, tone: 'orange' },
+  { key: 'differentiation', icon: <Sparkles className="h-4 w-4" />, tone: 'emerald' },
   { key: 'contentRules', icon: <FileText className="h-4 w-4" />, tone: 'slate' },
   { key: 'ctaStyle', icon: <MousePointerClick className="h-4 w-4" />, tone: 'sky' },
   { key: 'offerStyle', icon: <Gift className="h-4 w-4" />, tone: 'violet' },
   { key: 'trustProof', icon: <ShieldCheck className="h-4 w-4" />, tone: 'emerald' },
-  { key: 'seasonalNotes', icon: <CalendarDays className="h-4 w-4" />, tone: 'amber' },
 ];
 
 export function BrandDnaEditor({
@@ -70,6 +68,8 @@ export function BrandDnaEditor({
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [formData, setFormData] = useState<BrandDnaEditorInput>({
     identityType: initialData?.identityType,
+    operatingProfile: initialData?.operatingProfile,
+    occasionContext: initialData?.occasionContext,
     audience: initialData?.audience || '',
     tone: initialData?.tone || '',
     values: initialData?.values || '',
@@ -91,6 +91,8 @@ export function BrandDnaEditor({
     // Send all fields (including empty strings) so clearing a field persists
     const payload: BrandDnaEditorInput = {
       identityType: formData.identityType,
+      operatingProfile: formData.operatingProfile,
+      occasionContext: formData.occasionContext,
       audience: (formData.audience || '').trim(),
       tone: (formData.tone || '').trim(),
       values: (formData.values || '').trim(),

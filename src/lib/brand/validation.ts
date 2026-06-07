@@ -150,6 +150,16 @@ export const ConnectedChannelPlaceholderInputSchema = z.object({
  */
 export const BrandDnaEditorInputSchema = z.object({
   identityType: z.enum(['company', 'service', 'product', 'after_sales', 'seasonal', 'hybrid']).optional(),
+  operatingProfile: z.object({
+    businessModel: z.enum(['company', 'service_business', 'product_brand', 'retail', 'personal_expert', 'hybrid']).optional(),
+    salesMotion: z.enum(['direct_purchase', 'consultation', 'quote_request', 'catalog', 'subscription']).optional(),
+    growthIntent: z.enum(['trust', 'conversion', 'awareness', 'retention', 'launch', 'repositioning']).optional(),
+    identityMaturity: z.enum(['none', 'logo_only', 'colors_logo', 'full_identity', 'refresh']).optional(),
+  }).optional(),
+  occasionContext: z.object({
+    enabled: z.boolean().optional(),
+    activeMode: z.enum(['ramadan', 'eid', 'national_day', 'sale', 'launch', 'new_branch', 'back_to_school', 'custom']).optional(),
+  }).optional(),
   audience: z.string().max(300).trim().optional(),
   tone: z.string().max(300).trim().optional(),
   values: z.string().max(300).trim().optional(),
