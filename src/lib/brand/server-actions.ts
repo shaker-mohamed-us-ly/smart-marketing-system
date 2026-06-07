@@ -685,17 +685,56 @@ export async function uploadBrandLogo(brandId: string, file: File): Promise<Bran
       );
     }
 
-    // TODO: Implement actual file upload with FormData handling
-    // This requires proper Server Action file upload pattern
-    // For now, return typed failure with clear blocker
-    return makeBrandActionFailure(
-      new BrandOSError(
-        'BRAND_LOGO_UPLOAD_FAILED',
-        'Logo upload not yet implemented - requires FormData handling in Server Actions',
-        'TODO: Implement FormData-based file upload in Server Actions',
-        'uploadBrandLogo'
-      )
-    );
+    // Generate safe filename and storage path
+    const safeFileName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, '_');
+    const timestamp = Date.now();
+    const path = `${user.id}/${idValidation.data}/${timestamp}-${safeFileName}`;
+
+    // Convert File to buffer for Supabase Storage upload
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = new Uint8Array(arrayBuffer);
+
+    // Upload to Supabase Storage
+    const { error: uploadError } = await supabase
+      .storage
+      .from(STORAGE_BUCKET)
+      .upload(path, buffer, {
+        contentType: file.type,
+        upsert: true,
+      });
+
+    if (uploadError) {
+      return makeBrandActionFailure(
+        new BrandOSError(
+          'BRAND_LOGO_UPLOAD_FAILED',
+          uploadError.message || 'Failed to upload logo to storage',
+          uploadError.message,
+          'uploadBrandLogo'
+        )
+      );
+    }
+
+    // Get public URL
+    const { data: publicUrlData } = supabase
+      .storage
+      .from(STORAGE_BUCKET)
+      .getPublicUrl(path);
+
+    const publicUrl = publicUrlData.publicUrl;
+
+    // Update brand with new logo_url
+    const { error: updateError } = await supabase
+      .from('brands')
+      .update({ logo_url: publicUrl })
+      .eq('id', idValidation.data)
+      .select()
+      .single();
+
+    if (updateError) {
+      return makeBrandActionFailure(mapSupabaseErrorToBrandError(updateError, 'uploadBrandLogo'));
+    }
+
+    return makeBrandActionSuccess<BrandLogoUploadResult>({ publicUrl, path });
   } catch (error) {
     return toBrandActionFailure(error, 'uploadBrandLogo');
   }

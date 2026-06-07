@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/shared/Button';
 import { IconFrame } from '@/components/shared/IconFrame';
@@ -38,7 +39,12 @@ const tabs: { key: TabKey; labelKey: string; icon: React.ReactNode }[] = [
 
 export function BrandDetailsShell({ brand }: BrandDetailsShellProps) {
   const t = useTranslations('clientBrand.v1.ui.details');
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabKey>('overview');
+
+  const handleBrandUpdated = () => {
+    router.refresh();
+  };
 
   const statusText = brand.status === 'active' ? t('statusActive') : t('statusInactive');
 
@@ -134,7 +140,7 @@ export function BrandDetailsShell({ brand }: BrandDetailsShellProps) {
         {activeTab === 'identity' && <BrandIdentityTab brand={brand} />}
         {activeTab === 'channels' && <BrandChannelsTab brand={brand} />}
         {activeTab === 'assets' && <BrandAssetsTab brand={brand} />}
-        {activeTab === 'settings' && <BrandSettingsTab brand={brand} />}
+        {activeTab === 'settings' && <BrandSettingsTab brand={brand} onBrandUpdated={handleBrandUpdated} />}
       </div>
     </div>
   );

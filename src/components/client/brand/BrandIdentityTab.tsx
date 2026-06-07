@@ -21,20 +21,18 @@ interface BrandIdentityTabProps {
   brand: Brand;
 }
 
-function getReadinessPercent(status: Brand['onboarding_status']): number {
-  switch (status) {
-    case 'created': return 25;
-    case 'profile_complete': return 50;
-    case 'channels_connected': return 75;
-    case 'ready': return 100;
-    default: return 25;
-  }
-}
-
 export function BrandIdentityTab({ brand }: BrandIdentityTabProps) {
   const t = useTranslations('clientBrand.v1.ui.details.identityStudio');
-  const readiness = getReadinessPercent(brand.onboarding_status);
   const [showDetails, setShowDetails] = useState(false);
+
+  const statusLabel =
+    brand.onboarding_status === 'created'
+      ? t('dnaSummary.phaseStatus.created')
+      : brand.onboarding_status === 'profile_complete'
+        ? t('dnaSummary.phaseStatus.profileComplete')
+        : brand.onboarding_status === 'channels_connected'
+          ? t('dnaSummary.phaseStatus.channelsConnected')
+          : t('dnaSummary.phaseStatus.ready');
 
   return (
     <div className="space-y-6">
@@ -57,23 +55,14 @@ export function BrandIdentityTab({ brand }: BrandIdentityTabProps) {
             {[
               { icon: <Building2 className="h-4 w-4" />, label: t('dnaSummary.industry'), value: brand.industry },
               { icon: <FileText className="h-4 w-4" />, label: t('dnaSummary.brandPromise'), value: brand.description || t('dnaSummary.noDescription') },
-              { icon: <Gauge className="h-4 w-4" />, label: t('dnaSummary.readiness'), value: `${readiness}%`, isProgress: true, progress: readiness },
+              { icon: <Gauge className="h-4 w-4" />, label: t('dnaSummary.readiness'), value: statusLabel },
               { icon: <Activity className="h-4 w-4" />, label: t('dnaSummary.status'), value: brand.status === 'active' ? t('dnaSummary.statusActive') : t('dnaSummary.statusInactive') },
             ].map((item, i) => (
               <div key={i} className="flex items-start gap-2.5">
                 <IconFrame size="sm" tone="slate" decorative>{item.icon}</IconFrame>
                 <div className="min-w-0 flex-1">
                   <p className="text-sm font-medium" style={{ color: 'var(--sms-v8-text-3)' }}>{item.label}</p>
-                  {item.isProgress ? (
-                    <div className="flex items-center gap-2 mt-1">
-                      <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'var(--sms-v8-surface-2)' }}>
-                        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${item.progress}%`, background: 'var(--tone-solid)' }} />
-                      </div>
-                      <span className="text-sm font-bold tabular-nums" style={{ color: 'var(--tone-text)' }}>{item.value}</span>
-                    </div>
-                  ) : (
-                    <p className="text-sm font-semibold truncate" style={{ color: 'var(--sms-v8-text)' }}>{item.value}</p>
-                  )}
+                  <p className="text-sm font-semibold truncate" style={{ color: 'var(--sms-v8-text)' }}>{item.value}</p>
                 </div>
               </div>
             ))}
