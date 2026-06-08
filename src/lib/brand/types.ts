@@ -184,6 +184,40 @@ export interface BrandOccasionContext {
 }
 
 // ============================================================================
+// Brand Values (Choice Intelligence Studio)
+// ============================================================================
+
+export type BrandValueKey =
+  | 'trust'
+  | 'quality'
+  | 'speed'
+  | 'simplicity'
+  | 'luxury'
+  | 'customer_closeness'
+  | 'innovation'
+  | 'professionalism'
+  | 'transparency';
+
+export interface BrandValueItem {
+  id: string;
+  key: BrandValueKey | 'custom';
+  label: string;
+  iconKey: string;
+  emotion?: string;
+  proofStyle?: string;
+  visualStyle?: string;
+  marketingStyle?: string;
+  publishingStyle?: string;
+  note?: string;
+}
+
+export interface BrandValuesState {
+  version: number;
+  selected: BrandValueItem[];
+  updatedAt?: string;
+}
+
+// ============================================================================
 // DNA Editor Input
 // ============================================================================
 
@@ -195,6 +229,7 @@ export interface BrandDnaEditorInput {
   identityType?: BrandIdentityType;
   operatingProfile?: BrandOperatingProfile;
   occasionContext?: BrandOccasionContext;
+  brandValues?: BrandValuesState;
   audience?: string;
   tone?: string;
   values?: string;

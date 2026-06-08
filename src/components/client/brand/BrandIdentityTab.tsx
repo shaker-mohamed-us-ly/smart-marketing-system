@@ -11,6 +11,7 @@ import { BrandOperatingProfilePreview } from './BrandOperatingProfilePreview';
 import { BrandOccasionContextPanel } from './BrandOccasionContextPanel';
 import { BrandProfileIntelligenceHero } from './BrandProfileIntelligenceHero';
 import { BrandStrategyUseMap } from './BrandStrategyUseMap';
+import { BrandValuesChoiceStudio } from './BrandValuesChoiceStudio';
 import { Card, CardContent } from '@/components/shared/Card';
 import { AlertTriangle } from 'lucide-react';
 import type {
@@ -20,6 +21,7 @@ import type {
   BrandDnaEditorInput,
   BrandOperatingProfile,
   BrandOccasionContext,
+  BrandValuesState,
 } from '@/lib/brand/types';
 
 interface BrandIdentityTabProps {
@@ -32,6 +34,7 @@ function extractIdentityData(profile?: BrandCoreProfile | null): {
   identityType?: BrandIdentityType | null;
   operatingProfile?: BrandOperatingProfile | null;
   occasionContext?: BrandOccasionContext | null;
+  brandValues?: BrandValuesState | null;
   dna?: BrandDnaEditorInput | null;
 } {
   if (!profile?.brand_dna) return {};
@@ -42,6 +45,7 @@ function extractIdentityData(profile?: BrandCoreProfile | null): {
     identityType: (bd.identityType as BrandIdentityType) || null,
     operatingProfile: (bd.operatingProfile as BrandOperatingProfile) || null,
     occasionContext: (bd.occasionContext as BrandOccasionContext) || null,
+    brandValues: (bd.brandValues as BrandValuesState) || null,
     dna: {
       identityType: (bd.identityType as BrandIdentityType) || undefined,
       operatingProfile: (bd.operatingProfile as BrandOperatingProfile) || undefined,
@@ -69,6 +73,7 @@ export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdenti
     identityType: initialIdentityType,
     operatingProfile: initialOperatingProfile,
     occasionContext: initialOccasionContext,
+    brandValues: initialBrandValues,
     dna: initialDna,
   } = extractIdentityData(profile);
 
@@ -80,6 +85,7 @@ export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdenti
   const [localIdentityType, setLocalIdentityType] = useState<BrandIdentityType | null>(initialIdentityType || null);
   const [localOperatingProfile, setLocalOperatingProfile] = useState<BrandOperatingProfile | null>(initialOperatingProfile || null);
   const [localOccasionContext, setLocalOccasionContext] = useState<BrandOccasionContext | null>(initialOccasionContext || null);
+  const [localBrandValues, setLocalBrandValues] = useState<BrandValuesState | null>(initialBrandValues || null);
   const [localDna, setLocalDna] = useState<BrandDnaEditorInput | null>(initialDna || null);
 
   const hasDna = !!localDna && Object.entries(localDna).some(([k, v]) => {
@@ -154,6 +160,38 @@ export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdenti
     }
   }, [brand.id, localDna, localIdentityType, localOperatingProfile, onBrandUpdated, tEditor]);
 
+  const handleSaveBrandValues = useCallback(async (bv: BrandValuesState) => {
+    setIsSaving(true);
+    setSaveError(null);
+    setSaveSuccess(false);
+
+    try {
+      const { updateBrandDna } = await import('@/lib/brand/server-actions');
+      const payload: BrandDnaEditorInput = {
+        ...(localDna || {}),
+        identityType: localIdentityType || undefined,
+        operatingProfile: localOperatingProfile || undefined,
+        occasionContext: localOccasionContext || undefined,
+        brandValues: bv,
+      };
+
+      const result = await updateBrandDna(brand.id, payload);
+
+      if (result.success) {
+        setSaveSuccess(true);
+        setLocalBrandValues(bv);
+        if (onBrandUpdated) onBrandUpdated();
+      } else {
+        setSaveError(tEditor('error'));
+      }
+    } catch (err) {
+      console.error('[BrandIdentityTab] brand values save error:', err);
+      setSaveError(tEditor('error'));
+    } finally {
+      setIsSaving(false);
+    }
+  }, [brand.id, localDna, localIdentityType, localOperatingProfile, localOccasionContext, onBrandUpdated, tEditor]);
+
   const handleSaveDna = useCallback(async (data: BrandDnaEditorInput) => {
     setIsSaving(true);
     setSaveError(null);
@@ -166,6 +204,7 @@ export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdenti
         identityType: localIdentityType || undefined,
         operatingProfile: localOperatingProfile || undefined,
         occasionContext: localOccasionContext || undefined,
+        brandValues: localBrandValues || undefined,
       };
 
       const result = await updateBrandDna(brand.id, payload);
@@ -193,8 +232,9 @@ export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdenti
     setLocalIdentityType(initialIdentityType || null);
     setLocalOperatingProfile(initialOperatingProfile || null);
     setLocalOccasionContext(initialOccasionContext || null);
+    setLocalBrandValues(initialBrandValues || null);
     setLocalDna(initialDna || null);
-  }, [initialIdentityType, initialOperatingProfile, initialOccasionContext, initialDna]);
+  }, [initialIdentityType, initialOperatingProfile, initialOccasionContext, initialBrandValues, initialDna]);
 
   return (
     <div className="space-y-6">
@@ -249,6 +289,13 @@ export function BrandIdentityTab({ brand, profile, onBrandUpdated }: BrandIdenti
       <BrandOccasionContextPanel
         initialContext={localOccasionContext}
         onSave={handleSaveOccasionContext}
+        disabled={isSaving}
+      />
+
+      {/* Brand Values Choice Studio */}
+      <BrandValuesChoiceStudio
+        initialValues={localBrandValues}
+        onSave={handleSaveBrandValues}
         disabled={isSaving}
       />
 

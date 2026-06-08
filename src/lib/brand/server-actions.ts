@@ -636,11 +636,19 @@ export async function updateBrandDna(
       ? { ...existingOcc, ...newOcc }
       : existingOcc;
 
+    // Merge brandValues if provided
+    const existingBv = (existingDna.brandValues as Record<string, unknown>) || {};
+    const newBv = dnaFields.brandValues;
+    const mergedBv = newBv
+      ? { ...existingBv, ...newBv, version: 1 }
+      : existingBv;
+
     const mergedDna: Record<string, unknown> = {
       ...existingDna,
       identityType: dnaFields.identityType ?? existingDna.identityType,
       ...(Object.keys(mergedOp).length > 0 && { operatingProfile: mergedOp }),
       ...(Object.keys(mergedOcc).length > 0 && { occasionContext: mergedOcc }),
+      ...(Object.keys(mergedBv).length > 0 && { brandValues: mergedBv }),
       dna: {
         ...((existingDna.dna as Record<string, unknown>) || {}),
         ...(dnaFields.audience !== undefined && { audience: dnaFields.audience }),
